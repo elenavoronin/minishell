@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
+/*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/02 14:32:16 by dliu          ########   odam.nl         */
+/*   Created: 2023/09/19 15:11:01 by dliu          #+#    #+#                 */
+/*   Updated: 2023/11/02 14:01:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "libft.h"
-# include "parse.h"
-# include "token.h"
+int	main(void)
+{
+	int		status;
 
-#endif
+	status = 1;
+	printf("Welcome to our Minishell.");
+	return (status);
+}
