@@ -6,31 +6,31 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/02 13:35:08 by evoronin      ########   odam.nl          #
+#    Updated: 2023/11/02 14:47:25 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ./include
+CFLAGS = -Wall -Wextra -Werror -I include
 
 UNAME_S := $(shell uname -s)
 
-ifeq ($(UNAME_S), Darwin)
-	READLINELINKFLAGS := -lreadline -L $(shell brew --prefix readline)/lib
-else
-	READLINELINKFLAGS := -lreadline
-endif
+# ifeq ($(UNAME_S), Darwin)
+# 	READLINELINKFLAGS := -lreadline -L $(shell brew --prefix readline)/lib
+# else
+READLINELINKFLAGS := -lreadline
+# endif
 
-ifeq ($(UNAME_S), Darwin)
-	READLINEFLAGS ?= -I $(shell brew --prefix readline)/include
-else
-	READLINEFLAGS ?= -I/usr/include
-endif
+# ifeq ($(UNAME_S), Darwin)
+# 	READLINEFLAGS ?= -I $(shell brew --prefix readline)/include
+# else
+READLINEFLAGS ?= -I/usr/include
+# endif
 
 NAME = minishell
 
 SRCS_DIR = ./src
-SRCS_NAMES = \
+SRCS_NAMES = main.c lifecycle/lifecycle_a.c
 
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
