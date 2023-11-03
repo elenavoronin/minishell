@@ -6,7 +6,7 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/02 18:46:29 by dliu          ########   odam.nl          #
+#    Updated: 2023/11/03 14:36:47 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,8 @@ endif
 
 NAME = minishell
 
-VPATH = ./src ./src/libft ./src/parser
-SRCS_NAMES = main.c _token.c parse.c \
+VPATH = ./src ./src/libft ./src/parse
+SRCS_NAMES = main.c parse.c _extract.c \
 get_next_line.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_printf.c ft_printf_helpers.c ft_printf_handle_types.c \

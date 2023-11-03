@@ -29,18 +29,18 @@ t_list	*parse_input(char *input)
 
 	cmdlist = NULL;
 	if (!input)
-		_parse_terminate(&cmdlist, "ERROR: parse_input function needs input.");
+		_terminate_parsing(&cmdlist, "ERROR: parse_input needs input.");
 	while (*input)
 	{
 		while (ft_isspace(*input))
 			input++;
 		cmd = _init_cmd();
-		pos = _extract_cmd(input, &pos);
+		pos = _extract_cmd(input, &cmd);
 		if (!cmd)
-			_parse_terminate(&cmdlist, "ERROR: malloc failure.");
+			_terminate_parsing(&cmdlist, "ERROR: malloc failure.");
 		cmdnode = ft_lstnew(cmd);
 		if (!cmdnode)
-			_parse_terminate(&cmdlist, "ERROR: malloc failure.");
+			_terminate_parsing(&cmdlist, "ERROR: malloc failure.");
 		ft_lstadd_back(&cmdlist, cmdnode);
 		input += pos;
 	}
