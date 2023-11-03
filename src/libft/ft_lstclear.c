@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/19 15:52:33 by dliu          #+#    #+#                 */
-/*   Updated: 2022/12/14 15:54:47 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/03 13:12:57 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*victim;
 
-	if (*lst == NULL || del == NULL)
+	if (!lst || !*lst || !del)
 		return ;
-	while (*lst != NULL)
+	while (*lst)
 	{
 		victim = (*lst);
 		*lst = (*lst)->next;

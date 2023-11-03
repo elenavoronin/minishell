@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/02 17:55:15 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/03 14:25:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,25 @@ typedef struct s_cmd
 	char	*input;
 	char	*output;
 	char	output_flag;
-	char	**cmds;
-	int		count;
+	char	**cmd_table;
 	int		status;
 }	t_cmd;
 
 t_list	*parse_input(char *input);
-void	parse_free(t_list *head);
+void	parse_free(t_list **cmdlist);
+
+//For parsing internal use, WARNING: VOLATILE
+enum e_state
+{
+	WORD,
+	REDIR_IN,
+	REDIR_HERE,
+	REDIR_OUT,
+	REDIR_APPEND
+};
+
+size_t	_extract_cmd(char *input, t_cmd **cmd);
+void	_terminate_parsing(t_list **cmdlist, char *message);
+void	_delete_cmd(void *content);
 
 #endif

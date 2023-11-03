@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse.h"
-#include "libft.h"
+#include "minishell.h"
 
 t_cmd	*_init_cmd(void);
 void	_delete_cmd(void *content);
@@ -23,57 +22,76 @@ void	_delete_cmd(void *content);
 */
 t_list	*parse_input(char *input)
 {
-	t_list		*head;
-	t_cmd		*cmdnode;
+	t_list	*cmdlist;
+	t_list	*cmdnode;
+	t_cmd	*cmd;
+	size_t	pos;
 
+	cmdlist = NULL;
 	if (!input)
-		ft_error("Error: parse_input function needs input.");
-	head = NULL;
-	cmdnode = NULL;
-	// while (*input)
-	// {
-	// 	cmdnode = _init_cmd();
-	// 	//logic goes here
-	// 	head = ft_lstnew(cmdnode);
-	// 	ft_lstadd_back(&head, ft_lstnew(cmdnode));
-	// }
-	return (head);
+		_parse_terminate(&cmdlist, "ERROR: parse_input function needs input.");
+	while (*input)
+	{
+		while (ft_isspace(*input))
+			input++;
+		cmd = _init_cmd();
+		pos = _extract_cmd(input, &pos);
+		if (!cmd)
+			_parse_terminate(&cmdlist, "ERROR: malloc failure.");
+		cmdnode = ft_lstnew(cmd);
+		if (!cmdnode)
+			_parse_terminate(&cmdlist, "ERROR: malloc failure.");
+		ft_lstadd_back(&cmdlist, cmdnode);
+		input += pos;
+	}
+	return (cmdlist);
 }
 
 /**
  * Frees any allocated memory after procesing an input.
  * Use before processing any more inputs.
 */
-void	parse_free(t_list *cmdlist)
+void	parse_free(t_list **cmdlist)
 {
-	ft_lstclear(&cmdlist, _delete_cmd);
+	ft_lstclear(cmdlist, _delete_cmd);
 }
 
+/**
+ * For early terminating if error is encountered during parsing.
+ * Frees list, prints message and exits with EXIT_FAILURE
+ */
+void	_terminate_parsing(t_list **cmdlist, char *message)
+{
+	ft_lstclear(cmdlist, _delete_cmd);
+	ft_error(message);
+}
+
+//Allocates memory for t_cmd object and initialises members.
 t_cmd	*_init_cmd(void)
 {
-	t_cmd	*cmdnode;
+	t_cmd	*cmd;
 
-	cmdnode = malloc(sizeof(cmdnode));
-	if (cmdnode)
+	cmd = malloc(sizeof(cmd));
+	if (cmd)
 	{
-		cmdnode->delimiter = NULL;
-		cmdnode->input = NULL;
-		cmdnode->output = NULL;
-		cmdnode->output_flag = 'w';
-		cmdnode->cmds = NULL;
-		cmdnode->count = 0;
-		cmdnode->status = 0;
+		cmd->delimiter = NULL;
+		cmd->input = NULL;
+		cmd->output = NULL;
+		cmd->output_flag = 'w';
+		cmd->cmd_table = NULL;
+		cmd->status = 0;
 	}
-	return (cmdnode);
+	return (cmd);
 }
 
+//De-allocates members of t_cmd object, passed as void*
 void	_delete_cmd(void *content)
 {
-	t_cmd	*cmdnode;
+	t_cmd	*cmd;
 
-	cmdnode = content;
-	ft_free_strarr(cmdnode->cmds);
-	free(cmdnode->delimiter);
-	free(cmdnode->input);
-	free(cmdnode->output);
+	cmd = content;
+	ft_free_strarr(cmd->cmd_table);
+	free(cmd->delimiter);
+	free(cmd->input);
+	free(cmd->output);
 }
