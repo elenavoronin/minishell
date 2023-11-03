@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/03 11:58:42 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/03 16:45:52 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,14 @@
 # include <readline/history.h>
 # include <stdlib.h>
 
-typedef struct	s_mini_env
+typedef enum e_code_status
+{
+	SUCCESS,
+	MALLOC_ERROR,
+	SYNTAX_ERROR,
+}	t_code_status;
+
+typedef struct s_mini_env
 {
 	char	*variable_name;
 	char	*variable_path;
@@ -27,11 +34,14 @@ typedef struct	s_mini_env
 
 typedef struct s_shell_state
 {
-	int		status_code;
-	char	**mini_env;
+	int			status_code;
+	t_mini_env	**mini_env;
 }	t_shell_state;
 
 
-void	start_minishell(int argc, char **argv, char **envp);
+void			start_minishell(int argc, char **argv, char **envp);
+void			init_mini_state(t_shell_state *mini_state, char **envp);
+void			clear_mini_env(t_shell_state *mini_state);
+void			print_env_arr(t_mini_env **mini_env);
 
 #endif

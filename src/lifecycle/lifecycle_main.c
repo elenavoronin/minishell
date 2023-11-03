@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
+/*   lifecycle_main.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/03 12:16:36 by elenavoroni   ########   odam.nl         */
+/*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
+/*   Updated: 2023/11/03 16:19:42 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "lifecycle.h"
-# include "libft.h"
 
-#endif
+
+int main(int argc, char **argv, char **envp)
+{
+	start_minishell(argc, argv, envp);
+	return (0);	
+}
