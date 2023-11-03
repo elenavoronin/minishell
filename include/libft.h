@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 11:29:23 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/01 16:02:06 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/03 13:32:55 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void		ft_putnbr_fd(int n, int fd);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
-int			ft_isascii(int c);
+int			ft_isspace(int c);
 int			ft_isprint(int c);
 
 int			ft_atoi(const char *str);

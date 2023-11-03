@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_lstnew.c                                        :+:    :+:            */
+/*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/19 13:35:50 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/03 13:55:00 by dliu          ########   odam.nl         */
+/*   Created: 2023/09/19 15:11:01 by dliu          #+#    #+#                 */
+/*   Updated: 2023/11/02 14:01:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-t_list	*ft_lstnew(void *content)
+int	main(void)
 {
-	t_list	*node;
+	int		status;
 
-	node = (t_list *)malloc(sizeof(t_list));
-	if (!node)
-		return (NULL);
-	node->content = content;
-	node->next = NULL;
-	return (node);
+	status = 1;
+	printf("Welcome to our Minishell.");
+	return (status);
 }

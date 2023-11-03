@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/27 17:08:51 by dliu          #+#    #+#                 */
-/*   Updated: 2023/01/25 13:54:52 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/02 18:31:23 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ static void	initialise_tab(t_print *tab, int count)
 	tab->dash = 0;
 	tab->zero = 0;
 	tab->dot = 0;
-	tab->width_min = 0;
-	tab->width_precision = 0;
+	tab->w_min = 0;
+	tab->w_precise = 0;
 }
 
 static int	evaluate_format(t_print *tab, const char *format)
