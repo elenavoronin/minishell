@@ -32,7 +32,7 @@ t_list	*parse_input(char *input)
 		_extract_cmdstr(input, &parse);
 		if (!parse.cmdstr)
 			_terminate(&cmdlist, NULL, parse.status);
-		parse.cmd = _extract_cmd(parse.cmdstr);
+		_extract_cmd(parse);
 		if (!parse.cmd)
 			_terminate(&cmdlist, "ERROR: malloc failure.", MALLOC_ERROR);
 		parse.cmdnode = ft_lstnew(parse.cmd);

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/07 18:50:42 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/07 18:55:17 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ void	_extract_cmdstr(char *input, t_parse *parse)
 }
 
 //WIP HERE
-void	_extract_cmd(char *input, t_parse *parse)
+void	_extract_cmd(t_parse *parse)
 {
 	t_cmd		*cmd;		
 	t_tokens	tok;
 	char		**split;
 
-	split = ft_split2(input);
-	if (!input || !split)
+	split = ft_split2(parse->cmdstr);
+	if (!parse->cmdstr || !split)
 		return (NULL);
 	tok.pos = 0;
 	tok.count = ft_strarray_count(split);

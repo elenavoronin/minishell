@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/07 18:19:48 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/07 18:56:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,15 @@ typedef struct s_tokens
 
 typedef struct s_parse
 {
-	t_list	*cmdnode;
-	t_cmd	*cmd;
 	char	*cmdstr;
-	size_t	pos;
 	int		status;
+	size_t	pos;
+	t_cmd	*cmd;
+	t_list	*cmdnode;
 }	t_parse;
 
 void	_extract_cmdstr(char *input, t_parse *parse);
-void	_extract_cmd(char *input, t_parse *parse);
+void	_extract_cmd(t_parse *parse);
 void	_terminate(t_list **cmdlist, char *message, int status);
 void	_delete_cmd(void *content);
 
