@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/03 16:45:52 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/07 15:51:15 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef enum e_code_status
 	SUCCESS,
 	MALLOC_ERROR,
 	SYNTAX_ERROR,
+    USUPORTED,
 }	t_code_status;
 
 typedef struct s_mini_env

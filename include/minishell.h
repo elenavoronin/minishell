@@ -6,14 +6,15 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/03 12:16:36 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/07 15:51:58 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "lifecycle.h"
 # include "libft.h"
+# include "parse.h"
+# include "lifecycle.h"
 
 #endif
