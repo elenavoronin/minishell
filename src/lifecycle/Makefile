@@ -6,19 +6,19 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/03 16:40:40 by elenavoroni   ########   odam.nl          #
+#    Updated: 2023/11/07 17:22:54 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ../../include 
+CFLAGS = -Wall -Wextra -Werror -I ../../include  -g
 
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
 
 NAME = lifecycle
 
-SRCS_NAMES = lifecycle_main.c lifecycle_a.c \
+SRCS_NAMES = lifecycle_main.c lifecycle_a.c lifecycle_b.c\
 ../libft/ft_atoi_validate.c \
 ../libft/ft_bzero.c \
 ../libft/ft_calloc.c \
@@ -51,10 +51,8 @@ SRCS_NAMES = lifecycle_main.c lifecycle_a.c \
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 OBJS = $(OBJS_NAMES)
-DEPS = $(OBJS:.o=.d)
 
 all:  $(NAME)
--include $(DEPS)
 
 $(OBJS): %.o: %.c
 	mkdir -p $(@D)
@@ -64,7 +62,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(READLINELINKFLAGS)
 
 clean:
-	rm -rf
+	rm -rf $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)

@@ -6,26 +6,11 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/03 16:46:42 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/07 17:23:11 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-void	print_env_arr(t_mini_env **mini_env)
-{
-	int	i;
-
-	i = 0;
-	while (mini_env[i] != NULL)
-	{
-		printf("[%d]: %s\n", i, mini_env[i]->variable_name);
-		printf("[%d]: %s\n", i,  mini_env[i]->variable_path);
-		i++;
-	}
-}
-
 
 void	clear_mini_env(t_shell_state *mini_state)
 {
@@ -47,54 +32,60 @@ void	clear_mini_env(t_shell_state *mini_state)
 	free(mini_env);
 	free(mini_state);
 }
-
-void	init_mini_state(t_shell_state *mini_state, char **envp)
+void	update_status_code(t_shell_state *mini_state, t_code_status status)
 {
-	int			i;
-	int			j;
-	char		*name;
-	char		*path;
+	mini_state->status_code = status;
+}
+
+void	mini_env_arr(t_shell_state *mini_state, char **envp, char *name, char *path)
+{
+	int	i;
+	int	j;
 
 	i = 0;
-	mini_state = ft_calloc(1, sizeof(t_shell_state));
-	if (!mini_state)
-		return ;
-	mini_state->status_code = 0;
-	mini_state->mini_env = ft_calloc(1, sizeof(t_mini_env *));
-	if (!mini_state->mini_env)
-	{
-		mini_state->status_code = MALLOC_ERROR;
-		return ;
-	}
-	while (envp[i] != NULL)
+	while (envp[i])
 	{
 		j = 0;
 		while (envp[i][j] && envp[i][j] != '=')
 			j++;
-		name = ft_substr(envp[i], 0, i);
+		name = ft_substr(envp[i], 0, j);
 		if (!name)
-		{
-			mini_state->status_code = MALLOC_ERROR;
-			return ;
-		}
+			return(update_status_code(mini_state, MALLOC_ERROR));
 		j++;
-		path = ft_strdup(envp[i] + j + 1);
+		path = ft_strdup(envp[i] + j);
 		if (!path)
-		{
-			mini_state->status_code = MALLOC_ERROR;
-			return ;
-		}
-		mini_state->mini_env[i] = ft_calloc(1, sizeof(t_mini_env));
+			return(update_status_code(mini_state, MALLOC_ERROR));
+		mini_state->mini_env[i] = malloc(sizeof(t_mini_env));
 		if (!mini_state->mini_env[i])
-		{
-			mini_state->status_code = MALLOC_ERROR;
-			break ;
-		}
+			return(update_status_code(mini_state, MALLOC_ERROR));
 		mini_state->mini_env[i]->variable_name = name;
 		mini_state->mini_env[i]->variable_path = path;
 		i++;
 	}
 	mini_state->status_code = SUCCESS;
+}
+
+void	init_mini_state(t_shell_state *mini_state, char **envp)
+{
+	int			i;
+	char		*name;
+	char		*path;
+
+	i = 0;
+	name = NULL;
+	path = NULL;
+	mini_state = ft_calloc(1, sizeof(t_shell_state));
+	if (!mini_state)
+		return ;
+	mini_state->status_code = 0;
+	mini_state->mini_env = malloc(sizeof(t_mini_env **)
+		* count_envp_elements(envp));
+	if (!mini_state->mini_env)
+	{
+		mini_state->status_code = MALLOC_ERROR;
+		return ;
+	}
+	mini_env_arr(mini_state, envp, name, path);
 	print_env_arr(mini_state->mini_env);
 }
 
