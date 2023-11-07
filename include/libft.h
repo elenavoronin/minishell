@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 11:29:23 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/03 13:32:55 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/07 18:06:35 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,10 @@ void		ft_putnbr_fd(int n, int fd);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
-int			ft_isspace(int c);
 int			ft_isprint(int c);
+int			ft_isascii(int c);
+
+int			ft_isspace(int c);
 
 int			ft_atoi(const char *str);
 long long	ft_atoll(const char *str);
@@ -144,6 +146,7 @@ int			ft_numlen(long long n, int base);
 size_t		ft_distance(int a, int b);
 
 void		ft_error(char *errstr);
+void		ft_errexit(char *errmsg, int errcode);
 void		ft_perror(char *progname, char *funcname, char *messsage);
 
 void		ft_free(void *content);

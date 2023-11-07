@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/03 14:25:02 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/07 18:19:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 typedef struct s_cmd
 {
 	char	*delimiter;
-	char	*input;
-	char	*output;
+	char	*infile;
+	char	*outfile;
 	char	output_flag;
 	char	**cmd_table;
 	int		status;
@@ -46,8 +46,28 @@ enum e_state
 	REDIR_APPEND
 };
 
-size_t	_extract_cmd(char *input, t_cmd **cmd);
-void	_terminate_parsing(t_list **cmdlist, char *message);
+typedef struct s_tokens
+{
+	size_t	pos;
+	size_t	count;
+	size_t	rem;
+	size_t	delim;
+	size_t	infile;
+	size_t	outfile;
+}	t_tokens;
+
+typedef struct s_parse
+{
+	t_list	*cmdnode;
+	t_cmd	*cmd;
+	char	*cmdstr;
+	size_t	pos;
+	int		status;
+}	t_parse;
+
+void	_extract_cmdstr(char *input, t_parse *parse);
+void	_extract_cmd(char *input, t_parse *parse);
+void	_terminate(t_list **cmdlist, char *message, int status);
 void	_delete_cmd(void *content);
 
 #endif

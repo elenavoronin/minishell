@@ -6,7 +6,7 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/03 14:36:47 by dliu          ########   odam.nl          #
+#    Updated: 2023/11/07 18:06:57 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ get_next_line.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_printf.c ft_printf_helpers.c ft_printf_handle_types.c \
 ft_printf_handle_flags.c ft_printf_handle_flags_nums.c \
-ft_put_fd.c ft_is.c ft_converts.c \
+ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \
 ft_strhelpers.c ft_strfinds.c ft_strmakers.c ft_strmanips.c ft_split.c ft_itoa.c \
 ft_lltoa_base.c ft_ltoa_unsigned_base.c ft_atoi_validate.c ft_nums.c \

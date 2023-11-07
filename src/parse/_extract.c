@@ -6,48 +6,117 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/03 14:40:06 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/07 18:50:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int	_get_token(char *c);
+int		_token_type(char *c);
+t_cmd	*_init_cmd(void);
+int		_validate_str(char *str);
 
-size_t	_extract_cmd(char *input, t_cmd **cmd)
+void	_extract_cmdstr(char *input, t_parse *parse)
 {
- 	size_t	pos;
-// 	int		token;
+	char	*str;
+	int		valid;
 
- 	pos = 0;
- 	if (!input || !cmd || !*cmd)
- 		return (pos);
-// 	if (token == REDIR_IN)
-// 		pos = _extract(input, (*cmd)->input);
-// 	else if (token == REDIR_HERE)
-// 		pos = _extract(input, (*cmd)->delimiter);
-// 	else if (token == REDIR_OUT || token == REDIR_APPEND)
-// 	{
-// 		pos = _extract(input, (*cmd)->output);
-// 		if (token == REDIR_APPEND)
-// 			(*cmd)->output_flag = 'a';
-//	}
-	return (pos);
+	parse->cmdstr = NULL;
+	while (ft_isspace(*input))
+		input++;
+	while (input[parse->pos] && input[parse->pos] != '|')
+		parse->pos++;
+	str = ft_substr(input, 0, parse->pos);
+	if (!str)
+	{
+		ft_perror("Minishell", NULL, "Likely malloc fail.");
+		parse->status = MALLOC_ERROR;
+		return ;
+	}
+	parse->status = _validate_str(str);
+	if (parse->status)
+	{
+		free(str);
+		str = NULL;
+	}
+	parse->cmdstr = str;
 }
 
-// int	_get_token(char *c)
-// {
-// 	if (*c == '<')
-// 	{
-// 		if (c + 1 == '<')
-// 			return (REDIR_HERE);
-// 		return (REDIR_IN);
-// 	}
-// 	if (c == '>')
-// 	{
-// 		if (c + 1 == '>')
-// 			return (REDIR_APPEND);
-// 		return (REDIR_OUT);
-// 	}
-// 	return (WORD);
-// }
+//WIP HERE
+void	_extract_cmd(char *input, t_parse *parse)
+{
+	t_cmd		*cmd;		
+	t_tokens	tok;
+	char		**split;
+
+	split = ft_split2(input);
+	if (!input || !split)
+		return (NULL);
+	tok.pos = 0;
+	tok.count = ft_strarray_count(split);
+	tok.rem = tok.count;
+	while (tok.pos < tok.count)
+	{
+		tok.pos++;
+	}
+	cmd = _init_cmd();
+	return (cmd);
+}
+
+//Allocates memory for t_cmd object and initialises members.
+t_cmd	*_init_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(cmd));
+	if (cmd)
+	{
+		cmd->delimiter = NULL;
+		cmd->infile = NULL;
+		cmd->outfile = NULL;
+		cmd->output_flag = 'w';
+		cmd->cmd_table = NULL;
+		cmd->status = 0;
+	}
+	return (cmd);
+}
+
+int	_token_type(char *c)
+{
+	if (*c == '<')
+	{
+		if (c + 1 == '<')
+			return (REDIR_HERE);
+		return (REDIR_IN);
+	}
+	if (c == '>')
+	{
+		if (c + 1 == '>')
+			return (REDIR_APPEND);
+		return (REDIR_OUT);
+	}
+	return (WORD);
+}
+
+int	_validate_str(char *str)
+{
+	int	i;
+	int	valid;
+
+	i = 0;
+	valid = 0;
+	while (str[i])
+	{
+		if (!ft_isascii(str[i]))
+		{
+			ft_perror("ERROR", NULL, "Unsupported character found in input.");
+			return (UNSUPORTED);
+		}
+		if (ft_isalnum(str[i]))
+			valid = 1;
+		i++;
+	}
+	if (valid)
+		return (0);
+	return (SYNTAX_ERROR);
+}

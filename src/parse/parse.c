@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-t_cmd	*_init_cmd(void);
 void	_delete_cmd(void *content);
 
 /**
@@ -23,26 +22,25 @@ void	_delete_cmd(void *content);
 t_list	*parse_input(char *input)
 {
 	t_list	*cmdlist;
-	t_list	*cmdnode;
-	t_cmd	*cmd;
-	size_t	pos;
+	t_parse	parse;
 
 	cmdlist = NULL;
 	if (!input)
-		_terminate_parsing(&cmdlist, "ERROR: parse_input needs input.");
+		_terminate(&cmdlist, "ERROR: parse_input needs input.", MALLOC_ERROR);
 	while (*input)
 	{
-		while (ft_isspace(*input))
-			input++;
-		cmd = _init_cmd();
-		pos = _extract_cmd(input, &cmd);
-		if (!cmd)
-			_terminate_parsing(&cmdlist, "ERROR: malloc failure.");
-		cmdnode = ft_lstnew(cmd);
-		if (!cmdnode)
-			_terminate_parsing(&cmdlist, "ERROR: malloc failure.");
-		ft_lstadd_back(&cmdlist, cmdnode);
-		input += pos;
+		_extract_cmdstr(input, &parse);
+		if (!parse.cmdstr)
+			_terminate(&cmdlist, NULL, parse.status);
+		parse.cmd = _extract_cmd(parse.cmdstr);
+		if (!parse.cmd)
+			_terminate(&cmdlist, "ERROR: malloc failure.", MALLOC_ERROR);
+		parse.cmdnode = ft_lstnew(parse.cmd);
+		if (!parse.cmdnode)
+			_terminate(&cmdlist, "ERROR: malloc failure.", MALLOC_ERROR);
+		ft_lstadd_back(&cmdlist, parse.cmdnode);
+		free(parse.cmdstr);
+		input += parse.pos;
 	}
 	return (cmdlist);
 }
@@ -60,28 +58,10 @@ void	parse_free(t_list **cmdlist)
  * For early terminating if error is encountered during parsing.
  * Frees list, prints message and exits with EXIT_FAILURE
  */
-void	_terminate_parsing(t_list **cmdlist, char *message)
+void	_terminate(t_list **cmdlist, char *message, int status)
 {
 	ft_lstclear(cmdlist, _delete_cmd);
-	ft_error(message);
-}
-
-//Allocates memory for t_cmd object and initialises members.
-t_cmd	*_init_cmd(void)
-{
-	t_cmd	*cmd;
-
-	cmd = malloc(sizeof(cmd));
-	if (cmd)
-	{
-		cmd->delimiter = NULL;
-		cmd->input = NULL;
-		cmd->output = NULL;
-		cmd->output_flag = 'w';
-		cmd->cmd_table = NULL;
-		cmd->status = 0;
-	}
-	return (cmd);
+	ft_errexit(message, status);
 }
 
 //De-allocates members of t_cmd object, passed as void*
@@ -92,6 +72,6 @@ void	_delete_cmd(void *content)
 	cmd = content;
 	ft_free_strarr(cmd->cmd_table);
 	free(cmd->delimiter);
-	free(cmd->input);
-	free(cmd->output);
+	free(cmd->infile);
+	free(cmd->outfile);
 }

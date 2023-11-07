@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
+/*   ft_is2.c                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/07 15:55:49 by dliu          ########   odam.nl         */
+/*   Created: 2022/10/05 14:17:45 by dliu          #+#    #+#                 */
+/*   Updated: 2023/11/07 18:06:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
-
-# include "libft.h"
-# include "parse.h"
-# include "lifecycle.h"
-
-#endif
+int	ft_isspace(int c)
+{
+	if (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\r')
+		return (1);
+	return (0);
+}
