@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/07 17:13:03 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/08 15:42:09 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ typedef enum e_code_status
 	SUCCESS,
 	MALLOC_ERROR,
 	SYNTAX_ERROR,
-    USUPORTED,
+    UNSUPPORTED,
+	PIPE_ERROR,
+	INTERNAL_ERROR,
 }	t_code_status;
 
 typedef struct s_mini_env
@@ -45,5 +47,6 @@ void			init_mini_state(t_shell_state *mini_state, char **envp);
 void			clear_mini_env(t_shell_state *mini_state);
 void			print_env_arr(t_mini_env **mini_env);
 int 			count_envp_elements(char **envp);
+void			update_status_code(t_shell_state *mini_state, t_code_status status);
 
 #endif

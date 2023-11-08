@@ -1,21 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
+/*   execute_c.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/08 14:55:55 by evoronin      ########   odam.nl         */
+/*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
+/*   Updated: 2023/11/08 16:44:16 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "libft.h"
-# include "parse.h"
-# include "lifecycle.h"
-# include "execute.h"
-
-#endif
+int create_children(t_dummy_cmd *cmds, t_shell_state *mini_state)

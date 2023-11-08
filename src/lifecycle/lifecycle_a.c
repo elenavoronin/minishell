@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/07 17:23:11 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/08 15:21:17 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	clear_mini_env(t_shell_state *mini_state)
 	free(mini_env);
 	free(mini_state);
 }
+
 void	update_status_code(t_shell_state *mini_state, t_code_status status)
 {
 	mini_state->status_code = status;
