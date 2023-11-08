@@ -6,79 +6,120 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/07 18:55:17 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/08 18:51:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int		_token_type(char *c);
-t_cmd	*_init_cmd(void);
-int		_validate_str(char *str);
+void	_validate_str(char *str, t_parse *parse);
+void	_tokens_to_cmd(size_t *i, t_parse *parse);
+void	_tokens_to_cmdtable(t_parse *parse);
 
 void	_extract_cmdstr(char *input, t_parse *parse)
 {
 	char	*str;
-	int		valid;
+	size_t	start;
 
-	parse->cmdstr = NULL;
-	while (ft_isspace(*input))
-		input++;
+	while (ft_isspace(input[parse->pos]))
+		parse->pos++;
+	start = parse->pos;
 	while (input[parse->pos] && input[parse->pos] != '|')
 		parse->pos++;
-	str = ft_substr(input, 0, parse->pos);
+	str = ft_substr(input, start, parse->pos);
 	if (!str)
 	{
-		ft_perror("Minishell", NULL, "Likely malloc fail.");
-		parse->status = MALLOC_ERROR;
+		_malloc_error(parse);
+		parse->cmdstr = NULL;
 		return ;
 	}
-	parse->status = _validate_str(str);
-	if (parse->status)
-	{
-		free(str);
-		str = NULL;
-	}
-	parse->cmdstr = str;
+	_validate_str(str, parse);
 }
 
-//WIP HERE
 void	_extract_cmd(t_parse *parse)
 {
-	t_cmd		*cmd;		
-	t_tokens	tok;
-	char		**split;
+	size_t	i;
 
-	split = ft_split2(parse->cmdstr);
-	if (!parse->cmdstr || !split)
-		return (NULL);
-	tok.pos = 0;
-	tok.count = ft_strarray_count(split);
-	tok.rem = tok.count;
-	while (tok.pos < tok.count)
+	parse->tokens = ft_split2(parse->cmdstr);
+	if (!parse->tokens)
 	{
-		tok.pos++;
+		_malloc_error(parse);
+		return ;
 	}
-	cmd = _init_cmd();
-	return (cmd);
+	i = 0;
+	parse->rem = ft_strarray_count(parse->tokens);
+	parse->count = parse->rem;
+	while (parse->tokens[i] && !parse->status)
+	{
+		_tokens_to_cmd(&i, parse);
+		i++;
+	}
+	parse->count = 0;
+	_tokens_to_cmdtable(parse);
 }
 
-//Allocates memory for t_cmd object and initialises members.
-t_cmd	*_init_cmd(void)
+void	_malloc_error(t_parse *parse)
 {
-	t_cmd	*cmd;
+	ft_perror("ERROR", "Parsing", "Likely malloc fail.");
+	parse->status = MALLOC_ERROR;
+}
 
-	cmd = malloc(sizeof(cmd));
-	if (cmd)
+void	_tokens_to_cmd(size_t *i, t_parse *parse)
+{
+	char	**dest_address;
+
+	dest_address = NULL;
+	if (_token_type(parse->tokens[*i]) == REDIR_HERE)
+		dest_address = &(parse->cmd->delimiter);
+	else if (_token_type(parse->tokens[*i]) == REDIR_IN)
+		dest_address = &(parse->cmd->infile);
+	else if (_token_type(parse->tokens[*i]) == REDIR_OUT)
+		dest_address = &(parse->cmd->outfile);
+	else if (_token_type(parse->tokens[*i]) == REDIR_APPEND)
+		parse->cmd->output_flag = 'a';
+	if (dest_address)
 	{
-		cmd->delimiter = NULL;
-		cmd->infile = NULL;
-		cmd->outfile = NULL;
-		cmd->output_flag = 'w';
-		cmd->cmd_table = NULL;
-		cmd->status = 0;
+		*i++;
+		if (*i < parse->count)
+		{
+			dest_address = ft_strdup(parse->tokens[*i]);
+			free(parse->tokens[*i]);
+			parse->tokens[*i] = NULL;
+			parse->rem--;
+		}
+		else
+			parse->status = SYNTAX_ERROR;
 	}
-	return (cmd);
+}
+
+void	_tokens_to_cmdtable(t_parse *parse)
+{
+	int	i;
+
+	parse->cmd->cmd_table = malloc((parse->rem + 1) * sizeof(char **));
+	if (!parse->cmd->cmd_table)
+	{
+		_malloc_error(parse);
+		return ;
+	}
+	i = 0;
+	while (parse->rem)
+	{
+		if (parse->tokens[parse->count])
+		{
+			parse->cmd->cmd_table[i] = ft_strdup(parse->tokens[parse->count]);
+			if (!parse->cmd->cmd_table[i])
+			{
+				_malloc_error(parse);
+				return ;
+			}
+			i++;
+			parse->rem--;
+		}
+		parse->count++;
+	}
+	parse->cmd->cmd_table[i] = NULL;
 }
 
 int	_token_type(char *c)
@@ -98,25 +139,55 @@ int	_token_type(char *c)
 	return (WORD);
 }
 
-int	_validate_str(char *str)
+void	_validate_str(char *str, t_parse *parse)
 {
 	int	i;
 	int	valid;
 
 	i = 0;
 	valid = 0;
+	parse->cmdstr = NULL;
 	while (str[i])
 	{
-		if (!ft_isascii(str[i]))
-		{
-			ft_perror("ERROR", NULL, "Unsupported character found in input.");
-			return (UNSUPORTED);
-		}
 		if (ft_isalnum(str[i]))
 			valid = 1;
+		else if (!ft_isascii(str[i]))
+		{
+			valid = 0;
+			break ;
+		}
 		i++;
 	}
-	if (valid)
-		return (0);
-	return (SYNTAX_ERROR);
+	if (!valid)
+	{
+		free(str);
+		ft_perror("ERROR", NULL, "Invalid input found.");
+		parse->status = SYNTAX_ERROR;
+		return ;
+	}
+	parse->cmdstr = str;
+}
+
+//Allocates memory for t_cmd object and initialises members.
+void	_init_cmd(t_parse *parse)
+{
+	parse->cmd->delimiter = NULL;
+	parse->cmd->infile = NULL;
+	parse->cmd->outfile = NULL;
+	parse->cmd->output_flag = 'w';
+	parse->cmd->cmd_table = NULL;
+	parse->cmd->pipecount = 0;
+	parse->cmd->status = 0;
+}
+
+//De-allocates members of t_cmd object, passed as void*
+void	_delete_cmd(void *content)
+{
+	t_cmd	*cmd;
+
+	cmd = content;
+	ft_free_strarr(cmd->cmd_table);
+	free(cmd->delimiter);
+	free(cmd->infile);
+	free(cmd->outfile);
 }

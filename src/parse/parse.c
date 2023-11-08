@@ -12,35 +12,34 @@
 
 #include "minishell.h"
 
-void	_delete_cmd(void *content);
+void	_init_parse(t_parse *parse, t_list **cmdlist);
+void	_free_parse(t_parse *parse);
 
 /**
  * Parses input. Allocates memory.
  * @param input The string to parses.
- * @return On success, returns pointer to head of list, else NULL.
+ * @return On success, returns pointer to head of list.
+ * Will terminate program with appropriate exit code on failure.
 */
 t_list	*parse_input(char *input)
 {
 	t_list	*cmdlist;
 	t_parse	parse;
 
-	cmdlist = NULL;
 	if (!input)
-		_terminate(&cmdlist, "ERROR: parse_input needs input.", MALLOC_ERROR);
+		_terminate(NULL, NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
+	cmdlist = NULL;
 	while (*input)
 	{
+		_init_parse(&parse, &cmdlist);
 		_extract_cmdstr(input, &parse);
 		if (!parse.cmdstr)
-			_terminate(&cmdlist, NULL, parse.status);
-		_extract_cmd(parse);
-		if (!parse.cmd)
-			_terminate(&cmdlist, "ERROR: malloc failure.", MALLOC_ERROR);
-		parse.cmdnode = ft_lstnew(parse.cmd);
-		if (!parse.cmdnode)
-			_terminate(&cmdlist, "ERROR: malloc failure.", MALLOC_ERROR);
-		ft_lstadd_back(&cmdlist, parse.cmdnode);
-		free(parse.cmdstr);
+			_terminate(&cmdlist, &parse, NULL, parse.status);
+		_extract_cmd(&parse);
+		if (parse.status)
+			_terminate(&cmdlist, &parse, NULL, parse.status);
 		input += parse.pos;
+		_free_parse(&parse);
 	}
 	return (cmdlist);
 }
@@ -54,24 +53,35 @@ void	parse_free(t_list **cmdlist)
 	ft_lstclear(cmdlist, _delete_cmd);
 }
 
-/**
- * For early terminating if error is encountered during parsing.
- * Frees list, prints message and exits with EXIT_FAILURE
- */
-void	_terminate(t_list **cmdlist, char *message, int status)
+void	_init_parse(t_parse *parse, t_list **cmdlist)
 {
-	ft_lstclear(cmdlist, _delete_cmd);
-	ft_errexit(message, status);
+	parse->status = 0;
+	parse->cmdstr = NULL;
+	parse->tokens = NULL;
+	parse->pos = 0;
+	parse->count = 0;
+	parse->rem = 0;
+	parse->cmd = malloc(sizeof(*(parse->cmd)));
+	if (!parse->cmd)
+		_terminate(cmdlist, parse, "ERROR: Malloc failure", MALLOC_ERROR);
+	_init_cmd(parse);
+	if (!*cmdlist)
+		*cmdlist = ft_lstnew(parse->cmd);
+	else
+		ft_lstadd_back(cmdlist, parse->cmd);
 }
 
-//De-allocates members of t_cmd object, passed as void*
-void	_delete_cmd(void *content)
+void	_free_parse(t_parse *parse)
 {
-	t_cmd	*cmd;
+	free(parse->cmdstr);
+	parse->cmdstr = NULL;
+	ft_free_strarr(parse->tokens);
+	parse->tokens = NULL;
+}
 
-	cmd = content;
-	ft_free_strarr(cmd->cmd_table);
-	free(cmd->delimiter);
-	free(cmd->infile);
-	free(cmd->outfile);
+void	_terminate(t_list **cmdlist, t_parse *parse, char *message, int status)
+{
+	_free_parse(parse);
+	ft_lstclear(cmdlist, _delete_cmd);
+	ft_errexit(message, status);
 }
