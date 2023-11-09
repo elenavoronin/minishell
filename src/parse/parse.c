@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-void	_init_parse(t_parse *parse, t_list **cmdlist);
-void	_free_parse(t_parse *parse);
+static void	_init_cmd(t_parse *parse);
+static void	_init_parse(t_parse *parse, t_list **cmdlist);
 
 /**
  * Parses input. Allocates memory.
@@ -35,7 +35,7 @@ t_list	*parse_input(char *input)
 		_extract_cmdstr(input, &parse);
 		if (!parse.cmdstr)
 			_terminate(&cmdlist, &parse, NULL, parse.status);
-		_extract_cmd(&parse);
+		_tokens_to_cmd(&parse);
 		if (parse.status)
 			_terminate(&cmdlist, &parse, NULL, parse.status);
 		input += parse.pos;
@@ -45,16 +45,27 @@ t_list	*parse_input(char *input)
 }
 
 /**
- * Frees any allocated memory after procesing an input.
- * Use before processing any more inputs.
+ * Use this function in ft_lstclear after processing each line of input,
+ * to free linked list content.
+ * 
+ * ft_lstclear(cmdlist, delete_cmd);
 */
-void	parse_free(t_list **cmdlist)
+void	delete_cmd(void *content)
 {
-	ft_lstclear(cmdlist, _delete_cmd);
+	t_cmd	*cmd;
+
+	cmd = content;
+	ft_free_strarr(cmd->cmd_table);
+	free(cmd->delimiter);
+	free(cmd->infile);
+	free(cmd->outfile);
+	free(cmd);
 }
 
-void	_init_parse(t_parse *parse, t_list **cmdlist)
+static void	_init_parse(t_parse *parse, t_list **cmdlist)
 {
+	t_list	*new;
+
 	parse->status = 0;
 	parse->cmdstr = NULL;
 	parse->tokens = NULL;
@@ -65,10 +76,13 @@ void	_init_parse(t_parse *parse, t_list **cmdlist)
 	if (!parse->cmd)
 		_terminate(cmdlist, parse, "ERROR: Malloc failure", MALLOC_ERROR);
 	_init_cmd(parse);
-	if (!*cmdlist)
-		*cmdlist = ft_lstnew(parse->cmd);
-	else
-		ft_lstadd_back(cmdlist, parse->cmd);
+	new = ft_lstnew(parse->cmd);
+	if (!new)
+	{
+		delete_cmd(parse->cmd);
+		_terminate(NULL, parse, "ERROR: Malloc failure", MALLOC_ERROR);
+	}
+	ft_lstadd_back(cmdlist, new);
 }
 
 void	_free_parse(t_parse *parse)
@@ -79,9 +93,12 @@ void	_free_parse(t_parse *parse)
 	parse->tokens = NULL;
 }
 
-void	_terminate(t_list **cmdlist, t_parse *parse, char *message, int status)
+static void	_init_cmd(t_parse *parse)
 {
-	_free_parse(parse);
-	ft_lstclear(cmdlist, _delete_cmd);
-	ft_errexit(message, status);
+	parse->cmd->delimiter = NULL;
+	parse->cmd->infile = NULL;
+	parse->cmd->outfile = NULL;
+	parse->cmd->output_flag = 'w';
+	parse->cmd->cmd_table = NULL;
+	parse->cmd->status = 0;
 }

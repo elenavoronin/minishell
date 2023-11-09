@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/19 15:11:01 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/02 14:01:26 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/09 14:12:46 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,50 @@
 
 int	main(void)
 {
-	int		status;
+	char	*line;
+	t_list	*cmdlist;
+	t_list	*printlist;
+	t_cmd	*cmd;
+	size_t	i;
 
-	status = 1;
-	printf("Welcome to our Minishell.");
-	return (status);
+	line = NULL;
+	printf("\nMinishell Parsing Tester\n");
+	while (1)
+	{
+		line = readline("minishell: ");
+		if (line)
+		{
+			if (ft_strncmp(line, "exit", ft_strlen(line)))
+				return (0);
+			cmdlist = parse_input(line);
+			if (!cmdlist)
+			{
+				printf("parsing failed!");
+				return (0);
+			}
+			printlist = cmdlist;
+			while (printlist)
+			{
+				cmd = printlist->content;
+				if (cmd)
+				{
+					printf("\ndelimiter: %s\n", cmd->delimiter);
+					printf("\ninfile: %s\n", cmd->infile);
+					printf("\noutfile: %s\n", cmd->outfile);
+					printf("\nout_flag: %c\n", cmd->output_flag);
+					i = 0;
+					printf("\ncmdtable args:");
+					while (cmd->cmd_table && cmd->cmd_table[i])
+					{
+						printf("	%s", cmd->cmd_table[i]);
+						i++;
+					}
+				}
+				printlist = printlist->next;
+			}
+			ft_lstclear(&cmdlist, delete_cmd);
+		}
+		free(line);
+	}
+	return (0);
 }

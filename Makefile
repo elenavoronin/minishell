@@ -6,12 +6,12 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/07 18:06:57 by dliu          ########   odam.nl          #
+#    Updated: 2023/11/09 14:04:46 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ./include
+CFLAGS = -Wall -Wextra -Werror -I ./include -g -fsanitize=address
 
 UNAME_S := $(shell uname -s)
 
@@ -30,7 +30,7 @@ endif
 NAME = minishell
 
 VPATH = ./src ./src/libft ./src/parse
-SRCS_NAMES = main.c parse.c _extract.c \
+SRCS_NAMES = main.c parse.c _extract.c _tokens.c _errors.c \
 get_next_line.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_printf.c ft_printf_helpers.c ft_printf_handle_types.c \
