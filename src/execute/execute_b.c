@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/08 16:59:51 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:32:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,90 @@
 
 void    clean_pipes(t_pipes_struct *pipes)
 {
-    int i;
+	int i;
+	int j;
+	int k;
 
-    i = 0;
-    free(pipes->fd_arr);
-        
+	i = 0;
+	j = 0;
+	k = 0;
+	while (pipes->fd_arr)
+	{
+		free(pipes->fd_arr[i]);
+		i++;
+	}
+	free(pipes->path);
+	free(pipes->pid);
+	free(pipes);
 }
 
-int   create_pipes(t_dummy_cmd *cmds, t_pipes_struct *pipes,
-    t_shell_state *state)
+char	*get_path(char **cmd, t_mini_env *mini_envp, t_pipes_struct *pipes)
 {
-    pipes->fd_arr = malloc(sizeof(pipe_fd) * (cmds->nr_pipes + 2));
-    if (!pipes->fd_arr)
-        return(update_status_code(state, MALLOC_ERROR), -1);
-    pipes->fd_arr[0][0] = STDIN_FILENO;
-    pipes->fd_arr[0][1] = STDOUT_FILENO;
-    while (pipes->nr_pipes < cmds->nr_pipes)
-    {
-        if (pipe(pipes->fd_arr[pipes->nr_pipes + 1]) != 0)
-            return(clean_pipes(&pipes), -1);
-        pipes->nr_pipes++; 
-    }
-    return (0);
+	char	**new_paths;
+	char	*path;
+	int		i;
+	int     j;
+
+	i = 0;
+	j = 0;
+	// if (cmds == builtin ... look in directory, else ... getpath)
+	while (mini_envp->variable_name[i])
+	{
+		if (ft_strnstr(&mini_envp->variable_name[i], "PATH", ft_strlen("PATH")))
+		{
+			new_paths = ft_split(&mini_envp->variable_path[i], ':');
+			if(!new_paths)
+				return(NULL);
+		}
+		else
+			i++;
+	}
+	while (new_paths[j] != NULL)
+	{
+		path = ft_strjoin(new_paths[j], "/");
+		if(!path)
+			return(NULL);
+		pipes->path = ft_strjoin(path, cmd[0]);
+		if(!pipes->path)
+			return(NULL);
+		if (access(pipes->path, X_OK) == 0)
+			return (pipes->path);
+		free(path);
+		free(pipes->path);
+		j++;
+	}
+	// set error code to 127 - command not found and exit
+	return (NULL);
+}
+
+int	create_pipes(t_list *list, t_pipes_struct *pipes, t_shell_state *state)
+{
+	int			nr;
+	t_dummy_cmd	*cmds;
+
+	while (list)
+	{
+		cmds = list->content;
+		nr = ft_lstsize(list) - 1;
+		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));
+		if (!pipes->fd_arr)
+			return (update_status_code(state, MALLOC_ERROR), -1);
+		pipes->fd_arr[0][0] = STDIN_FILENO;
+		pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
+		if (nr <= 0) // if i don't have pipes, I need to call execve directly
+			return (0);
+		while (pipes->nr_pipes < nr)
+		{
+			if (pipe(pipes->fd_arr[pipes->nr_pipes + 1]) != 0)
+				return (clean_pipes(pipes), -1);
+			pipes->nr_pipes++;
+		}
+		if (!get_path(cmds->cmd_table, *state->mini_env, pipes))
+			return (update_status_code(state, PIPE_ERROR), -1);
+		pipes->pid = malloc(sizeof(int) * pipes->nr_pipes);
+		if (!pipes->pid)
+			return (clean_pipes(pipes), -1);
+		list = list->next;
+	}
+	return (0);
 }

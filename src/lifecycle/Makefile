@@ -6,7 +6,7 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/07 17:22:54 by evoronin      ########   odam.nl          #
+#    Updated: 2023/11/09 14:46:12 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ READLINEFLAGS ?= -I/usr/include
 NAME = lifecycle
 
 SRCS_NAMES = lifecycle_main.c lifecycle_a.c lifecycle_b.c\
+../execute/execute_a.c ../execute/execute_b.c ../execute/execute_c.c \
 ../libft/ft_atoi_validate.c \
 ../libft/ft_bzero.c \
 ../libft/ft_calloc.c \

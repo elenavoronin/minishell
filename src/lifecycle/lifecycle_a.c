@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/08 15:21:17 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:34:38 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,22 @@ void	init_mini_state(t_shell_state *mini_state, char **envp)
 		return ;
 	}
 	mini_env_arr(mini_state, envp, name, path);
-	print_env_arr(mini_state->mini_env);
 }
 
 void	start_minishell(int argc, char **argv, char **envp)
 {
 	// char			*line;
 	t_shell_state	*mini_state;
+	t_list			*cmds;
 
+	cmds = NULL;
 	mini_state = NULL;
 	(void)argv;
 	(void)argc;
 	init_mini_state(mini_state, envp);
+	create_dummy_cmd(cmds);
+	execute_shell(cmds, mini_state);
+	printf("I EXECUTED\n");
 	// while (1)
 	// {
 	// 	line = readline("🐢shell:");

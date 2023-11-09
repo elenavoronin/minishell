@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/08 16:48:00 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:30:23 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,41 @@
 # define EXECUTE_H
 
 # include "minishell.h"
+# include "libft.h"
+# include "lifecycle.h"
 # include <fcntl.h>
 # include <unistd.h>
-
+# include <stdio.h>
 
 typedef struct s_dummy_cmd
 {
-	char            *delimiter;
-	char            *input;
-	char            *output;
-	char            output_flag;
-	char	        **cmd_table;
-	t_code_status   status;
-    int             nr_pipes;
+	char			*delimiter;
+	char			*infile;
+	char			*outfile;
+	char			output_flag; //append or write (w or a)
+	char			**cmd_table;
+	t_code_status	status;
 }	t_dummy_cmd;
 
-typedef int pipe_fd[2];
+typedef int	t_pipe_fd[2];
 
 typedef struct s_pipes_struct
 {
-    int             nr_pipes;
-    pipe_fd         *fd_arr;
-}   t_pipes_struct;
+	int				nr_pipes;
+	char			*path;
+	int				*pid;
+	t_pipe_fd		*fd_arr;
+}	t_pipes_struct;
 
-void    execute_shell(t_dummy_cmd *cmds, t_shell_state *mini_state);
-int     create_pipes(t_dummy_cmd *cmds, t_pipes_struct *pipes,
-    t_shell_state *state);
+void	execute_shell(t_list *cmds, t_shell_state *mini_state);
+int		create_pipes(t_list *list, t_pipes_struct *pipes,
+			t_shell_state *state);
+void	create_children(t_list *list, t_shell_state *mini_state,
+			t_pipes_struct *pipes);
+void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
+			t_pipes_struct *pipes);
+t_list	*create_dummy_cmd(t_list *list);
+int		redirect_stuff(int i, t_pipes_struct *pipes);
+void	close_useless_pipes(int i, t_pipes_struct *pipes);
 
 #endif
