@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:30:23 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 16:02:49 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <string.h>
 
 typedef struct s_dummy_cmd
 {
@@ -47,7 +48,7 @@ void	create_children(t_list *list, t_shell_state *mini_state,
 			t_pipes_struct *pipes);
 void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 			t_pipes_struct *pipes);
-t_list	*create_dummy_cmd(t_list *list);
+void	*create_dummy_cmd(t_list *list);
 int		redirect_stuff(int i, t_pipes_struct *pipes);
 void	close_useless_pipes(int i, t_pipes_struct *pipes);
 

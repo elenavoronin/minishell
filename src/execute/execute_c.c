@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:34:05 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:47:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state, t_pipes_struct *pip
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] != 0)
 		return ;
+	dprintf(1, "I FORK\n");
 	close_useless_pipes(i, pipes); 	// close pipe ends i don't need 
 	if (redirect_stuff(i, pipes) != 0)
 	{

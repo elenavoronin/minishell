@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:34:38 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:59:32 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ void	start_minishell(int argc, char **argv, char **envp)
 	init_mini_state(mini_state, envp);
 	create_dummy_cmd(cmds);
 	execute_shell(cmds, mini_state);
-	printf("I EXECUTED\n");
 	// while (1)
 	// {
 	// 	line = readline("🐢shell:");

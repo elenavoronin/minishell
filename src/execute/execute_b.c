@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:32:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:58:43 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ int	create_pipes(t_list *list, t_pipes_struct *pipes, t_shell_state *state)
 	while (list)
 	{
 		cmds = list->content;
+		printf("path: %s\n", pipes->path);
+		printf("args: %s\n", cmds->cmd_table[0]);
+		printf("args: %s\n", cmds->cmd_table[1]);
 		nr = ft_lstsize(list) - 1;
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));
 		if (!pipes->fd_arr)
