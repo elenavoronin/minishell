@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/09 14:03:26 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/09 19:47:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	delete_cmd(void *content);
 //For parsing internal use, WARNING: VOLATILE
 enum e_state
 {
+	EMPTY,
 	WORD,
 	REDIR_IN,
 	REDIR_HERE,

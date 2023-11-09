@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/09 18:43:29 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/09 19:40:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void	_extract_cmdstr(char *input, t_parse *parse)
 	start = parse->pos;
 	while (input[parse->pos] && input[parse->pos] != '|')
 		parse->pos++;
-	str = ft_substr(input, start, parse->pos - 1);
+	if (input[parse->pos] == '|')
+		str = ft_substr(input, start, parse->pos - 1);
+	else
+		str = ft_substr(input, start, parse->pos);
 	if (!str)
 	{
 		_malloc_error(parse);

@@ -29,9 +29,9 @@ t_list	*parse_input(char *input)
 	if (!input)
 		_terminate(NULL, NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
 	cmdlist = NULL;
-	_init_parse(&parse, &cmdlist);
 	while (*input)
 	{
+		_init_parse(&parse, &cmdlist);
 		_extract_cmdstr(input, &parse);
 		if (!parse.cmdstr)
 			_terminate(&cmdlist, &parse, NULL, parse.status);
@@ -39,10 +39,9 @@ t_list	*parse_input(char *input)
 		if (parse.status)
 			_terminate(&cmdlist, &parse, NULL, parse.status);
 		input += parse.pos;
-		_free_parse(&parse);
-		_init_parse(&parse, &cmdlist);
 		if (*input == '|')
-			parse.pos++;
+			input++;
+		_free_parse(&parse);
 	}
 	return (cmdlist);
 }
