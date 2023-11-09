@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/19 15:11:01 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/09 14:12:46 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/09 18:16:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,11 @@ int	main(void)
 		line = readline("minishell: ");
 		if (line)
 		{
-			if (ft_strncmp(line, "exit", ft_strlen(line)))
+			if (ft_strncmp(line, "exit", ft_strlen(line)) == 0)
+			{
+				free(line);
 				return (0);
+			}
 			cmdlist = parse_input(line);
 			if (!cmdlist)
 			{
@@ -52,6 +55,7 @@ int	main(void)
 						printf("	%s", cmd->cmd_table[i]);
 						i++;
 					}
+					printf("\n");
 				}
 				printlist = printlist->next;
 			}
