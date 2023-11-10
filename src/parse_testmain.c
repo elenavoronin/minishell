@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/19 15:11:01 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/10 11:24:59 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/10 11:36:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(void)
 {
-	char	*line = "hello args < infile > outfile << here >> flag";
+	char	*line = "hello 'args' 'args again' < infile > outfile << here >> flag";
 	t_list	*cmdlist;
 	t_list	*printlist;
 	t_cmd	*cmd;
