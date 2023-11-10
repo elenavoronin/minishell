@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/03 14:25:02 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/09 19:47:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,21 @@
  */
 typedef struct s_cmd
 {
-	char	*delimiter;
-	char	*input;
-	char	*output;
-	char	output_flag;
-	char	**cmd_table;
-	int		status;
+	char				*delimiter;
+	char				*infile;
+	char				*outfile;
+	char				output_flag;
+	char				**cmd_table;
+	int					status;
 }	t_cmd;
 
 t_list	*parse_input(char *input);
-void	parse_free(t_list **cmdlist);
+void	delete_cmd(void *content);
 
 //For parsing internal use, WARNING: VOLATILE
 enum e_state
 {
+	EMPTY,
 	WORD,
 	REDIR_IN,
 	REDIR_HERE,
@@ -46,8 +47,21 @@ enum e_state
 	REDIR_APPEND
 };
 
-size_t	_extract_cmd(char *input, t_cmd **cmd);
-void	_terminate_parsing(t_list **cmdlist, char *message);
-void	_delete_cmd(void *content);
+typedef struct s_parse
+{
+	int		status;
+	char	*cmdstr;
+	char	**tokens;
+	t_cmd	*cmd;
+	size_t	pos;
+	size_t	count;
+	size_t	rem;
+}	t_parse;
+
+void	_extract_cmdstr(char *input, t_parse *parse);
+void	_tokens_to_cmd(t_parse *parse);
+void	_terminate(t_list **cmdlist, t_parse *parse, char *message, int status);
+void	_malloc_error(t_parse *parse);
+void	_free_parse(t_parse *parse);
 
 #endif

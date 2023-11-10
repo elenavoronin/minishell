@@ -6,12 +6,12 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/07 15:51:39 by evoronin      ########   odam.nl          #
+#    Updated: 2023/11/10 12:48:18 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I include
+CFLAGS = -Wall -Wextra -Werror -I ./include -g -fsanitize=address
 
 # UNAME_S := $(shell uname -s)
 
@@ -30,12 +30,12 @@ READLINEFLAGS ?= -I/usr/include
 NAME = minishell
 
 VPATH = ./src ./src/libft ./src/parse
-SRCS_NAMES = main.c parse.c _extract.c \
+SRCS_NAMES = parse_testmain.c parse.c _extract.c _tokens.c _errors.c \
 get_next_line.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_printf.c ft_printf_helpers.c ft_printf_handle_types.c \
 ft_printf_handle_flags.c ft_printf_handle_flags_nums.c \
-ft_put_fd.c ft_is.c ft_converts.c \
+ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \
 ft_strhelpers.c ft_strfinds.c ft_strmakers.c ft_strmanips.c ft_split.c ft_itoa.c \
 ft_lltoa_base.c ft_ltoa_unsigned_base.c ft_atoi_validate.c ft_nums.c \

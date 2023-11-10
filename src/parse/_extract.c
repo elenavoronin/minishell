@@ -6,48 +6,62 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/03 14:40:06 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/09 19:40:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int	_get_token(char *c);
+static void	_validate_str(char *str, t_parse *parse);
 
-size_t	_extract_cmd(char *input, t_cmd **cmd)
+void	_extract_cmdstr(char *input, t_parse *parse)
 {
- 	size_t	pos;
-// 	int		token;
+	char	*str;
+	size_t	start;
 
- 	pos = 0;
- 	if (!input || !cmd || !*cmd)
- 		return (pos);
-// 	if (token == REDIR_IN)
-// 		pos = _extract(input, (*cmd)->input);
-// 	else if (token == REDIR_HERE)
-// 		pos = _extract(input, (*cmd)->delimiter);
-// 	else if (token == REDIR_OUT || token == REDIR_APPEND)
-// 	{
-// 		pos = _extract(input, (*cmd)->output);
-// 		if (token == REDIR_APPEND)
-// 			(*cmd)->output_flag = 'a';
-//	}
-	return (pos);
+	while (ft_isspace(input[parse->pos]))
+		parse->pos++;
+	start = parse->pos;
+	while (input[parse->pos] && input[parse->pos] != '|')
+		parse->pos++;
+	if (input[parse->pos] == '|')
+		str = ft_substr(input, start, parse->pos - 1);
+	else
+		str = ft_substr(input, start, parse->pos);
+	if (!str)
+	{
+		_malloc_error(parse);
+		parse->cmdstr = NULL;
+		return ;
+	}
+	_validate_str(str, parse);
 }
 
-// int	_get_token(char *c)
-// {
-// 	if (*c == '<')
-// 	{
-// 		if (c + 1 == '<')
-// 			return (REDIR_HERE);
-// 		return (REDIR_IN);
-// 	}
-// 	if (c == '>')
-// 	{
-// 		if (c + 1 == '>')
-// 			return (REDIR_APPEND);
-// 		return (REDIR_OUT);
-// 	}
-// 	return (WORD);
-// }
+static void	_validate_str(char *str, t_parse *parse)
+{
+	int	i;
+	int	valid;
+
+	i = 0;
+	valid = 0;
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]))
+			valid = 1;
+		else if (!ft_isascii(str[i]))
+		{
+			valid = 0;
+			break ;
+		}
+		i++;
+	}
+	if (!valid)
+	{
+		free(str);
+		ft_perror("ERROR", NULL, "Invalid input found.");
+		parse->status = SYNTAX_ERROR;
+		parse->cmdstr = NULL;
+		return ;
+	}
+	parse->cmdstr = str;
+}
