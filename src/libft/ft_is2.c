@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   ft_is2.c                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/09/19 15:11:01 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/02 14:01:26 by dliu          ########   odam.nl         */
+/*   Created: 2022/10/05 14:17:45 by dliu          #+#    #+#                 */
+/*   Updated: 2023/11/07 18:06:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int	main(void)
+int	ft_isspace(int c)
 {
-	int		status;
-
-	status = 1;
-	printf("Welcome to our Minishell.");
-	return (status);
+	if (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\r')
+		return (1);
+	return (0);
 }

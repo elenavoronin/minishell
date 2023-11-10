@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/01/12 16:57:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/02 18:28:23 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/07 15:54:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ void	ft_error(char *errmsg)
 	if (errmsg)
 		ft_putendl_fd(errmsg, STDERR_FILENO);
 	exit(EXIT_FAILURE);
+}
+
+//Prints errmsg to STDERR_FILENO and exits with errcode.
+void	ft_errexit(char *errmsg, int errcode)
+{
+	if (errmsg)
+		ft_putendl_fd(errmsg, STDERR_FILENO);
+	exit(errcode);
 }
 
 /**
