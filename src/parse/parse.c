@@ -90,7 +90,6 @@ void	_free_parse(t_parse *parse)
 {
 	free(parse->cmdstr);
 	parse->cmdstr = NULL;
-	// ft_free_strarr(parse->tokens);
 	parse->tokens = NULL;
 }
 
