@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/13 16:20:58 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/13 16:46:54 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,27 @@ void    clean_pipes(t_pipes_struct *pipes)
 	free(pipes);
 }
 
-char	*get_path(char **cmd, t_mini_env *mini_envp, t_pipes_struct *pipes)
+char	*get_path(char **cmd, t_mini_env **mini_envp, t_pipes_struct *pipes)
 {
 	char	**new_paths;
 	char	*path;
 	int		i;
 	int		j;
+	char	*name;
+	char	*old_path;
 
+	// name = NULL;
+	// path = NULL;
 	i = 0;
 	j = 0;
 	// if (cmds == builtin ... look in directory, else ... getpath)
-	while (mini_envp)
+	while (mini_envp[i] != NULL)
 	{
-		if (ft_strnstr(&mini_envp->variable_name[i], "PATH", ft_strlen("PATH")))
+		name = mini_envp[i]->variable_name;
+		old_path = mini_envp[i]->variable_path;
+		if (ft_strnstr(name, "PATH", ft_strlen("PATH")))
 		{
-			new_paths = ft_split(&mini_envp->variable_path[i], ':');
+			new_paths = ft_split(old_path, ':');
 			if (!new_paths)
 				return (NULL);
 		}
@@ -93,7 +99,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
 		if (nr <= 0) // if i don't have pipes, I need to call execve directly
 		{
-			if (!get_path(cmds->cmd_table, *state->mini_env, pipes))
+			if (!get_path(cmds->cmd_table, state->mini_env, pipes))
 				return (update_status_code(state, INTERNAL_ERROR), -1);
 		}
 		while (pipes->nr_pipes < nr)
@@ -102,7 +108,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 				return (clean_pipes(pipes), -1);
 			pipes->nr_pipes++;
 		}
-		if (!get_path(cmds->cmd_table, *state->mini_env, pipes))
+		if (!get_path(cmds->cmd_table, state->mini_env, pipes))
 			return (update_status_code(state, PIPE_ERROR), -1);
 		pipes->pid = malloc(sizeof(int) * pipes->nr_pipes);
 		if (!pipes->pid)
