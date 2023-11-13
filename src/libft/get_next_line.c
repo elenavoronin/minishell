@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 10:26:15 by dliu          #+#    #+#                 */
-/*   Updated: 2023/01/25 13:57:59 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 17:20:25 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	*cpycat(char *cpy, size_t cpystart, char *cat, size_t tlen)
 
 	newstr = NULL;
 	if (tlen > 0 && (cpy || cat))
-		newstr = malloc(tlen + 1);
+		newstr = ft_malloc_wrapper(tlen + 1);
 	if (newstr)
 	{
 		i = 0;

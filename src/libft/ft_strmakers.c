@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/11 19:03:29 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/01 15:45:43 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 17:20:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ char	*ft_strrep(const char c, const size_t len)
 	size_t	i;
 
 	i = 0;
-	str = malloc(len + 1);
+	str = ft_calloc(len + 1, sizeof(*str));
 	if (str)
 	{
 		while (i < len)

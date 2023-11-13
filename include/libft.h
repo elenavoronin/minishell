@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 11:29:23 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/07 18:06:35 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 16:31:56 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int			ft_toupper(int c);
 int			ft_tolower(int c);
 
 void		*ft_calloc(size_t count, size_t size);
+void		*ft_malloc_wrapper(size_t size);
 void		ft_bzero(void *s, size_t n);
 
 void		*ft_memchr(const void *s, int c, size_t n);
