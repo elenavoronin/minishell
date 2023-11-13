@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/09 19:47:48 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 14:51:10 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ typedef struct s_parse
 	char	**tokens;
 	t_cmd	*cmd;
 	size_t	pos;
-	size_t	count;
-	size_t	rem;
+	size_t	argc;
 }	t_parse;
 
 void	_extract_cmdstr(char *input, t_parse *parse);

@@ -72,8 +72,7 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 	parse->cmdstr = NULL;
 	parse->tokens = NULL;
 	parse->pos = 0;
-	parse->count = 0;
-	parse->rem = 0;
+	parse->argc = 0;
 	parse->cmd = malloc(sizeof(*(parse->cmd)));
 	if (!parse->cmd)
 		_terminate(cmdlist, parse, "ERROR: Malloc failure", MALLOC_ERROR);
@@ -91,7 +90,7 @@ void	_free_parse(t_parse *parse)
 {
 	free(parse->cmdstr);
 	parse->cmdstr = NULL;
-	ft_free_strarr(parse->tokens);
+	// ft_free_strarr(parse->tokens);
 	parse->tokens = NULL;
 }
 
