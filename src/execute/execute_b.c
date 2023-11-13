@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/13 16:46:54 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/13 17:01:56 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,19 @@ char	*get_path(char **cmd, t_mini_env **mini_envp, t_pipes_struct *pipes)
 	char	*path;
 	int		i;
 	int		j;
-	char	*name;
-	char	*old_path;
 
-	// name = NULL;
-	// path = NULL;
 	i = 0;
 	j = 0;
+	new_paths = NULL;
 	// if (cmds == builtin ... look in directory, else ... getpath)
 	while (mini_envp[i] != NULL)
 	{
-		name = mini_envp[i]->variable_name;
-		old_path = mini_envp[i]->variable_path;
-		if (ft_strnstr(name, "PATH", ft_strlen("PATH")))
+		if (ft_strnstr(mini_envp[i]->variable_name, "PATH", ft_strlen("PATH")))
 		{
-			new_paths = ft_split(old_path, ':');
+			new_paths = ft_split(mini_envp[i]->variable_path, ':');
 			if (!new_paths)
 				return (NULL);
+			break ;
 		}
 		else
 			i++;
@@ -101,6 +97,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		{
 			if (!get_path(cmds->cmd_table, state->mini_env, pipes))
 				return (update_status_code(state, INTERNAL_ERROR), -1);
+			return (0);
 		}
 		while (pipes->nr_pipes < nr)
 		{
