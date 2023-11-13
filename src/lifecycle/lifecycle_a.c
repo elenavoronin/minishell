@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/13 16:14:37 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/13 16:38:36 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ int	mini_env_arr(t_shell_state *mini_state, char **envp)
 		if (!mini_state->mini_env[i]->variable_name)
 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
 		j++;
-		mini_state->mini_env[i]->variable_path = ft_substr(envp[i], j,
-				ft_strlen(envp[i]) - j);
+		mini_state->mini_env[i]->variable_path = ft_strdup(envp[i] + j);
 		if (!mini_state->mini_env[i]->variable_path)
 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
 		i++;
@@ -105,7 +104,7 @@ void	start_minishell(int argc, char **argv, char **envp)
 		printf("ERROR\n");
 		exit(EXIT_FAILURE);
 	}
-	print_env_arr(mini_state->mini_env);
+	// print_env_arr(mini_state->mini_env);
 	if (create_dummy_cmd(&cmds) == 0)
 		execute_shell(&cmds, mini_state);
 	// while (1)
