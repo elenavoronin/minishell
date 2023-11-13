@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/10 09:37:53 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/13 16:20:11 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,16 @@ typedef struct s_pipes_struct
 	t_pipe_fd		*fd_arr;
 }	t_pipes_struct;
 
-void	execute_shell(t_list *cmds, t_shell_state *mini_state);
-int		create_pipes(t_list *list, t_pipes_struct *pipes,
+void	execute_shell(t_list **cmds, t_shell_state *mini_state);
+int		create_pipes(t_list **list, t_pipes_struct *pipes,
 			t_shell_state *state);
-void	create_children(t_list *list, t_shell_state *mini_state,
+void	create_children(t_list **list, t_shell_state *mini_state,
 			t_pipes_struct *pipes);
 void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 			t_pipes_struct *pipes);
-int		create_dummy_cmd(t_list *list);
+int		create_dummy_cmd(t_list **list);
 int		redirect_stuff(int i, t_pipes_struct *pipes);
 void	close_useless_pipes(int i, t_pipes_struct *pipes);
+char	*get_path(char **cmd, t_mini_env *mini_envp, t_pipes_struct *pipes);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/10 14:06:42 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/13 16:14:37 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,55 +38,56 @@ void	update_status_code(t_shell_state *mini_state, t_code_status status)
 	mini_state->status_code = status;
 }
 
-void	mini_env_arr(t_shell_state *mini_state, char **envp, char *name, char *path)
+int	mini_env_arr(t_shell_state *mini_state, char **envp)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	i = 0;
-	while (envp[i])
+	while (envp[i] != NULL)
 	{
 		j = 0;
-		while (envp[i][j] && envp[i][j] != '=')
-			j++;
-		name = ft_substr(envp[i], 0, j);
-		if (!name)
-			return(update_status_code(mini_state, MALLOC_ERROR));
-		j++;
-		path = ft_strdup(envp[i] + j);
-		if (!path)
-			return(update_status_code(mini_state, MALLOC_ERROR));
 		mini_state->mini_env[i] = malloc(sizeof(t_mini_env));
 		if (!mini_state->mini_env[i])
-			return(update_status_code(mini_state, MALLOC_ERROR));
-		mini_state->mini_env[i]->variable_name = name;
-		mini_state->mini_env[i]->variable_path = path;
+			return (update_status_code(mini_state, MALLOC_ERROR), -1);
+		while (envp[i][j] && envp[i][j] != '=')
+			j++;
+		mini_state->mini_env[i]->variable_name = ft_substr(envp[i], 0, j);
+		if (!mini_state->mini_env[i]->variable_name)
+			return (update_status_code(mini_state, MALLOC_ERROR), -1);
+		j++;
+		mini_state->mini_env[i]->variable_path = ft_substr(envp[i], j,
+				ft_strlen(envp[i]) - j);
+		if (!mini_state->mini_env[i]->variable_path)
+			return (update_status_code(mini_state, MALLOC_ERROR), -1);
 		i++;
 	}
-	mini_state->status_code = SUCCESS;
+	mini_state->mini_env[i] = NULL;
+	return (update_status_code(mini_state, SUCCESS), 0);
 }
 
-void	init_mini_state(t_shell_state *mini_state, char **envp)
+int	init_mini_state(t_shell_state **mini_state, char **envp)
 {
 	int			i;
-	char		*name;
-	char		*path;
 
 	i = 0;
-	name = NULL;
-	path = NULL;
-	mini_state = ft_calloc(1, sizeof(t_shell_state));
-	if (!mini_state)
-		return ;
-	mini_state->status_code = 0;
-	mini_state->mini_env = malloc(sizeof(t_mini_env **)
-		* count_envp_elements(envp));
-	if (!mini_state->mini_env)
+	(*mini_state) = malloc(sizeof(t_shell_state *));
+	if (!(*mini_state))
+		return (-1);
+	(*mini_state)->status_code = 0;
+	(*mini_state)->mini_env = malloc(sizeof(t_mini_env *)
+			* (count_envp_elements(envp) + 1));
+	if (!(*mini_state)->mini_env)
 	{
-		mini_state->status_code = MALLOC_ERROR;
-		return ;
+		free(mini_state);
+		return (-1);
 	}
-	mini_env_arr(mini_state, envp, name, path);
+	if (mini_env_arr(*mini_state, envp) != 0)
+	{
+		clear_mini_env(*mini_state);
+		return (-1);
+	}
+	return (0);
 }
 
 void	start_minishell(int argc, char **argv, char **envp)
@@ -99,7 +100,12 @@ void	start_minishell(int argc, char **argv, char **envp)
 	mini_state = NULL;
 	(void)argv;
 	(void)argc;
-	init_mini_state(mini_state, envp);
+	if (init_mini_state(&mini_state, envp) != 0)
+	{
+		printf("ERROR\n");
+		exit(EXIT_FAILURE);
+	}
+	print_env_arr(mini_state->mini_env);
 	if (create_dummy_cmd(&cmds) == 0)
 		execute_shell(&cmds, mini_state);
 	// while (1)

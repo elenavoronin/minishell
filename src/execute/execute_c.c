@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:47:08 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/13 13:07:49 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
 	int	input;
 	int	output;
-	
+
 	input = STDIN_FILENO;
 	output = STDOUT_FILENO;
 	if (i == 0 && pipes->nr_pipes == 0)
@@ -35,7 +35,8 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 	return (0);
 }
 
-void	fork_cmds(char **cmd, int i, t_shell_state *mini_state, t_pipes_struct *pipes)
+void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
+			t_pipes_struct *pipes)
 {
 	int		j;
 
@@ -56,7 +57,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state, t_pipes_struct *pip
 	exit(127);
 }
 
-void	create_children(t_list *list, t_shell_state *mini_state,
+void	create_children(t_list **list, t_shell_state *mini_state,
 	t_pipes_struct *pipes)
 {
 	int			i;
@@ -65,9 +66,9 @@ void	create_children(t_list *list, t_shell_state *mini_state,
 	i = 1;
 	while (list)
 	{
-		cmds = list->content;
+		cmds = (*list)->content;
 		fork_cmds(cmds->cmd_table, i, mini_state, pipes);
 		i++;
-		list = list->next;
+		*list = (*list)->next;
 	}
 }

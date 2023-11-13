@@ -6,12 +6,13 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/09 14:46:12 by evoronin      ########   odam.nl          #
+#    Updated: 2023/11/13 16:14:23 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ../../include  -g
+# CFLAGS += -fsanitize=address
 
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include

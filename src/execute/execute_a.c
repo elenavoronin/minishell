@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/10 09:53:32 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/13 13:24:22 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int  create_dummy_cmd(t_list *list) //don't forget to delete from here and .h
+int  create_dummy_cmd(t_list **list) //don't forget to delete from here and .h
 {
 	t_dummy_cmd *dummy_cmd;
 
@@ -28,19 +28,32 @@ int  create_dummy_cmd(t_list *list) //don't forget to delete from here and .h
 	dummy_cmd->status = 0;
 	char **cmd_table = malloc(sizeof(char *) * 2);
 	if (!cmd_table)
+	{
+		free(dummy_cmd);
 		return (-1);
+	}
 	cmd_table[i] = strdup("echo");
+	if (!cmd_table[i])
+	{
+		free(dummy_cmd);
+		free(cmd_table);
+		return (-1);
+	}
 	cmd_table[i + 1] = strdup("hello");
+	if (!cmd_table[i + 1])
+	{
+		free(cmd_table[i]);
+		free(dummy_cmd);
+		free(cmd_table);
+		return (-1);
+	}
 	dummy_cmd->cmd_table = cmd_table;
-	list = malloc(sizeof(t_list));
-	if (!list)
-		list = ft_lstnew(dummy_cmd);
-	printf("list %s\n", (char *)list->content->cmd_table[0]);
-	list->next = NULL;
+	*list = ft_lstnew(dummy_cmd);
+	// printf("list %s\n", (char *)((t_dummy_cmd *)(*list)->content)->cmd_table[0]);
 	return (0);
 }
 
-void	execute_shell(t_list *cmds, t_shell_state *mini_state)
+void	execute_shell(t_list **cmds, t_shell_state *mini_state)
 {
 	t_pipes_struct	pipes;
 
