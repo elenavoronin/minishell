@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute_c.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/13 13:07:49 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/14 08:53:17 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 {
 	int		j;
 
+	pipes->pid = malloc(sizeof(int *));
+	if (!pipes->pid)
+		return (update_status_code(mini_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] != 0)
 		return ;
