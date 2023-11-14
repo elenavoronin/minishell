@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 16:53:01 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 18:50:23 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,9 @@ typedef struct s_parse
 	t_code_status	status;
 }	t_parse;
 
-typedef enum e_quote
-{
-	NO_Q,
-	SINGLE_Q,
-	DOUBLE_Q
-}	t_quote;
-
 typedef struct s_split
 {
 	size_t			count;
-	t_quote			quoted;
 	char			*pos;
 	char			**result;
 	t_code_status	*status;
@@ -74,7 +66,7 @@ typedef struct s_split
 
 void	_extract_cmdstr(char *input, t_parse *parse);
 void	_tokens_to_cmd(t_parse *parse);
-char	**_split_and_expand(char *line, t_code_status *status);
+char	**_split(char *line, t_code_status *status);
 void	_terminate(t_list **cmdlist, char *message, int status);
 
 void	parse_test(t_list **cmdlist);
