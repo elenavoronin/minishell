@@ -6,7 +6,7 @@
 #    By: dliu <dliu@student.codam.nl>                 +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/14 19:22:31 by dliu          ########   odam.nl          #
+#    Updated: 2023/11/14 19:31:05 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,12 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./include -g 
 CFLAGS += -fsanitize=address -D DEBUG=0
+CFLAGS += -fsanitize=address -D DEBUG=0
 
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
 
-VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute ./src/builtins ./src/enviro ./src/signals
+VPATH = ./src ./src/libft ./src/parse ./src/execute ./src/builtins ./src/enviro ./src/signals
 SRCS_NAMES = main.c minishell.c enviro.c signals.c \
 parse.c _expand.c _split.c _tokenise.c __test.c \
 builtins.c env.c echo.c cd.c pwd.c export.c unset.c exit.c \

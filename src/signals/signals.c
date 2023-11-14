@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   signals.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/02 12:34:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/16 12:54:00 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 19:28:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
