@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_is2.c                                           :+:    :+:            */
+/*   lifecycle_main.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/05 14:17:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/10 12:48:29 by evoronin      ########   odam.nl         */
+/*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
+/*   Updated: 2023/11/07 15:56:31 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isspace(int c)
+#include "minishell.h"
+
+int main(int argc, char **argv, char **envp)
 {
-	if (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\r')
-		return (1);
-	return (0);
+	start_minishell(argc, argv, envp);
+	return (0);	
 }

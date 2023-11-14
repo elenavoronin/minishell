@@ -6,26 +6,26 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/10 11:36:34 by dliu          ########   odam.nl          #
+#    Updated: 2023/11/10 12:48:18 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./include -g -fsanitize=address
 
-UNAME_S := $(shell uname -s)
+# UNAME_S := $(shell uname -s)
 
-ifeq ($(UNAME_S), Darwin)
-	READLINELINKFLAGS := -lreadline -L $(shell brew --prefix readline)/lib
-else
-	READLINELINKFLAGS := -lreadline
-endif
+# ifeq ($(UNAME_S), Darwin)
+# 	READLINELINKFLAGS := -lreadline -L $(shell brew --prefix readline)/lib
+# else
+READLINELINKFLAGS := -lreadline
+# endif
 
-ifeq ($(UNAME_S), Darwin)
-	READLINEFLAGS ?= -I $(shell brew --prefix readline)/include
-else
-	READLINEFLAGS ?= -I/usr/include
-endif
+# ifeq ($(UNAME_S), Darwin)
+# 	READLINEFLAGS ?= -I $(shell brew --prefix readline)/include
+# else
+READLINEFLAGS ?= -I/usr/include
+# endif
 
 NAME = minishell
 
@@ -39,7 +39,8 @@ ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \
 ft_strhelpers.c ft_strfinds.c ft_strmakers.c ft_strmanips.c ft_split.c ft_itoa.c \
 ft_lltoa_base.c ft_ltoa_unsigned_base.c ft_atoi_validate.c ft_nums.c \
-ft_split2.c ft_joinstrs.c ft_nopes.c ft_free.c
+ft_split2.c ft_joinstrs.c ft_nopes.c ft_free.c \
+lifecycle/lifecycle_a.c
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 OUT_DIR = ./objs
