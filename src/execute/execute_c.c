@@ -6,37 +6,43 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 12:35:44 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 12:47:03 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	close_useless_pipes(int cmd_index, t_pipes_struct *pipes)
+// Close unnecessary pipe ends in the child process
+void	close_useless_pipes(int i, t_pipes_struct *pipes)
 {
-	int	index_in;
-	int	index_out;
-	int	i;
+	int	j;
 
-	index_in = cmd_index - 0;
-	index_out = cmd_index;
-	i = 1;
-	while (i <= pipes->nr_pipes)
+	j = 0;
+	while (j < pipes->nr_pipes)
 	{
-		if (i != index_in)
-			close(pipes->fd_arr[i][0]);
-		if (i != index_out)
-			close(pipes->fd_arr[i][1]);
-		i += 1;
+		if (j != i)
+		{
+			close(pipes->fd_arr[j][0]);
+			close(pipes->fd_arr[j][1]);
+		}
+		j++;
 	}
 }
 
-int	redirect_stuff(int cmd_index, t_pipes_struct *pipes)
+int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
-	if (dup2(pipes->fd_arr[cmd_index - 1][0], STDIN_FILENO) == -1)
-		return (-1);
-	if (dup2(pipes->fd_arr[cmd_index][1], STDOUT_FILENO) == -1)
-		return (-1);
+	if (i > 0)
+	{
+		dup2(pipes->fd_arr[i - 1][0], STDIN_FILENO);
+		close(pipes->fd_arr[i - 1][0]);
+		close(pipes->fd_arr[i - 1][1]);
+	}
+	if (i < pipes->nr_pipes - 1)
+	{
+		dup2(pipes->fd_arr[i][1], STDOUT_FILENO);
+		close(pipes->fd_arr[i][0]);
+		close(pipes->fd_arr[i][1]);
+	}
 	return (0);
 }
 
@@ -48,7 +54,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 		return (update_status_code(mini_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] != 0)
-		return ;
+		return (update_status_code(mini_state, FORK_ERROR));
 	close_useless_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{

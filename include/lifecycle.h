@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 12:26:52 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 12:45:13 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef enum e_code_status
 	PIPE_ERROR,
 	INTERNAL_ERROR,
 	REDIRECT_ERROR,
+	FORK_ERROR,
 }	t_code_status;
 
 // typedef struct s_mini_env
@@ -52,6 +53,5 @@ int				count_envp_elements(char **envp);
 void			update_status_code(t_shell_state *mini_state,
 					t_code_status status);
 int				count_envp_elements(char **envp);
-
 
 #endif
