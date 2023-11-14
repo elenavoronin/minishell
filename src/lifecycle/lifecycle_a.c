@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/13 16:38:36 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/14 11:47:00 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	init_mini_state(t_shell_state **mini_state, char **envp)
 	int			i;
 
 	i = 0;
-	(*mini_state) = malloc(sizeof(t_shell_state *));
+	(*mini_state) = malloc(sizeof(t_shell_state));
 	if (!(*mini_state))
 		return (-1);
 	(*mini_state)->status_code = 0;
