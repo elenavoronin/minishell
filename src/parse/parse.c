@@ -27,21 +27,20 @@ t_list	*parse_input(char *input)
 	t_parse	parse;
 
 	if (!input)
-		_terminate(NULL, NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
+		_terminate(NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
 	cmdlist = NULL;
 	while (*input)
 	{
 		_init_parse(&parse, &cmdlist);
 		_extract_cmdstr(input, &parse);
-		if (parse.status)
-			_terminate(&cmdlist, &parse, NULL, parse.status);
+		if (parse.status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.status);
 		_tokens_to_cmd(&parse);
-		if (parse.status)
-			_terminate(&cmdlist, &parse, NULL, parse.status);
+		if (parse.status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.status);
 		input += parse.pos;
 		if (*input == '|')
 			input++;
-		_free_parse(&parse);
 	}
 	return (cmdlist);
 }
@@ -68,28 +67,22 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 {
 	t_list	*new;
 
-	parse->status = 0;
+	parse->status = SUCCESS;
 	parse->cmdstr = NULL;
 	parse->tokens = NULL;
 	parse->pos = 0;
 	parse->argc = 0;
 	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
 	if (!parse->cmd)
-		_terminate(cmdlist, parse, NULL, MALLOC_ERROR);
+		_terminate(cmdlist, NULL, MALLOC_ERROR);
 	_init_cmd(parse);
 	new = ft_lstnew(parse->cmd);
 	if (!new)
 	{
 		delete_cmd(parse->cmd);
-		_terminate(NULL, parse, NULL, MALLOC_ERROR);
+		_terminate(NULL, NULL, MALLOC_ERROR);
 	}
 	ft_lstadd_back(cmdlist, new);
-}
-
-void	_free_parse(t_parse *parse)
-{
-	free(parse->cmdstr);
-	parse->cmdstr = NULL;
 }
 
 static void	_init_cmd(t_parse *parse)

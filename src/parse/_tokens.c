@@ -6,33 +6,30 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 16:55:02 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 17:03:46 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	_populate_cmd(t_parse *parse);
-static void	_populate_cmdtable(char *token, t_parse *parse);
-static int	_token_type(char *c);
-static char	**_get_dest(char *token, t_parse *parse);
+static void			_populate_cmd(t_parse *parse);
+static void			_populate_cmdtable(char *token, t_parse *parse);
+static t_token_type	_token_type(char *c);
+static char			**_get_dest(char *token, t_parse *parse);
 
 void	_tokens_to_cmd(t_parse *parse)
 {
 	char	**tokens;
 
-	tokens = ft_split2(parse->cmdstr);
-	if (!tokens)
-	{
-		parse->status = MALLOC_ERROR;
+	tokens = _split_and_expand(parse->cmdstr, &(parse->status));
+	if (parse->status != SUCCESS)
 		return ;
-	}
 	parse->tokens = tokens;
 	_populate_cmd(parse);
 	ft_free_strarr(tokens);
 }
 
-static int	_populate_cmd(t_parse *parse)
+static void	_populate_cmd(t_parse *parse)
 {
 	char	**dest;
 
@@ -45,7 +42,7 @@ static int	_populate_cmd(t_parse *parse)
 			if (!*(parse->tokens))
 			{
 				parse->status = SYNTAX_ERROR;
-				return (0);
+				return ;
 			}
 			if (*dest)
 				free(*dest);
@@ -57,7 +54,6 @@ static int	_populate_cmd(t_parse *parse)
 			_populate_cmdtable(*parse->tokens, parse);
 		parse->tokens++;
 	}
-	return (1);
 }
 
 static void	_populate_cmdtable(char *token, t_parse *parse)
@@ -87,8 +83,8 @@ static void	_populate_cmdtable(char *token, t_parse *parse)
 
 static char	**_get_dest(char *token, t_parse *parse)
 {
-	int		token_type;
-	char	**dest;
+	t_token_type	token_type;
+	char			**dest;
 
 	dest = NULL;
 	token_type = _token_type(token);
@@ -111,7 +107,7 @@ static char	**_get_dest(char *token, t_parse *parse)
 	return (dest);
 }
 
-static int	_token_type(char *c)
+static t_token_type	_token_type(char *c)
 {
 	if (!c)
 		return (EMPTY);

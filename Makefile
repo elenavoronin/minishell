@@ -6,7 +6,7 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/14 14:47:59 by dliu          ########   odam.nl          #
+#    Updated: 2023/11/14 16:48:31 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ READLINEFLAGS ?= -I/usr/include
 
 VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute
 SRCS_NAMES = main.c lifecycle_a.c lifecycle_b.c \
-parse.c _extract.c _tokens.c _errors.c \
+parse.c _extract.c _tokens.c _split.c _errors.c \
 execute_a.c execute_b.c execute_c.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 17:04:48 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 17:13:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,14 @@ static int	_valid_str(char *str);
 void	_extract_cmdstr(char *input, t_parse *parse)
 {
 	char	*str;
-	size_t	start;
+	char	*end;
 
-	while (ft_isspace(input[parse->pos]))
-		parse->pos++;
-	start = parse->pos;
-	while (input[parse->pos] && input[parse->pos] != '|')
-		parse->pos++;
-	if (input[parse->pos] == '|')
-		str = ft_substr(input, start, parse->pos - 1);
+	end = ft_strchr(input, '|');
+	if (end)
+		parse->pos = end - 1 - input;
 	else
-		str = ft_substr(input, start, parse->pos);
+		parse->pos = ft_strlen(input);
+	str = ft_substr(input, 0, parse->pos);
 	if (!str)
 	{
 		parse->status = MALLOC_ERROR;

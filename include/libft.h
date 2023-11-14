@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 11:29:23 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 13:47:55 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 17:31:34 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int			ft_isprint(int c);
 int			ft_isascii(int c);
 
 int			ft_isspace(int c);
+int			ft_isquote(int c);
 
 int			ft_atoi(const char *str);
 long long	ft_atoll(const char *str);
