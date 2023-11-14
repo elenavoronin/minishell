@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 11:29:58 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 12:15:41 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void    clean_pipes(t_pipes_struct *pipes)
 	free(pipes);
 }
 
-char	*get_path(char **cmd, t_mini_env **mini_envp, t_pipes_struct *pipes)
+char	*get_path(char **cmd, char **mini_envp, t_pipes_struct *pipes)
 {
 	char	**new_paths;
 	char	*path;
@@ -44,9 +44,9 @@ char	*get_path(char **cmd, t_mini_env **mini_envp, t_pipes_struct *pipes)
 	// if (cmds == builtin ... look in directory, else ... getpath)
 	while (mini_envp[i] != NULL)
 	{
-		if (ft_strnstr(mini_envp[i]->variable_name, "PATH", ft_strlen("PATH")))
+		if (ft_strnstr(mini_envp[i], "PATH", ft_strlen("PATH")))
 		{
-			new_paths = ft_split(mini_envp[i]->variable_path, ':');
+			new_paths = ft_split(mini_envp[i], ':');
 			if (!new_paths)
 				return (NULL);
 			break ;

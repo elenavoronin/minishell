@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   lifecycle_b.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/07 17:12:21 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/13 15:17:12 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/14 12:19:27 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,14 @@ int	count_envp_elements(char **envp)
 	return (count);
 }
 
-void	print_env_arr(t_mini_env **mini_env)
+void	print_env_arr(char **mini_env)
 {
 	int	i;
 
 	i = 0;
 	while (mini_env[i] != NULL)
 	{
-		printf("[%d]: %s\n", i, mini_env[i]->variable_name);
-		printf("[%d]: %s\n", i, mini_env[i]->variable_path);
+		printf("[%d]: %s\n", i, mini_env[i]);
 		i++;
 	}
 }
