@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 11:29:23 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 16:31:56 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 13:47:55 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@
 # include <stdarg.h>
 # include <stdio.h>
 # include <stdbool.h>
-
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
-# endif
 
 # define ANSI_COL_RED "\x1b[31m"
 # define ANSI_COL_GREEN "\x1b[32m"
@@ -46,39 +42,6 @@ void		ft_lstdelone(t_list *lst, void (*del)(void *));
 void		ft_lstclear(t_list **lst, void (*del)(void *));
 void		ft_lstiter(t_list *lst, void (*f)(void *));
 t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-
-typedef struct s_print
-{
-	va_list		argsp;
-	t_list		*plist;
-	int			count;
-	int			isneg;
-	int			iszero;
-	int			plus;
-	int			hash;
-	int			space;
-	int			dash;
-	int			zero;
-	int			dot;
-	int			w_min;
-	int			w_precise;
-}				t_print;
-
-int			ft_printf(const char *s, ...);
-int			set_flags(t_print *tab, const char *format);
-int			add_node(t_print *tab, char *content, const int addback);
-char		*ft_strrep(const char c, const size_t len);
-void		print_char(t_print *tab, const char c);
-void		print_string(t_print *tab);
-void		print_int(t_print *tab, const char c);
-void		print_hex(t_print *tab, const char c);
-void		print_pnt(t_print *tab);
-void		apply_flags_chars(t_print *tab);
-void		apply_flags_num(t_print *tab);
-void		apply_flags_hex(t_print *tab);
-void		check_write(t_print *tab);
-
-char		*get_next_line(int fd);
 
 void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *s, int fd);

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 16:56:18 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 14:10:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,7 @@ void	_extract_cmdstr(char *input, t_parse *parse);
 void	_tokens_to_cmd(t_parse *parse);
 void	_terminate(t_list **cmdlist, t_parse *parse, char *message, int status);
 void	_free_parse(t_parse *parse);
+
+void	parse_test(t_list **cmdlist);
 
 #endif
