@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 11:47:16 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 12:54:47 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int  create_dummy_cmd(t_list **list) //don't forget to delete from here and .h
 	dummy_cmd->outfile = 0;
 	dummy_cmd->output_flag = 0;
 	dummy_cmd->status = 0;
-	char **cmd_table = malloc(sizeof(char *) * 2);
+	char **cmd_table = malloc(sizeof(char *) * 3);
 	if (!cmd_table)
 	{
 		free(dummy_cmd);
@@ -47,6 +47,7 @@ int  create_dummy_cmd(t_list **list) //don't forget to delete from here and .h
 		free(cmd_table);
 		return (-1);
 	}
+	cmd_table[i + 2] = NULL;
 	dummy_cmd->cmd_table = cmd_table;
 	*list = ft_lstnew(dummy_cmd);
 	// printf("list %s\n", (char *)((t_dummy_cmd *)(*list)->content)->cmd_table[0]);

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 12:45:30 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 12:54:01 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 			t_pipes_struct *pipes);
 int		create_dummy_cmd(t_list **list);
 char	*get_path(char **cmd, char **mini_envp, t_pipes_struct *pipes);
-void	close_useless_pipes(int i, t_pipes_struct *pipes);
+void		close_useless_pipes(int i, t_pipes_struct *pipes);
 int		redirect_stuff(int i, t_pipes_struct *pipes);
 
 #endif
