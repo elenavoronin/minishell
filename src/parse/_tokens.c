@@ -6,105 +6,102 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/10 11:34:41 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 15:35:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	_populate_cmd(t_parse *parse);
+static void	_populate_cmdtable(char *token, t_parse *parse);
 static int	_token_type(char *c);
-static void	_populate_cmd(size_t *i, t_parse *parse);
-static void	_populate_cmdtable(t_parse *parse);
+static char	**_get_dest(char *token, t_parse *parse);
 
 void	_tokens_to_cmd(t_parse *parse)
 {
+	char	**tokens;
+
+	tokens = ft_split2(parse->cmdstr);
+	if (!tokens)
+	{
+		_malloc_error(parse);
+		return ;
+	}
+	parse->tokens = tokens;
+	_populate_cmd(parse);
+	ft_free_strarr(tokens);
+}
+
+static int	_populate_cmd(t_parse *parse)
+{
+	char	**dest;
+
+	while (*parse->tokens)
+	{
+		dest = _get_dest(*parse->tokens, parse);
+		if (dest && *dest != parse->cmd->cmd_table[0])
+		{
+			parse->tokens++;
+			if (!*(parse->tokens))
+			{
+				parse->status = SYNTAX_ERROR;
+				return (0);
+			}
+			if (*dest)
+				free(*dest);
+			*dest = ft_strdup(*parse->tokens);
+		}
+		else if (dest == &parse->cmd->cmd_table[0])
+			_populate_cmdtable(*parse->tokens, parse);
+		parse->tokens++;
+	}
+	return (1);
+}
+
+static void	_populate_cmdtable(char *token, t_parse *parse)
+{
+	char	**cmdtable;
 	size_t	i;
 
-	parse->tokens = ft_split2(parse->cmdstr);
-	if (!parse->tokens)
-	{
-		_malloc_error(parse);
-		return ;
-	}
-	parse->count = ft_strarray_count(parse->tokens);
-	parse->rem = parse->count - 1;
-	//DEBUGGINGGGGGGGG
+	cmdtable = malloc((parse->argc + 1) * sizeof(*cmdtable));
 	i = 0;
-	printf("Got %zu tokens:\n", parse->count);
-	while (parse->tokens[i])
+	while (i < parse->argc)
 	{
-		printf("	_%s_\n", parse->tokens[i]);
-		i++;
-	}
-	//END DEBUGGING
-	i = 0;
-	while (parse->tokens[i] && !parse->status)
-	{
-		_populate_cmd(&i, parse);
-		i++;
-	}
-	parse->count = 0;
-	if (parse->rem)
-		_populate_cmdtable(parse);
-}
-
-static void	_populate_cmd(size_t *i, t_parse *parse)
-{
-	char	**dest_address;
-	int		token_type;
-
-	dest_address = NULL;
-	token_type = _token_type(parse->tokens[*i]);
-	if (token_type != EMPTY && token_type != WORD)
-		parse->rem--;
-	if (token_type == REDIR_HERE)
-		dest_address = &(parse->cmd->delimiter);
-	else if (token_type == REDIR_IN)
-		dest_address = &(parse->cmd->infile);
-	else if (token_type == REDIR_OUT)
-		dest_address = &(parse->cmd->outfile);
-	else if (token_type == REDIR_APPEND)
-		parse->cmd->output_flag = 'a';
-	if (dest_address)
-	{
-		*i += 1;
-		if (*i < parse->count)
-		{
-			*dest_address = ft_strdup(parse->tokens[*i]);
-			parse->rem--;
-		}
+		if (parse->cmd->cmd_table && parse->cmd->cmd_table[i])
+			cmdtable[i] = ft_strdup(parse->cmd->cmd_table[i]);
 		else
-			parse->status = SYNTAX_ERROR;
+			cmdtable[i] = ft_strdup(token);
+		i++;
 	}
+	cmdtable[i] = NULL;
+	ft_free_strarr(parse->cmd->cmd_table);
+	parse->cmd->cmd_table = cmdtable;
 }
 
-static void	_populate_cmdtable(t_parse *parse)
+static char	**_get_dest(char *token, t_parse *parse)
 {
-	int	i;
+	int		token_type;
+	char	**dest;
 
-	parse->cmd->cmd_table = malloc((parse->rem + 1) * sizeof(char **));
-	if (!parse->cmd->cmd_table)
+	dest = NULL;
+	token_type = _token_type(token);
+	if (token_type == REDIR_HERE)
+		dest = &(parse->cmd->delimiter);
+	else if (token_type == REDIR_IN)
+		dest = &(parse->cmd->infile);
+	else if (token_type == REDIR_OUT)
+		dest = &(parse->cmd->outfile);
+	else if (token_type == REDIR_APPEND)
 	{
-		_malloc_error(parse);
-		return ;
+		parse->cmd->output_flag = 'a';
+		dest = &(parse->cmd->outfile);
 	}
-	i = 0;
-	while (parse->rem)
+	else if (token_type == WORD)
 	{
-		if (_token_type(parse->tokens[parse->count]) == WORD)
-		{
-			parse->cmd->cmd_table[i] = ft_strdup(parse->tokens[parse->count]);
-			if (!parse->cmd->cmd_table[i])
-			{
-				_malloc_error(parse);
-				return ;
-			}
-			i++;
-			parse->rem--;
-		}
-		parse->count++;
+		parse->argc++;
+		dest = &(parse->cmd->cmd_table[0]);
 	}
-	parse->cmd->cmd_table[i] = NULL;
+	return (dest);
 }
 
 static int	_token_type(char *c)
