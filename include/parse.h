@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 14:51:10 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 14:10:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 /**
  * Container for parsed input. Create this in stack memory.
  * @param delimiter If not NULL, delimiter for heredoc.
- * @param input If not NULL, name of input file.
- * @param output If not NULL, name of output file.
+ * @param infile If not NULL, name of input file.
+ * @param outfile If not NULL, name of output file.
  * @param output_flag Either 'w' for write, or 'a' for append.
- * @param cmds Commands and args.
+ * @param cmd_table Command with args.
  */
 typedef struct s_cmd
 {
@@ -30,7 +30,6 @@ typedef struct s_cmd
 	char				*outfile;
 	char				output_flag;
 	char				**cmd_table;
-	int					status;
 }	t_cmd;
 
 t_list	*parse_input(char *input);
@@ -60,7 +59,8 @@ typedef struct s_parse
 void	_extract_cmdstr(char *input, t_parse *parse);
 void	_tokens_to_cmd(t_parse *parse);
 void	_terminate(t_list **cmdlist, t_parse *parse, char *message, int status);
-void	_malloc_error(t_parse *parse);
 void	_free_parse(t_parse *parse);
+
+void	parse_test(t_list **cmdlist);
 
 #endif

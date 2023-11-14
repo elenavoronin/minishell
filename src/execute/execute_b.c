@@ -6,21 +6,21 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 12:53:59 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 14:55:32 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    clean_pipes(t_pipes_struct *pipes)
+void	clean_pipes(t_pipes_struct *pipes)
 {
 	int i;
-	int j;
-	int k;
+	// int j;
+	// int k;
 
 	i = 0;
-	j = 0;
-	k = 0;
+	// j = 0;
+	// k = 0;
 	while (pipes->fd_arr)
 	{
 		free(pipes->fd_arr[i]);

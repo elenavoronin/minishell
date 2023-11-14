@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "execute.h": "c",
-        "unistd.h": "c",
-        "typeinfo": "c"
-    }
-}

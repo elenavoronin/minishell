@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/09 19:40:02 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 17:04:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_validate_str(char *str, t_parse *parse);
+static int	_valid_str(char *str);
 
 void	_extract_cmdstr(char *input, t_parse *parse)
 {
@@ -30,14 +30,19 @@ void	_extract_cmdstr(char *input, t_parse *parse)
 		str = ft_substr(input, start, parse->pos);
 	if (!str)
 	{
-		_malloc_error(parse);
-		parse->cmdstr = NULL;
+		parse->status = MALLOC_ERROR;
 		return ;
 	}
-	_validate_str(str, parse);
+	if (!_valid_str(str))
+	{
+		free(str);
+		parse->status = SYNTAX_ERROR;
+		return ;
+	}
+	parse->cmdstr = str;
 }
 
-static void	_validate_str(char *str, t_parse *parse)
+static int	_valid_str(char *str)
 {
 	int	i;
 	int	valid;
@@ -56,12 +61,6 @@ static void	_validate_str(char *str, t_parse *parse)
 		i++;
 	}
 	if (!valid)
-	{
-		free(str);
-		ft_perror("ERROR", NULL, "Invalid input found.");
-		parse->status = SYNTAX_ERROR;
-		parse->cmdstr = NULL;
-		return ;
-	}
-	parse->cmdstr = str;
+		ft_perror("SYNTAX ERROR:", NULL, "Invalid input found.");
+	return (valid);
 }

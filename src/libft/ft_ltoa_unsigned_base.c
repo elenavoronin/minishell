@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 12:21:22 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/01 15:36:44 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 17:24:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_ltoa_unsigned_base(unsigned long num, int base)
 			len++;
 		}
 	}
-	buffer = malloc(len + 1);
+	buffer = ft_calloc(len + 1, sizeof(*buffer));
 	if (!buffer)
 		return (NULL);
 	buffer[len] = '\0';
