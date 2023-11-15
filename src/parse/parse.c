@@ -12,8 +12,9 @@
 
 #include "minishell.h"
 
-static void	_init_cmd(t_parse *parse);
 static void	_init_parse(t_parse *parse, t_list **cmdlist);
+static void	_extract_cmdstr(char *input, t_parse *parse);
+static int	_valid_str(char *str);
 
 /**
  * Parses input. Allocates memory.
@@ -75,7 +76,11 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
 	if (!parse->cmd)
 		_terminate(cmdlist, NULL, MALLOC_ERROR);
-	_init_cmd(parse);
+	parse->cmd->delimiter = NULL;
+	parse->cmd->infile = NULL;
+	parse->cmd->outfile = NULL;
+	parse->cmd->output_flag = 'w';
+	parse->cmd->cmd_table = NULL;
 	new = ft_lstnew(parse->cmd);
 	if (!new)
 	{
@@ -85,11 +90,50 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 	ft_lstadd_back(cmdlist, new);
 }
 
-static void	_init_cmd(t_parse *parse)
+static void	_extract_cmdstr(char *input, t_parse *parse)
 {
-	parse->cmd->delimiter = NULL;
-	parse->cmd->infile = NULL;
-	parse->cmd->outfile = NULL;
-	parse->cmd->output_flag = 'w';
-	parse->cmd->cmd_table = NULL;
+	char	*str;
+	char	*end;
+
+	end = ft_strchr(input, '|');
+	if (end)
+		parse->pos = end - 1 - input;
+	else
+		parse->pos = ft_strlen(input);
+	str = ft_substr(input, 0, parse->pos);
+	if (!str)
+	{
+		parse->status = MALLOC_ERROR;
+		return ;
+	}
+	if (!_valid_str(str))
+	{
+		free(str);
+		parse->status = SYNTAX_ERROR;
+		return ;
+	}
+	parse->cmdstr = str;
+}
+
+static int	_valid_str(char *str)
+{
+	int	i;
+	int	valid;
+
+	i = 0;
+	valid = 0;
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]))
+			valid = 1;
+		else if (!ft_isascii(str[i]))
+		{
+			valid = 0;
+			break ;
+		}
+		i++;
+	}
+	if (!valid)
+		ft_perror("SYNTAX ERROR:", NULL, "Invalid input found.");
+	return (valid);
 }

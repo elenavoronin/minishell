@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 18:50:23 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/15 12:31:10 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,13 @@ typedef struct s_split
 	t_code_status	*status;
 }	t_split;
 
-void	_extract_cmdstr(char *input, t_parse *parse);
 void	_tokens_to_cmd(t_parse *parse);
+
 char	**_split(char *line, t_code_status *status);
+size_t	_extract_quote_literal(char *line, t_split *split);
+size_t	_extract_quote_expand(char *line, t_split *split);
+size_t	_extract_word(char *line, t_split *split);
+
 void	_terminate(t_list **cmdlist, char *message, int status);
 
 void	parse_test(t_list **cmdlist);
