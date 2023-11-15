@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 11:29:23 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 13:47:55 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/14 19:07:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int			ft_isprint(int c);
 int			ft_isascii(int c);
 
 int			ft_isspace(int c);
+int			ft_isquote(int c);
 
 int			ft_atoi(const char *str);
 long long	ft_atoll(const char *str);
@@ -73,6 +74,7 @@ void		*ft_memcpy(void *dst, const void *src, size_t n);
 void		*ft_memmove(void *dst, const void *src, size_t len);
 
 size_t		ft_strlen(const char *s);
+size_t		ft_charcount(char *str, char c);
 size_t		ft_strarray_count(char **s);
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
@@ -81,6 +83,7 @@ char		*ft_strchr(const char *s, int c);
 char		*ft_strrchr(const char *s, int c);
 char		*ft_strnstr(const char *haystack, const char*needle, size_t len);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
+int			ft_strcmp(const char *s1, const char *s2);
 
 char		*ft_strdup(const char *s1);
 char		*ft_strjoin(char const *s1, char const *s2);
