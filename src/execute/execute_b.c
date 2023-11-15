@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 14:55:32 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/15 14:17:55 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ char	*get_path(char **cmd, char **mini_envp, t_pipes_struct *pipes)
 		if (access(pipes->path, X_OK) == 0)
 			return (pipes->path);
 		free(path);
-		free(pipes->path);
 		j++;
 	}
 	// printf("HERE\n");
@@ -93,7 +92,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 			return (update_status_code(state, MALLOC_ERROR), -1);
 		pipes->fd_arr[0][0] = STDIN_FILENO;
 		pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
-		if (nr <= 0) // if i don't have pipes, I need to call execve directly
+		if (nr <= 0)
 		{
 			if (!get_path(cmds->cmd_table, state->mini_env, pipes))
 				return (update_status_code(state, INTERNAL_ERROR), -1);

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/15 12:19:38 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/15 14:17:10 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void	start_minishell(int argc, char **argv, char **envp)
 		line = readline("🐢shell: ");
 		if (!line)
 		{
-			clear_history();
 			clear_mini_env(mini_state);
+			clear_history();
 			exit(EXIT_SUCCESS);
 		}
 		if (ft_strncmp(line, "exit", ft_strlen(line)) == 0)
@@ -125,7 +125,7 @@ void	start_minishell(int argc, char **argv, char **envp)
 			break ;
 		}
 		cmdlist = parse_input(line);
-		parse_test(&cmdlist);
+		// parse_test(&cmdlist);
 		execute_shell(&cmdlist, mini_state);
 		ft_lstclear(&cmdlist, delete_cmd);
 		add_history(line);
