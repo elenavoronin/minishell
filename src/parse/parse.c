@@ -33,7 +33,7 @@ t_list	*parse_input(char *input)
 	{
 		_init_parse(&parse, &cmdlist);
 		_extract_cmdstr(input, &parse);
-		if (!parse.cmdstr)
+		if (parse.status)
 			_terminate(&cmdlist, &parse, NULL, parse.status);
 		_tokens_to_cmd(&parse);
 		if (parse.status)
@@ -73,15 +73,15 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 	parse->tokens = NULL;
 	parse->pos = 0;
 	parse->argc = 0;
-	parse->cmd = malloc(sizeof(*(parse->cmd)));
+	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
 	if (!parse->cmd)
-		_terminate(cmdlist, parse, "ERROR: Malloc failure", MALLOC_ERROR);
+		_terminate(cmdlist, parse, NULL, MALLOC_ERROR);
 	_init_cmd(parse);
 	new = ft_lstnew(parse->cmd);
 	if (!new)
 	{
 		delete_cmd(parse->cmd);
-		_terminate(NULL, parse, "ERROR: Malloc failure", MALLOC_ERROR);
+		_terminate(NULL, parse, NULL, MALLOC_ERROR);
 	}
 	ft_lstadd_back(cmdlist, new);
 }
@@ -90,7 +90,6 @@ void	_free_parse(t_parse *parse)
 {
 	free(parse->cmdstr);
 	parse->cmdstr = NULL;
-	parse->tokens = NULL;
 }
 
 static void	_init_cmd(t_parse *parse)
@@ -100,5 +99,4 @@ static void	_init_cmd(t_parse *parse)
 	parse->cmd->outfile = NULL;
 	parse->cmd->output_flag = 'w';
 	parse->cmd->cmd_table = NULL;
-	parse->cmd->status = 0;
 }

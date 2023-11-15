@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 12:54:14 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 14:53:38 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ int	mini_env_arr(t_shell_state *mini_state, char **envp)
 
 int	init_mini_state(t_shell_state **mini_state, char **envp)
 {
-	int			i;
+	// int	i;
 
-	i = 0;
+	// i = 0;
 	(*mini_state) = malloc(sizeof(t_shell_state));
 	if (!(*mini_state))
 		return (-1);
@@ -97,11 +97,11 @@ int	init_mini_state(t_shell_state **mini_state, char **envp)
 
 void	start_minishell(int argc, char **argv, char **envp)
 {
-	// char			*line;
 	t_shell_state	*mini_state;
-	t_list			*cmds;
+	t_list			*cmdlist;
+	char			*line;
 
-	cmds = NULL;
+	cmdlist = NULL;
 	mini_state = NULL;
 	(void)argv;
 	(void)argc;
@@ -110,21 +110,25 @@ void	start_minishell(int argc, char **argv, char **envp)
 		printf("ERROR\n");
 		exit(EXIT_FAILURE);
 	}
-	// print_env_arr(mini_state->mini_env);
-	if (create_dummy_cmd(&cmds) == 0)
-		execute_shell(&cmds, mini_state);
-	// while (1)
-	// {
-	// 	line = readline("🐢shell:");
-	// 	printf("%s\n", line);
-		// if (!line)
-		// {
-		// 	clear_history();
-		// 	clear_mini_env(mini_state);
-		// 	exit(EXIT_SUCCESS);
-		// }
-		// // process_line(line);
-		// add_history(line);
-		// free(line);
-	// }
+	while (1)
+	{
+		line = readline("🐢shell: ");
+		if (!line)
+		{
+			clear_history();
+			clear_mini_env(mini_state);
+			exit(EXIT_SUCCESS);
+		}
+		if (ft_strncmp(line, "exit", ft_strlen(line)) == 0)
+		{
+			free(line);
+			break ;
+		}
+		cmdlist = parse_input(line);
+		parse_test(&cmdlist);
+		// execute_shell(&cmdlist, mini_state);
+		ft_lstclear(&cmdlist, delete_cmd);
+		add_history(line);
+		free(line);
+	}
 }

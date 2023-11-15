@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 15:35:22 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 16:55:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	_tokens_to_cmd(t_parse *parse)
 	tokens = ft_split2(parse->cmdstr);
 	if (!tokens)
 	{
-		_malloc_error(parse);
+		parse->status = MALLOC_ERROR;
 		return ;
 	}
 	parse->tokens = tokens;
@@ -36,7 +36,7 @@ static int	_populate_cmd(t_parse *parse)
 {
 	char	**dest;
 
-	while (*parse->tokens)
+	while (*parse->tokens && !parse->status)
 	{
 		dest = _get_dest(*parse->tokens, parse);
 		if (dest && *dest != parse->cmd->cmd_table[0])
@@ -50,6 +50,8 @@ static int	_populate_cmd(t_parse *parse)
 			if (*dest)
 				free(*dest);
 			*dest = ft_strdup(*parse->tokens);
+			if (!*dest)
+				parse->status = MALLOC_ERROR;
 		}
 		else if (dest == &parse->cmd->cmd_table[0])
 			_populate_cmdtable(*parse->tokens, parse);
@@ -63,7 +65,12 @@ static void	_populate_cmdtable(char *token, t_parse *parse)
 	char	**cmdtable;
 	size_t	i;
 
-	cmdtable = malloc((parse->argc + 1) * sizeof(*cmdtable));
+	cmdtable = ft_malloc_wrapper((parse->argc + 1) * sizeof(*cmdtable));
+	if (!cmdtable)
+	{
+		parse->status = MALLOC_ERROR;
+		return ;
+	}
 	i = 0;
 	while (i < parse->argc)
 	{

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 12:21:22 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/01 15:37:35 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/13 17:24:29 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_lltoa_base(long long n, int base)
 	int					len;
 
 	len = ft_numlen(n, base);
-	buffer = malloc(len + 1);
+	buffer = ft_calloc(len + 1, sizeof(*buffer));
 	if (!buffer)
 		return (NULL);
 	buffer[len] = '\0';

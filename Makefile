@@ -6,41 +6,27 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/10 12:48:18 by evoronin      ########   odam.nl          #
+#    Updated: 2023/11/14 14:47:59 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
+NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./include -g -fsanitize=address
 
-# UNAME_S := $(shell uname -s)
-
-# ifeq ($(UNAME_S), Darwin)
-# 	READLINELINKFLAGS := -lreadline -L $(shell brew --prefix readline)/lib
-# else
 READLINELINKFLAGS := -lreadline
-# endif
-
-# ifeq ($(UNAME_S), Darwin)
-# 	READLINEFLAGS ?= -I $(shell brew --prefix readline)/include
-# else
 READLINEFLAGS ?= -I/usr/include
-# endif
 
-NAME = minishell
-
-VPATH = ./src ./src/libft ./src/parse
-SRCS_NAMES = parse_testmain.c parse.c _extract.c _tokens.c _errors.c \
-get_next_line.c \
+VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute
+SRCS_NAMES = main.c lifecycle_a.c lifecycle_b.c \
+parse.c _extract.c _tokens.c _errors.c \
+execute_a.c execute_b.c execute_c.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
-ft_printf.c ft_printf_helpers.c ft_printf_handle_types.c \
-ft_printf_handle_flags.c ft_printf_handle_flags_nums.c \
 ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \
 ft_strhelpers.c ft_strfinds.c ft_strmakers.c ft_strmanips.c ft_split.c ft_itoa.c \
 ft_lltoa_base.c ft_ltoa_unsigned_base.c ft_atoi_validate.c ft_nums.c \
 ft_split2.c ft_joinstrs.c ft_nopes.c ft_free.c \
-lifecycle/lifecycle_a.c
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 OUT_DIR = ./objs
