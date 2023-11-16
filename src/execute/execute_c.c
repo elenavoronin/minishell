@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 12:51:41 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/15 14:18:57 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,9 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 		update_status_code(mini_state, REDIRECT_ERROR);
 		return ;
 	}
-	printf("%s\n", pipes->path);
 	execve(pipes->path, cmd, mini_state->mini_env);
 	perror("execve");
-    fprintf(stderr, "execve failed\n");
+	fprintf(stderr, "execve failed\n");
 	exit(127);
 }
 
