@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/15 12:31:10 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/16 13:55:37 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_cmd
 	char				**cmd_table;
 }	t_cmd;
 
-t_list	*parse_input(char *input);
+t_list	*parse_input(char *input, t_shell_state	*shell_state);
 void	delete_cmd(void *content);
 
 //For parsing internal use, WARNING: VOLATILE
@@ -54,12 +54,16 @@ typedef struct s_parse
 	size_t			pos;
 	size_t			argc;
 	t_code_status	status;
+	t_shell_state	*shell_state;
 }	t_parse;
 
 typedef struct s_split
 {
 	size_t			count;
+	char			*line;
 	char			*pos;
+	char			*tag;
+	char			*tmp;
 	char			**result;
 	t_code_status	*status;
 }	t_split;
@@ -67,9 +71,9 @@ typedef struct s_split
 void	_tokens_to_cmd(t_parse *parse);
 
 char	**_split(char *line, t_code_status *status);
-size_t	_extract_quote_literal(char *line, t_split *split);
-size_t	_extract_quote_expand(char *line, t_split *split);
-size_t	_extract_word(char *line, t_split *split);
+void	_extract_quote_literal(t_split *split);
+void	_extract_quote_expand(t_split *split);
+void	_extract_word(t_split *split);
 
 void	_terminate(t_list **cmdlist, char *message, int status);
 

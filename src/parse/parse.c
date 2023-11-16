@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	_init_parse(t_parse *parse, t_list **cmdlist);
+static void	_init_parse(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state);
 static void	_extract_cmdstr(char *input, t_parse *parse);
 static int	_valid_str(char *str);
 
@@ -22,7 +22,7 @@ static int	_valid_str(char *str);
  * @return On success, returns pointer to head of list.
  * Will terminate program with appropriate exit code on failure.
 */
-t_list	*parse_input(char *input)
+t_list	*parse_input(char *input, t_shell_state	*shell_state)
 {
 	t_list	*cmdlist;
 	t_parse	parse;
@@ -32,7 +32,7 @@ t_list	*parse_input(char *input)
 	cmdlist = NULL;
 	while (*input)
 	{
-		_init_parse(&parse, &cmdlist);
+		_init_parse(&parse, &cmdlist, shell_state);
 		_extract_cmdstr(input, &parse);
 		if (parse.status != SUCCESS)
 			_terminate(&cmdlist, NULL, parse.status);
@@ -64,7 +64,7 @@ void	delete_cmd(void *content)
 	free(cmd);
 }
 
-static void	_init_parse(t_parse *parse, t_list **cmdlist)
+static void	_init_parse(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
 {
 	t_list	*new;
 
@@ -88,6 +88,7 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 		_terminate(NULL, NULL, MALLOC_ERROR);
 	}
 	ft_lstadd_back(cmdlist, new);
+	parse->shell_state = shell_state;
 }
 
 static void	_extract_cmdstr(char *input, t_parse *parse)
