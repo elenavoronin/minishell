@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 14:54:33 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/16 12:00:00 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,16 @@ typedef enum e_code_status
 	FORK_ERROR,
 }	t_code_status;
 
-// typedef struct s_mini_env
-// {
-// 	char	*variable_name;
-// 	char	*variable_path;
-// }	t_mini_env;
+typedef struct s_mini_env
+{
+	char	*variable_name;
+	char	*variable_path;
+}	t_mini_env;
 
 typedef struct s_shell_state
 {
 	int				status_code;
+	t_mini_env		**env_print;
 	char			**mini_env;
 }	t_shell_state;
 
@@ -51,5 +52,6 @@ void	print_env_arr(char **mini_env);
 int		count_envp_elements(char **envp);
 void	update_status_code(t_shell_state *mini_state, t_code_status status);
 int		count_envp_elements(char **envp);
+int		mini_env_arr_for_printing(t_shell_state *mini_state, char **envp);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/15 14:17:10 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/16 12:02:17 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,33 +31,6 @@ void	update_status_code(t_shell_state *mini_state, t_code_status status)
 	mini_state->status_code = status;
 }
 
-// int	mini_env_arr_for_printing(t_shell_state *mini_state, char **envp)
-// {
-// 	int		i;
-// 	int		j;
-
-// 	i = 0;
-// 	while (envp[i] != NULL)
-// 	{
-// 		j = 0;
-// 		mini_state->mini_env[i] = malloc(sizeof(t_mini_env));
-// 		if (!mini_state->mini_env[i])
-// 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
-// 		while (envp[i][j] && envp[i][j] != '=')
-// 			j++;
-// 		mini_state->mini_env[i]->variable_name = ft_substr(envp[i], 0, j);
-// 		if (!mini_state->mini_env[i]->variable_name)
-// 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
-// 		j++;
-// 		mini_state->mini_env[i]->variable_path = ft_strdup(envp[i] + j);
-// 		if (!mini_state->mini_env[i]->variable_path)
-// 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
-// 		i++;
-// 	}
-// 	mini_state->mini_env[i] = NULL;
-// 	return (update_status_code(mini_state, SUCCESS), 0);
-// }
-
 int	mini_env_arr(t_shell_state *mini_state, char **envp)
 {
 	int	i;
@@ -76,11 +49,12 @@ int	mini_env_arr(t_shell_state *mini_state, char **envp)
 
 int	init_mini_state(t_shell_state **mini_state, char **envp)
 {
-	// int	i;
-
-	// i = 0;
 	(*mini_state) = malloc(sizeof(t_shell_state));
 	if (!(*mini_state))
+		return (-1);
+	(*mini_state)->env_print = malloc(sizeof(t_mini_env **)
+			* (count_envp_elements(envp) + 1));
+	if (!(*mini_state)->env_print)
 		return (-1);
 	(*mini_state)->status_code = 0;
 	(*mini_state)->mini_env = (char **)malloc(sizeof(char *)
@@ -88,6 +62,11 @@ int	init_mini_state(t_shell_state **mini_state, char **envp)
 	if (!(*mini_state)->mini_env)
 		return (-1);
 	if (mini_env_arr(*mini_state, envp) != 0)
+	{
+		clear_mini_env(*mini_state);
+		return (-1);
+	}
+	if (mini_env_arr_for_printing(*mini_state, envp) != 0)
 	{
 		clear_mini_env(*mini_state);
 		return (-1);
