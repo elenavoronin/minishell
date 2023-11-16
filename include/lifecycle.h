@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:22:02 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/16 12:46:20 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ typedef struct s_shell_state
 	t_mini_env		**env_pathv;
 	char			**mini_env;
 }	t_shell_state;
-
 
 void	start_minishell(int argc, char **argv, char **envp);
 int		mini_env_arr(t_shell_state *mini_state, char **envp);

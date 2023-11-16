@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/15 14:18:57 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/16 15:14:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,27 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 	return (0);
 }
 
+void	clear_pipes(t_pipes_struct *pipes)
+{
+	int	i;
+
+	i = 0;
+	ft_free_strarr(pipes->path);
+	while (pipes->fd_arr[i])
+	{
+		free(pipes->fd_arr[i]);
+		free(pipes->pid);
+		i++;
+	}
+	free(pipes->pid);
+	free(pipes->fd_arr);
+	free(pipes);
+}
+
 void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 			t_pipes_struct *pipes)
 {
-	pipes->pid = malloc(sizeof(int *));
+	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
 	if (!pipes->pid)
 		return (update_status_code(mini_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
@@ -63,8 +80,10 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 		update_status_code(mini_state, REDIRECT_ERROR);
 		return ;
 	}
-	execve(pipes->path, cmd, mini_state->mini_env);
-	perror("execve");
+	execve(*pipes->path, cmd, mini_state->mini_env);
+	clear_pipes(pipes);
+	clear_mini_env(mini_state);
+	// perror("execve");
 	fprintf(stderr, "execve failed\n");
 	exit(127);
 }
