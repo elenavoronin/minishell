@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/07 17:12:21 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:03:07 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/16 12:22:23 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,17 @@ int	mini_env_arr_for_printing(t_shell_state *mini_state, char **envp)
 	while (envp[i] != NULL)
 	{
 		j = 0;
-		mini_state->env_print[i] = malloc(sizeof(t_mini_env));
-		if (!mini_state->env_print[i])
+		mini_state->env_pathv[i] = malloc(sizeof(t_mini_env));
+		if (!mini_state->env_pathv[i])
 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
 		while (envp[i][j] && envp[i][j] != '=')
 			j++;
-		mini_state->env_print[i]->variable_name = ft_substr(envp[i], 0, j);
-		if (!mini_state->env_print[i]->variable_name)
+		mini_state->env_pathv[i]->variable_name = ft_substr(envp[i], 0, j);
+		if (!mini_state->env_pathv[i]->variable_name)
 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
 		j++;
-		mini_state->env_print[i]->variable_path = ft_strdup(envp[i] + j);
-		if (!mini_state->env_print[i]->variable_path)
+		mini_state->env_pathv[i]->variable_path = ft_strdup(envp[i] + j);
+		if (!mini_state->env_pathv[i]->variable_path)
 			return (update_status_code(mini_state, MALLOC_ERROR), -1);
 		i++;
 	}

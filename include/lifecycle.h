@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:00:00 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/16 12:22:02 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_mini_env
 typedef struct s_shell_state
 {
 	int				status_code;
-	t_mini_env		**env_print;
+	t_mini_env		**env_pathv;
 	char			**mini_env;
 }	t_shell_state;
 
