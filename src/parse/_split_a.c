@@ -12,41 +12,40 @@
 
 #include "minishell.h"
 
-static void	_init_split(char *line, t_code_status *status, t_split *split);
+static void	_init_split(t_parse *parse, t_split *split);
 static void	_count_split(char *line, t_split *split);
 static void	_do_split(t_split *split);
 
-char	**_split(char *line, t_code_status *status)
+char	**_split(t_parse *parse)
 {
 	t_split	split;
 
-	if (!line)
-		return (NULL);
-	_init_split(line, status, &split);
-	_count_split(line, &split);
-	if (*status != SUCCESS)
+	_init_split(parse, &split);
+	_count_split(parse->cmdstr, &split);
+	if (parse->status != SUCCESS)
 		return (NULL);
 	split.result = ft_calloc(split.count + 1, sizeof(*split.result));
 	split.count = 0;
 	if (!split.result)
-		*status = MALLOC_ERROR;
+		parse->status = MALLOC_ERROR;
 	else
 		_do_split(&split);
-	if (*status == SUCCESS)
+	if (parse->status == SUCCESS)
 		return (split.result);
 	ft_free_strarr(split.result);
 	return (NULL);
 }
 
-static void	_init_split(char *line, t_code_status *status, t_split *split)
+static void	_init_split(t_parse *parse, t_split *split)
 {
 	split->count = 0;
-	split->line = line;
+	split->line = parse->cmdstr;
 	split->pos = NULL;
 	split->tag = NULL;
 	split->tmp = NULL;
 	split->result = NULL;
-	split->status = status;
+	split->status = &parse->status;
+	split->pathv = parse->shell_state->env_pathv;
 }
 
 static void	_count_split(char *line, t_split *split)

@@ -20,12 +20,12 @@ void	_tokens_to_cmd(t_parse *parse)
 {
 	char	**tokens;
 
-	tokens = _split(parse->cmdstr, &(parse->status));
-	free(parse->cmdstr);
-	if (parse->status != SUCCESS)
-		return ;
-	parse->tokens = tokens;
-	_populate_cmd(parse);
+	tokens = _split(parse);
+	if (parse->status == SUCCESS)
+	{
+		parse->tokens = tokens;
+		_populate_cmd(parse);
+	}
 	ft_free_strarr(tokens);
 }
 

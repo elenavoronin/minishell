@@ -30,13 +30,29 @@ void	_extract_quote_literal(t_split *split)
 char	*_expand_tag(t_split *split)
 {
 	size_t	len;
+	int		i;
+	char	*tag;
 	char	*expand;
 
-	split->pos = split->tag + 1;
-	while (ft_isalnum(*split->pos) || split->pos == '_')
-		split->pos++;
-	len = split->pos - split->tag + 1;
-	expand = ft_substr(split->tag, 0, len);
+	expand = ft_strdup("");
+	if (expand)
+	{
+		split->pos = split->tag + 1;
+		while (ft_isalnum(*split->pos) || *split->pos == '_')
+			split->pos++;
+		len = split->pos - split->tag + 1;
+		tag = ft_substr(split->tag, 0, len);
+		if (!tag)
+			*(split->status) = MALLOC_ERROR;
+		i = 0;
+		while (split->pathv[i] && ft_strcmp(split->pathv[i]->variable_name, expand))
+			i++;
+		if (ft_strcmp(split->pathv[i]->variable_name, expand) == 0)
+		{
+			free(expand);
+			expand = ft_strdup(split->pathv[i]->variable_path);
+		}
+	}
 	if (!expand)
 		*(split->status) = MALLOC_ERROR;
 	return (expand);
@@ -45,11 +61,10 @@ char	*_expand_tag(t_split *split)
 void	_extract_quote_expand(t_split *split)
 {
 	size_t	len;
-	char	*tag;
+	char	*start;
 	char	*expand;
 	char	*end;
-	char	*tmp;
-	
+
 	split->line++;
 	split->pos = ft_strchr(split->line, '\"');
 	split->tag = ft_strchr(split->line, '$');
@@ -60,9 +75,22 @@ void	_extract_quote_expand(t_split *split)
 		while (*end)
 			end++;
 		len = end - split->pos;
-		tmp = ft_substr(split->pos, 0, len);
+		end = ft_substr(split->pos, 0, len);
+		start = split->tag;
+		len = start - split->line;
+		start = ft_substr(split->line, 0, len);
+		if (!start || !expand || !end)
+		{
+			*split->status = MALLOC_ERROR;
+			return ;
+		}
+		split->tmp = split->line;
+		split->line = ft_joinstrs(3, start, expand, end);
+		free(split->tmp);
+		free(start);
+		free(expand);
+		free(end);
 	}
-	//
 	split->pos = ft_strchr(split->line, '\"');
 	len = split->pos - split->line;
 	split->result[split->count] = ft_substr(split->line, 0, len);

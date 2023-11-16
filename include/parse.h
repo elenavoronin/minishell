@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/16 13:55:37 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/16 14:03:56 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,24 +59,24 @@ typedef struct s_parse
 
 typedef struct s_split
 {
-	size_t			count;
-	char			*line;
-	char			*pos;
-	char			*tag;
-	char			*tmp;
-	char			**result;
-	t_code_status	*status;
+	size_t				count;
+	char				*line;
+	char				*pos;
+	char				*tag;
+	char				*tmp;
+	char				**result;
+	t_mini_env			**pathv;
+	t_code_status		*status;
 }	t_split;
 
 void	_tokens_to_cmd(t_parse *parse);
 
-char	**_split(char *line, t_code_status *status);
+char	**_split(t_parse *parse);
 void	_extract_quote_literal(t_split *split);
 void	_extract_quote_expand(t_split *split);
 void	_extract_word(t_split *split);
 
 void	_terminate(t_list **cmdlist, char *message, int status);
-
 void	parse_test(t_list **cmdlist);
 
 #endif

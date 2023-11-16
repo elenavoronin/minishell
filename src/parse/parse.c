@@ -37,6 +37,7 @@ t_list	*parse_input(char *input, t_shell_state	*shell_state)
 		if (parse.status != SUCCESS)
 			_terminate(&cmdlist, NULL, parse.status);
 		_tokens_to_cmd(&parse);
+		free(parse.cmdstr);
 		if (parse.status != SUCCESS)
 			_terminate(&cmdlist, NULL, parse.status);
 		input += parse.pos;
@@ -91,7 +92,7 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist, t_shell_state *shell_s
 	parse->shell_state = shell_state;
 }
 
-static void	_extract_cmdstr(char *input, t_parse *parse)
+static void _extract_cmdstr(char *input, t_parse *parse)
 {
 	char	*str;
 	char	*end;
