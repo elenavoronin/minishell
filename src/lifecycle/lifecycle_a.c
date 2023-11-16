@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:04:36 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/16 12:29:53 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ void	clear_mini_env(t_shell_state *mini_state)
 	int			i;
 
 	i = 0;
-	while (mini_state->mini_env[i])
+	ft_free_strarr(mini_state->mini_env);
+	free(mini_state->mini_env);
+	while (mini_state->env_pathv[i])
 	{
-		free(mini_state->mini_env[i]);
+		free(mini_state->env_pathv[i]->variable_name);
+		free(mini_state->env_pathv[i]->variable_path);
 		i++;
 	}
-	free(mini_state->mini_env);
 	free(mini_state);
 }
 
@@ -52,9 +54,9 @@ int	init_mini_state(t_shell_state **mini_state, char **envp)
 	(*mini_state) = malloc(sizeof(t_shell_state));
 	if (!(*mini_state))
 		return (-1);
-	(*mini_state)->env_print = malloc(sizeof(t_mini_env **)
+	(*mini_state)->env_pathv = malloc(sizeof(t_mini_env **)
 			* (count_envp_elements(envp) + 1));
-	if (!(*mini_state)->env_print)
+	if (!(*mini_state)->env_pathv)
 		return (-1);
 	(*mini_state)->status_code = 0;
 	(*mini_state)->mini_env = (char **)malloc(sizeof(char *)
@@ -108,6 +110,7 @@ void	start_minishell(int argc, char **argv, char **envp)
 		execute_shell(&cmdlist, mini_state);
 		ft_lstclear(&cmdlist, delete_cmd);
 		add_history(line);
+		// rl_on_new_line();
 		free(line);
 	}
 	clear_mini_env(mini_state);
