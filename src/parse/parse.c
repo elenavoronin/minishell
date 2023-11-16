@@ -12,8 +12,9 @@
 
 #include "minishell.h"
 
-static void	_init_cmd(t_parse *parse);
 static void	_init_parse(t_parse *parse, t_list **cmdlist);
+static void	_extract_cmdstr(char *input, t_parse *parse);
+static int	_valid_str(char *str);
 
 /**
  * Parses input. Allocates memory.
@@ -27,21 +28,20 @@ t_list	*parse_input(char *input)
 	t_parse	parse;
 
 	if (!input)
-		_terminate(NULL, NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
+		_terminate(NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
 	cmdlist = NULL;
 	while (*input)
 	{
 		_init_parse(&parse, &cmdlist);
 		_extract_cmdstr(input, &parse);
-		if (parse.status)
-			_terminate(&cmdlist, &parse, NULL, parse.status);
+		if (parse.status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.status);
 		_tokens_to_cmd(&parse);
-		if (parse.status)
-			_terminate(&cmdlist, &parse, NULL, parse.status);
+		if (parse.status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.status);
 		input += parse.pos;
 		if (*input == '|')
 			input++;
-		_free_parse(&parse);
 	}
 	return (cmdlist);
 }
@@ -68,35 +68,72 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist)
 {
 	t_list	*new;
 
-	parse->status = 0;
+	parse->status = SUCCESS;
 	parse->cmdstr = NULL;
 	parse->tokens = NULL;
 	parse->pos = 0;
 	parse->argc = 0;
 	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
 	if (!parse->cmd)
-		_terminate(cmdlist, parse, NULL, MALLOC_ERROR);
-	_init_cmd(parse);
-	new = ft_lstnew(parse->cmd);
-	if (!new)
-	{
-		delete_cmd(parse->cmd);
-		_terminate(NULL, parse, NULL, MALLOC_ERROR);
-	}
-	ft_lstadd_back(cmdlist, new);
-}
-
-void	_free_parse(t_parse *parse)
-{
-	free(parse->cmdstr);
-	parse->cmdstr = NULL;
-}
-
-static void	_init_cmd(t_parse *parse)
-{
+		_terminate(cmdlist, NULL, MALLOC_ERROR);
 	parse->cmd->delimiter = NULL;
 	parse->cmd->infile = NULL;
 	parse->cmd->outfile = NULL;
 	parse->cmd->output_flag = 'w';
 	parse->cmd->cmd_table = NULL;
+	new = ft_lstnew(parse->cmd);
+	if (!new)
+	{
+		delete_cmd(parse->cmd);
+		_terminate(NULL, NULL, MALLOC_ERROR);
+	}
+	ft_lstadd_back(cmdlist, new);
+}
+
+static void	_extract_cmdstr(char *input, t_parse *parse)
+{
+	char	*str;
+	char	*end;
+
+	end = ft_strchr(input, '|');
+	if (end)
+		parse->pos = end - 1 - input;
+	else
+		parse->pos = ft_strlen(input);
+	str = ft_substr(input, 0, parse->pos);
+	if (!str)
+	{
+		parse->status = MALLOC_ERROR;
+		return ;
+	}
+	if (!_valid_str(str))
+	{
+		free(str);
+		parse->status = SYNTAX_ERROR;
+		return ;
+	}
+	parse->cmdstr = str;
+}
+
+static int	_valid_str(char *str)
+{
+	int	i;
+	int	valid;
+
+	i = 0;
+	valid = 0;
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]))
+			valid = 1;
+		else if (!ft_isascii(str[i]))
+		{
+			valid = 0;
+			break ;
+		}
+		i++;
+	}
+	if (!valid)
+		ft_perror("SYNTAX ERROR:", NULL, "Invalid input found.");
+	return (valid);
 }

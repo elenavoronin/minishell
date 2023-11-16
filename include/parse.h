@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 14:10:22 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/15 12:31:10 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_list	*parse_input(char *input);
 void	delete_cmd(void *content);
 
 //For parsing internal use, WARNING: VOLATILE
-enum e_state
+typedef enum e_token_type
 {
 	EMPTY,
 	WORD,
@@ -44,22 +44,34 @@ enum e_state
 	REDIR_HERE,
 	REDIR_OUT,
 	REDIR_APPEND
-};
+}	t_token_type;
 
 typedef struct s_parse
 {
-	int		status;
-	char	*cmdstr;
-	char	**tokens;
-	t_cmd	*cmd;
-	size_t	pos;
-	size_t	argc;
+	char			*cmdstr;
+	char			**tokens;
+	t_cmd			*cmd;
+	size_t			pos;
+	size_t			argc;
+	t_code_status	status;
 }	t_parse;
 
-void	_extract_cmdstr(char *input, t_parse *parse);
+typedef struct s_split
+{
+	size_t			count;
+	char			*pos;
+	char			**result;
+	t_code_status	*status;
+}	t_split;
+
 void	_tokens_to_cmd(t_parse *parse);
-void	_terminate(t_list **cmdlist, t_parse *parse, char *message, int status);
-void	_free_parse(t_parse *parse);
+
+char	**_split(char *line, t_code_status *status);
+size_t	_extract_quote_literal(char *line, t_split *split);
+size_t	_extract_quote_expand(char *line, t_split *split);
+size_t	_extract_word(char *line, t_split *split);
+
+void	_terminate(t_list **cmdlist, char *message, int status);
 
 void	parse_test(t_list **cmdlist);
 
