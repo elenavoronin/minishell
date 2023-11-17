@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parse.h                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/15 12:31:10 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 15:09:28 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_parse
 	t_cmd			*cmd;
 	size_t			pos;
 	size_t			argc;
-	t_code_status	status;
+	t_status_code	status;
 }	t_parse;
 
 typedef struct s_split
@@ -61,12 +61,12 @@ typedef struct s_split
 	size_t			count;
 	char			*pos;
 	char			**result;
-	t_code_status	*status;
+	t_status_code	*status;
 }	t_split;
 
 void	_tokens_to_cmd(t_parse *parse);
 
-char	**_split(char *line, t_code_status *status);
+char	**_split(char *line, t_status_code *status);
 size_t	_extract_quote_literal(char *line, t_split *split);
 size_t	_extract_quote_expand(char *line, t_split *split);
 size_t	_extract_word(char *line, t_split *split);

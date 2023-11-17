@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/07 17:12:21 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:22:23 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/17 15:43:17 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ int	count_envp_elements(char **envp)
 	return (count);
 }
 
-void	print_env_arr(char **mini_env)
+void	print_env_arr(char **env_path_arr)
 {
 	int	i;
 
 	i = 0;
-	while (mini_env[i] != NULL)
+	while (env_path_arr[i] != NULL)
 	{
-		printf("[%d]: %s\n", i, mini_env[i]);
+		printf("[%d]: %s\n", i, env_path_arr[i]);
 		i++;
 	}
 }
 
-int	mini_env_arr_for_printing(t_shell_state *mini_state, char **envp)
+int	env_path_arr_for_printing(t_shell_state *shell_state, char **envp)
 {
 	int		i;
 	int		j;
@@ -43,19 +43,31 @@ int	mini_env_arr_for_printing(t_shell_state *mini_state, char **envp)
 	while (envp[i] != NULL)
 	{
 		j = 0;
-		mini_state->env_pathv[i] = malloc(sizeof(t_mini_env));
-		if (!mini_state->env_pathv[i])
-			return (update_status_code(mini_state, MALLOC_ERROR), -1);
+		shell_state->mini_env = malloc(sizeof(t_mini_env)
+				* (count_envp_elements(envp) + 1));
+		if (!shell_state->mini_env)
+		{
+			clear_shell_state(shell_state);
+			exit(EXIT_FAILURE);
+		}
 		while (envp[i][j] && envp[i][j] != '=')
 			j++;
-		mini_state->env_pathv[i]->variable_name = ft_substr(envp[i], 0, j);
-		if (!mini_state->env_pathv[i]->variable_name)
-			return (update_status_code(mini_state, MALLOC_ERROR), -1);
+		shell_state->mini_env[i].variable_name = ft_substr(envp[i], 0, j);
+		if (!shell_state->mini_env[i].variable_name)
+		{
+			clear_shell_state(shell_state);
+			exit(EXIT_FAILURE);
+		}
 		j++;
-		mini_state->env_pathv[i]->variable_path = ft_strdup(envp[i] + j);
-		if (!mini_state->env_pathv[i]->variable_path)
-			return (update_status_code(mini_state, MALLOC_ERROR), -1);
+		shell_state->mini_env[i].variable_path = ft_strdup(envp[i] + j);
+		if (!shell_state->mini_env[i].variable_path)
+		{
+			clear_shell_state(shell_state);
+			exit(EXIT_FAILURE);
+		}
 		i++;
 	}
-	return (update_status_code(mini_state, SUCCESS), 0);
+	shell_state->mini_env[i].variable_name = NULL;
+	shell_state->mini_env[i].variable_path = NULL;
+	return (update_status_code(shell_state, SUCCESS), 0);
 }
