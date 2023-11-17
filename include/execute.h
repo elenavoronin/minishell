@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 15:11:17 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/17 12:36:45 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,6 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <string.h>
-
-typedef struct s_dummy_cmd
-{
-	char			*delimiter;
-	char			*infile;
-	char			*outfile;
-	char			output_flag; //append or write (w or a)
-	char			**cmd_table;
-	t_code_status	status;
-}	t_dummy_cmd;
 
 typedef int	t_pipe_fd[2];
 
@@ -53,6 +43,6 @@ char	*get_path_char(char **cmd, char **mini_envp, t_pipes_struct *pipes,
 int		get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state);
 void	close_useless_pipes(int i, t_pipes_struct *pipes);
 int		redirect_stuff(int i, t_pipes_struct *pipes);
-void	clear_pipes(t_pipes_struct *pipes);
+void	clear_pipes(t_pipes_struct *pipes, int nr);
 
 #endif

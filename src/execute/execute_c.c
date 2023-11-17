@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 15:14:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/17 12:44:28 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,23 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 	return (0);
 }
 
-void	clear_pipes(t_pipes_struct *pipes)
+void	clear_pipes(t_pipes_struct *pipes, int nr)
 {
 	int	i;
 
 	i = 0;
 	ft_free_strarr(pipes->path);
-	while (pipes->fd_arr[i])
+	if (nr > 0)
 	{
-		free(pipes->fd_arr[i]);
-		free(pipes->pid);
-		i++;
+		while (pipes->fd_arr[i])
+		{
+			free(pipes->fd_arr[i]);
+			free(pipes->pid);
+			i++;
+		}
 	}
 	free(pipes->pid);
 	free(pipes->fd_arr);
-	free(pipes);
 }
 
 void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
@@ -81,8 +83,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 		return ;
 	}
 	execve(*pipes->path, cmd, mini_state->mini_env);
-	clear_pipes(pipes);
-	clear_mini_env(mini_state);
+	clear_pipes(pipes, pipes->nr_pipes);
 	// perror("execve");
 	fprintf(stderr, "execve failed\n");
 	exit(127);
@@ -91,8 +92,8 @@ void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
 void	create_children(t_list **list, t_shell_state *mini_state,
 	t_pipes_struct *pipes)
 {
-	int			i;
-	t_dummy_cmd	*cmds;
+	int		i;
+	t_cmd	*cmds;
 
 	i = 1;
 	while (*list)

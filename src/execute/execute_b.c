@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 15:16:32 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/17 12:36:29 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,24 +65,26 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 {
 	int				nr;
 	int				i;
-	t_dummy_cmd		*cmds;
+	t_cmd			*cmds;
 
 	nr = ft_lstsize(*list) - 1;
 	i = 0;
 	if (nr == 0)
 	{
 		cmds = (*list)->content;
-		pipes->path = malloc(sizeof(char *) );
+		pipes->path = malloc(sizeof(char *) * 2);
 		if (!pipes->path)
 			return (update_status_code(state, MALLOC_ERROR), -1);
 		if (get_path_char(cmds->cmd_table, state->mini_env, pipes, i) != 0)
 			return (update_status_code(state, INTERNAL_ERROR), -1);
+		pipes->path[i + 1] = NULL;
 		return (0);
 	}
+	i = 0;
 	while (list)
 	{
 		cmds = (*list)->content;
-		pipes->path = malloc(sizeof(char *) * nr);
+		pipes->path[i] = malloc(sizeof(char *) * nr);
 		if (!pipes->path)
 			return (update_status_code(state, MALLOC_ERROR), -1);
 		if (!get_path_char(cmds->cmd_table, state->mini_env, pipes, i))
@@ -96,7 +98,7 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 {
 	int			nr;
-	t_dummy_cmd	*cmds;
+	t_cmd		*cmds;
 
 	nr = ft_lstsize(*list) - 1;
 	while (list)
@@ -105,14 +107,14 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));
 		if (!pipes->fd_arr)
 			return (update_status_code(state, MALLOC_ERROR), -1);
-		// pipes->fd_arr[0][0] = STDIN_FILENO;
-		// pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
+		pipes->fd_arr[0][0] = STDIN_FILENO;
+		pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
 		if (nr == 0)
 			return (0);
 		while (pipes->nr_pipes < nr)
 		{
 			if (pipe(pipes->fd_arr[pipes->nr_pipes + 1]) != 0)
-				return (clear_pipes(pipes), -1);
+				return (clear_pipes(pipes, pipes->nr_pipes), -1);
 			pipes->nr_pipes++;
 		}
 		*list = (*list)->next;

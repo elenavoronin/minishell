@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:29:53 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/17 12:40:00 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	clear_mini_env(t_shell_state *mini_state)
 
 	i = 0;
 	ft_free_strarr(mini_state->mini_env);
-	free(mini_state->mini_env);
 	while (mini_state->env_pathv[i])
 	{
 		free(mini_state->env_pathv[i]->variable_name);
@@ -110,7 +109,7 @@ void	start_minishell(int argc, char **argv, char **envp)
 		execute_shell(&cmdlist, mini_state);
 		ft_lstclear(&cmdlist, delete_cmd);
 		add_history(line);
-		// rl_on_new_line();
+		rl_on_new_line();
 		free(line);
 	}
 	clear_mini_env(mini_state);
