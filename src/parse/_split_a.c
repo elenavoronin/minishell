@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/17 13:54:30 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 15:25:25 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static void	_count_split(char *line, t_split *split)
 
 static void	_do_split(t_split *split)
 {
-	int		*status;
+	t_status_code	*status;
 
 	status = &(split->parse->shell_state->status_code);
 	while (*status == SUCCESS && *(split->parse->cmdstr))

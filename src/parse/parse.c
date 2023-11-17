@@ -34,11 +34,11 @@ t_list	*parse_input(char *input, t_shell_state	*shell_state)
 	{
 		_init(&parse, &cmdlist, shell_state);
 		_extract_cmdstr(input, &parse);
-		if (parse.shell_state->status_code != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.shell_state->status_code);
+		if (parse.shell_state->status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.shell_state->status);
 		_parse_tokens(&parse);
-		if (parse.shell_state->status_code != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.shell_state->status_code);
+		if (parse.shell_state->status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.shell_state->status);
 		input += parse.pos;
 		if (*input == '|')
 			input++;
@@ -69,7 +69,7 @@ static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
 	t_list	*new;
 
 	parse->shell_state = shell_state;
-	parse->shell_state->status_code = 0;
+	parse->shell_state->status = 0;
 	parse->cmdstr = NULL;
 	parse->pos = 0;
 	parse->argc = 0;
@@ -103,15 +103,11 @@ static void	_extract_cmdstr(char *input, t_parse *parse)
 		parse->pos = ft_strlen(input);
 	str = ft_substr(input, 0, parse->pos);
 	if (!str)
-	{
-		parse->shell_state->status_code = MALLOC_ERROR;
-		return ;
-	}
+		return (update_status(parse->shell_state, MALLOC_ERROR));
 	if (!_valid_str(str))
 	{
 		free(str);
-		parse->shell_state->status_code = SYNTAX_ERROR;
-		return ;
+		return (update_status(parse->shell_state, SYNTAX_ERROR));
 	}
 	parse->cmdstr = str;
 }
