@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/15 14:18:57 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/17 15:47:30 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,40 +46,60 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 	return (0);
 }
 
-void	fork_cmds(char **cmd, int i, t_shell_state *mini_state,
+void	clear_pipes(t_pipes_struct *pipes, int nr)
+{
+	int	i;
+
+	i = 0;
+	if (nr > 0)
+	{
+		while (pipes->fd_arr[i])
+		{
+			free(pipes->fd_arr[i]);
+			free(pipes->pid);
+			i++;
+		}
+	}
+	free(pipes->pid);
+	free(pipes->path);
+	free(pipes->fd_arr);
+}
+
+void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 			t_pipes_struct *pipes)
 {
-	pipes->pid = malloc(sizeof(int *));
+	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
 	if (!pipes->pid)
-		return (update_status_code(mini_state, MALLOC_ERROR));
+		return (update_status_code(shell_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] == -1)
-		return (update_status_code(mini_state, FORK_ERROR));
+		return (update_status_code(shell_state, FORK_ERROR));
 	if (pipes->pid[i] != 0)
 		return ;
 	close_useless_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{
-		update_status_code(mini_state, REDIRECT_ERROR);
+		update_status_code(shell_state, REDIRECT_ERROR);
 		return ;
 	}
-	execve(pipes->path, cmd, mini_state->mini_env);
-	perror("execve");
+	execve(pipes->path, cmd, shell_state->env_path_arr);
+	clear_pipes(pipes, pipes->nr_pipes);
+	// perror("execve");
 	fprintf(stderr, "execve failed\n");
-	exit(127);
+	// exit(127);
 }
 
-void	create_children(t_list **list, t_shell_state *mini_state,
+void	create_children(t_list **list, t_shell_state *shell_state,
 	t_pipes_struct *pipes)
 {
-	int			i;
-	t_dummy_cmd	*cmds;
+	int		i;
+	t_cmd	*cmds;
 
 	i = 1;
 	while (*list)
 	{
 		cmds = (*list)->content;
-		fork_cmds(cmds->cmd_table, i, mini_state, pipes);
+		fork_cmds(cmds->cmd_table, i, shell_state, pipes);
 		i++;
 		*list = (*list)->next;
 	}

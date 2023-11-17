@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/17 14:12:51 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 15:22:10 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*_expand_tag(t_split *split)
 	char		*expand;
 	t_mini_env	**pathv;
 
-	pathv = split->parse->shell_state->env_pathv;
+	pathv = split->parse->shell_state->mini_env;
 	expand = ft_strdup("");
 	if (expand)
 	{
