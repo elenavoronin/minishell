@@ -3,20 +3,20 @@
 /*                                                        ::::::::            */
 /*   _split_a.c                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/15 13:02:08 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 15:09:28 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_init_split(t_code_status *status, t_split *split);
+static void	_init_split(t_status_code *status, t_split *split);
 static void	_count_split(char *line, t_split *split);
 static void	_do_split(char *line, t_split *split);
 
-char	**_split(char *line, t_code_status *status)
+char	**_split(char *line, t_status_code *status)
 {
 	t_split	split;
 
@@ -38,7 +38,7 @@ char	**_split(char *line, t_code_status *status)
 	return (NULL);
 }
 
-static void	_init_split(t_code_status *status, t_split *split)
+static void	_init_split(t_status_code *status, t_split *split)
 {
 	split->status = status;
 	split->count = 0;
