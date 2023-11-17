@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/16 14:03:56 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 14:01:53 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,27 +49,23 @@ typedef enum e_token_type
 typedef struct s_parse
 {
 	char			*cmdstr;
-	char			**tokens;
 	t_cmd			*cmd;
 	size_t			pos;
 	size_t			argc;
-	t_code_status	status;
 	t_shell_state	*shell_state;
 }	t_parse;
 
 typedef struct s_split
 {
-	size_t				count;
-	char				*line;
-	char				*pos;
-	char				*tag;
-	char				*tmp;
-	char				**result;
-	t_mini_env			**pathv;
-	t_code_status		*status;
+	t_parse		*parse;
+	size_t		count;
+	char		*pos;
+	char		*tag;
+	char		*tmp;
+	char		**result;
 }	t_split;
 
-void	_tokens_to_cmd(t_parse *parse);
+void	_parse_tokens(t_parse *parse);
 
 char	**_split(t_parse *parse);
 void	_extract_quote_literal(t_split *split);

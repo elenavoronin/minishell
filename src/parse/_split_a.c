@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/16 13:55:31 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 13:54:30 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ char	**_split(t_parse *parse)
 
 	_init_split(parse, &split);
 	_count_split(parse->cmdstr, &split);
-	if (parse->status != SUCCESS)
+	if (parse->shell_state->status_code != SUCCESS)
 		return (NULL);
 	split.result = ft_calloc(split.count + 1, sizeof(*split.result));
 	split.count = 0;
 	if (!split.result)
-		parse->status = MALLOC_ERROR;
+		parse->shell_state->status_code = MALLOC_ERROR;
 	else
 		_do_split(&split);
-	if (parse->status == SUCCESS)
+	if (parse->shell_state->status_code == SUCCESS)
 		return (split.result);
 	ft_free_strarr(split.result);
 	return (NULL);
@@ -38,14 +38,12 @@ char	**_split(t_parse *parse)
 
 static void	_init_split(t_parse *parse, t_split *split)
 {
+	split->parse = parse;
 	split->count = 0;
-	split->line = parse->cmdstr;
 	split->pos = NULL;
 	split->tag = NULL;
 	split->tmp = NULL;
 	split->result = NULL;
-	split->status = &parse->status;
-	split->pathv = parse->shell_state->env_pathv;
 }
 
 static void	_count_split(char *line, t_split *split)
@@ -60,7 +58,7 @@ static void	_count_split(char *line, t_split *split)
 			line = ft_strchr(line + 1, *line);
 			if (!line)
 			{
-				*(split->status) = SYNTAX_ERROR;
+				split->parse->shell_state->status_code = SYNTAX_ERROR;
 				ft_perror("SYNTAX ERROR", NULL, "Unclosed brackets found.");
 				return ;
 			}
@@ -77,16 +75,18 @@ static void	_count_split(char *line, t_split *split)
 
 static void	_do_split(t_split *split)
 {
-	while (split->status == SUCCESS && split->line && *(split->line))
+	int		*status;
+
+	status = &(split->parse->shell_state->status_code);
+	while (*status == SUCCESS && *(split->parse->cmdstr))
 	{
-		while (ft_isspace(*split->line))
-			split->line++;
-		if (ft_isquote(*(split->line)) == 1)
+		while (ft_isspace(*split->parse->cmdstr))
+			split->parse->cmdstr++;
+		if (ft_isquote(*(split->parse->cmdstr)) == 1)
 			_extract_quote_literal(split);
-		else if (ft_isquote(*split->line) == 2)
+		else if (ft_isquote(*split->parse->cmdstr) == 2)
 			_extract_quote_expand(split);
-		else if (*split->line)
+		else if (*split->parse->cmdstr)
 			_extract_word(split);
 	}
-	// split->result[split->count] = NULL;
 }

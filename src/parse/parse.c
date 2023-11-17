@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	_init_parse(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state);
+static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state);
 static void	_extract_cmdstr(char *input, t_parse *parse);
 static int	_valid_str(char *str);
 
@@ -32,14 +32,13 @@ t_list	*parse_input(char *input, t_shell_state	*shell_state)
 	cmdlist = NULL;
 	while (*input)
 	{
-		_init_parse(&parse, &cmdlist, shell_state);
+		_init(&parse, &cmdlist, shell_state);
 		_extract_cmdstr(input, &parse);
-		if (parse.status != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.status);
-		_tokens_to_cmd(&parse);
-		free(parse.cmdstr);
-		if (parse.status != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.status);
+		if (parse.shell_state->status_code != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.shell_state->status_code);
+		_parse_tokens(&parse);
+		if (parse.shell_state->status_code != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.shell_state->status_code);
 		input += parse.pos;
 		if (*input == '|')
 			input++;
@@ -65,13 +64,13 @@ void	delete_cmd(void *content)
 	free(cmd);
 }
 
-static void	_init_parse(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
+static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
 {
 	t_list	*new;
 
-	parse->status = SUCCESS;
+	parse->shell_state = shell_state;
+	parse->shell_state->status_code = 0;
 	parse->cmdstr = NULL;
-	parse->tokens = NULL;
 	parse->pos = 0;
 	parse->argc = 0;
 	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
@@ -92,7 +91,7 @@ static void	_init_parse(t_parse *parse, t_list **cmdlist, t_shell_state *shell_s
 	parse->shell_state = shell_state;
 }
 
-static void _extract_cmdstr(char *input, t_parse *parse)
+static void	_extract_cmdstr(char *input, t_parse *parse)
 {
 	char	*str;
 	char	*end;
@@ -105,13 +104,13 @@ static void _extract_cmdstr(char *input, t_parse *parse)
 	str = ft_substr(input, 0, parse->pos);
 	if (!str)
 	{
-		parse->status = MALLOC_ERROR;
+		parse->shell_state->status_code = MALLOC_ERROR;
 		return ;
 	}
 	if (!_valid_str(str))
 	{
 		free(str);
-		parse->status = SYNTAX_ERROR;
+		parse->shell_state->status_code = SYNTAX_ERROR;
 		return ;
 	}
 	parse->cmdstr = str;
