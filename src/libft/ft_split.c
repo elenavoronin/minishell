@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 16:38:17 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/16 13:04:59 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	**ft_split(const char *s, char c)
 	if (s == NULL)
 		return (NULL);
 	count = split_count(s, c);
-	strings = ft_malloc_wrapper(sizeof (*strings) * (count + 1));
+	strings = ft_calloc((count + 1), sizeof(*strings));
 	if (strings != NULL)
 		strings = split(s, c, strings, count);
 	return (strings);

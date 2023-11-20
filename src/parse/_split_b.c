@@ -6,66 +6,126 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/15 13:01:50 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/17 18:54:05 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	_extract_quote_literal(char *line, t_split *split)
+void	_extract_quote_literal(t_split *split)
 {
 	size_t	len;
 
-	len = 0;
-	if (ft_isquote(*line) == 1)
-	{
-		line++;
-		split->pos = ft_strchr(line, '\'');
-		len = split->pos - line;
-		split->result[split->count] = ft_substr(line, 0, len);
-		if (!split->result[split->count])
-			*(split->status) = MALLOC_ERROR;
-		split->count++;
-		len += 2;
-	}
-	return (len);
+	split->parse->cmdstr++;
+	split->pos = ft_strchr(split->parse->cmdstr, '\'');
+	len = split->pos - split->parse->cmdstr;
+	split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
+	if (!split->result[split->count])
+		split->parse->shell_state->status = MALLOC_ERROR;
+	split->count++;
+	split->parse->cmdstr = split->pos;
+	split->parse->cmdstr++;
 }
 
-size_t	_extract_quote_expand(char *line, t_split *split)
+//WIP
+void	_extract_quote_expand(t_split *split)
 {
 	size_t	len;
 
-	len = 0;
-	if (ft_isquote(*line) == 2)
-	{
-		line++;
-		split->pos = ft_strchr(line, '\"');
-		len = split->pos - line;
-		split->result[split->count] = ft_substr(line, 0, len);
-		if (!split->result[split->count])
-			*(split->status) = MALLOC_ERROR;
-		split->count++;
-		len += 2;
-	}
-	return (len);
+	split->parse->cmdstr++;
+	split->pos = ft_strchr(split->parse->cmdstr, '\"');
+	len = split->pos - split->parse->cmdstr;
+	split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
+	if (!split->result[split->count])
+		split->parse->shell_state->status = MALLOC_ERROR;
+	split->count++;
+	split->parse->cmdstr = split->pos;
+	split->parse->cmdstr++;
 }
 
-size_t	_extract_word(char *line, t_split *split)
+// char	*_expand_tag(t_split *split)
+// {
+// 	size_t		len;
+// 	int			i;
+// 	char		*tag;
+// 	char		*expand;
+
+// 	expand = ft_strdup("");
+// 	if (expand)
+// 	{
+// 		split->pos = split->tag + 1;
+// 		while (*split->pos && (ft_isalnum(*split->pos) || *split->pos == '_'))
+// 			split->pos++;
+// 		len = split->pos - split->tag + 1;
+// 		tag = ft_substr(split->tag, 1, len);
+// 		if (!tag)
+// 			return (split->parse->shell_state->status, MALLOC_ERROR), NULL);
+// 		i = 0;
+// 		while (split->parse->shell_state->env.var_name[i]
+// 			&& ft_strcmp(split->parse->shell_state->env.var_name[i], tag))
+// 			i++;
+// 		if (ft_strcmp(split->parse->shell_state->env.var_name[i], tag) == 0)
+// 		{
+// 			free(expand);
+// 			expand = ft_strdup(split->parse->shell_state->env.var_value[i]);
+// 		}
+// 	}
+// 	if (!expand)
+// 		split->parse->shell_state->status = MALLOC_ERROR;
+// 	return (expand);
+// }
+
+// void	_extract_quote_expand(t_split *split)
+// {
+// 	size_t	len;
+// 	char	*start;
+// 	char	*expand;
+// 	char	*end;
+
+// 	split->parse->cmdstr++;
+// 	split->pos = ft_strchr(split->parse->cmdstr, '\"');
+// 	split->tag = ft_strchr(split->parse->cmdstr, '$');
+// 	if (split->tag && split->tag < split->pos)
+// 	{
+// 		expand = _expand_tag(split);
+// 		end = split->pos;
+// 		while (*end)
+// 			end++;
+// 		len = end - split->pos;
+// 		end = ft_substr(split->pos, 0, len);
+// 		start = split->tag;
+// 		len = start - split->parse->cmdstr;
+// 		start = ft_substr(split->parse->cmdstr, 0, len);
+// 		if (!start || !expand || !end)
+// 			return (update_status(split->parse->shell_state, MALLOC_ERROR);
+// 		split->tmp = split->parse->cmdstr;
+// 		split->parse->cmdstr = ft_joinstrs(3, start, expand, end);
+// 		free(split->tmp);
+// 		free(start);
+// 		free(expand);
+// 		free(end);
+// 	}
+// 	split->pos = ft_strchr(split->parse->cmdstr, '\"');
+// 	len = split->pos - split->parse->cmdstr;
+// 	split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
+// 	if (!split->result[split->count])
+// 		split->parse->shell_state->status = MALLOC_ERROR;
+// 	split->count++;
+// 	split->parse->cmdstr = split->pos;
+// 	split->parse->cmdstr++;
+// }
+
+void	_extract_word(t_split *split)
 {
-	char	*pos;
 	size_t	len;
 
-	len = 0;
-	if (*line && !ft_isspace(*line) && !ft_isquote(*line))
-	{
-		pos = line;
-		while (pos && *pos && !ft_isspace(*pos) && !ft_isquote(*pos))
-			pos++;
-		len = pos - line;
-		split->result[split->count] = ft_substr(line, 0, len);
-		if (!split->result[split->count])
-			*(split->status) = MALLOC_ERROR;
-		split->count++;
-	}
-	return (len);
+	split->pos = split->parse->cmdstr;
+	while (*split->pos && !ft_isspace(*split->pos) && !ft_isquote(*split->pos))
+		split->pos++;
+	len = split->pos - split->parse->cmdstr;
+	split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
+	if (!split->result[split->count])
+		split->parse->shell_state->status = MALLOC_ERROR;
+	split->count++;
+	split->parse->cmdstr = split->pos;
 }

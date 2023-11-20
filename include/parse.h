@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   parse.h                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/17 15:09:28 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/17 15:19:39 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_cmd
 	char				**cmd_table;
 }	t_cmd;
 
-t_list	*parse_input(char *input);
+t_list	*parse_input(char *input, t_shell_state	*shell_state);
 void	delete_cmd(void *content);
 
 //For parsing internal use, WARNING: VOLATILE
@@ -49,30 +49,30 @@ typedef enum e_token_type
 typedef struct s_parse
 {
 	char			*cmdstr;
-	char			**tokens;
 	t_cmd			*cmd;
 	size_t			pos;
 	size_t			argc;
-	t_status_code	status;
+	t_shell_state	*shell_state;
 }	t_parse;
 
 typedef struct s_split
 {
-	size_t			count;
-	char			*pos;
-	char			**result;
-	t_status_code	*status;
+	t_parse		*parse;
+	size_t		count;
+	char		*pos;
+	char		*tag;
+	char		*tmp;
+	char		**result;
 }	t_split;
 
-void	_tokens_to_cmd(t_parse *parse);
+void	_parse_tokens(t_parse *parse);
 
-char	**_split(char *line, t_status_code *status);
-size_t	_extract_quote_literal(char *line, t_split *split);
-size_t	_extract_quote_expand(char *line, t_split *split);
-size_t	_extract_word(char *line, t_split *split);
+char	**_split(t_parse *parse);
+void	_extract_quote_literal(t_split *split);
+void	_extract_quote_expand(t_split *split);
+void	_extract_word(t_split *split);
 
 void	_terminate(t_list **cmdlist, char *message, int status);
-
 void	parse_test(t_list **cmdlist);
 
 #endif
