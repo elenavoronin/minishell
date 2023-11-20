@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/11 19:03:29 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 13:13:39 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/20 11:41:00 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char			*str;
 	size_t			size;
 
-	if (s != NULL)
+	str = NULL;
+	if (s)
 	{
 		size = ft_strlen(s);
 		if (size <= start)
@@ -67,15 +68,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		else if (size - start < len)
 			len = size - start;
 		str = ft_calloc(len + 1, sizeof(*str));
-		if (str == NULL)
+		if (!str)
 			return (NULL);
-		if (size == 0 || size <= start || start == 4294967295)
+		if (size == 0 || len == 0)
 			str[0] = '\0';
 		else
 			ft_strlcpy(str, &s[start], len + 1);
-		return (str);
 	}
-	return (NULL);
+	return (str);
 }
 
 /**
@@ -112,18 +112,9 @@ char	*ft_strtrim(char const *s1, char const *set)
 char	*ft_strrep(const char c, const size_t len)
 {
 	char	*str;
-	size_t	i;
 
-	i = 0;
 	str = ft_calloc(len + 1, sizeof(*str));
 	if (str)
-	{
-		while (i < len)
-		{
-			str[i] = c;
-			i++;
-		}
-		str[i] = '\0';
-	}
+		ft_memset(str, c, len);
 	return (str);
 }
