@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/17 15:25:25 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 13:42:09 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ char	**_split(t_parse *parse)
 
 	_init_split(parse, &split);
 	_count_split(parse->cmdstr, &split);
-	if (parse->shell_state->status_code != SUCCESS)
+	if (parse->shell_state->status != SUCCESS)
 		return (NULL);
 	split.result = ft_calloc(split.count + 1, sizeof(*split.result));
 	split.count = 0;
 	if (!split.result)
-		parse->shell_state->status_code = MALLOC_ERROR;
+		parse->shell_state->status = MALLOC_ERROR;
 	else
 		_do_split(&split);
-	if (parse->shell_state->status_code == SUCCESS)
+	if (parse->shell_state->status == SUCCESS)
 		return (split.result);
 	ft_free_strarr(split.result);
 	return (NULL);
@@ -58,7 +58,7 @@ static void	_count_split(char *line, t_split *split)
 			line = ft_strchr(line + 1, *line);
 			if (!line)
 			{
-				split->parse->shell_state->status_code = SYNTAX_ERROR;
+				split->parse->shell_state->status = SYNTAX_ERROR;
 				ft_perror("SYNTAX ERROR", NULL, "Unclosed brackets found.");
 				return ;
 			}
@@ -75,9 +75,9 @@ static void	_count_split(char *line, t_split *split)
 
 static void	_do_split(t_split *split)
 {
-	t_status_code	*status;
+	t_status	*status;
 
-	status = &(split->parse->shell_state->status_code);
+	status = &(split->parse->shell_state->status);
 	while (*status == SUCCESS && *(split->parse->cmdstr))
 	{
 		while (ft_isspace(*split->parse->cmdstr))

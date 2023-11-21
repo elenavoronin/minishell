@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/17 15:47:30 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/21 15:39:12 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,19 @@ void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 {
 	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
 	if (!pipes->pid)
-		return (update_status_code(shell_state, MALLOC_ERROR));
+		return (update_status(shell_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
 	if (pipes->pid[i] == -1)
-		return (update_status_code(shell_state, FORK_ERROR));
+		return (update_status(shell_state, FORK_ERROR));
 	if (pipes->pid[i] != 0)
 		return ;
 	close_useless_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{
-		update_status_code(shell_state, REDIRECT_ERROR);
+		update_status(shell_state, REDIRECT_ERROR);
 		return ;
 	}
-	execve(pipes->path, cmd, shell_state->env_path_arr);
+	execve(pipes->path, cmd, shell_state->env.envp);
 	clear_pipes(pipes, pipes->nr_pipes);
 	// perror("execve");
 	fprintf(stderr, "execve failed\n");

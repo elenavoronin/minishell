@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/17 15:33:53 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/21 15:43:48 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_path_char(char **cmd, char **env_path_arr, t_pipes_struct *pipes)
+char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 {
 	char	**new_paths;
 	char	*path;
@@ -23,11 +23,11 @@ char	*get_path_char(char **cmd, char **env_path_arr, t_pipes_struct *pipes)
 	j = 0;
 	new_paths = NULL;
 	// if (cmds == builtin ... look in directory, else ... getpath)
-	while (env_path_arr[i] != NULL)
+	while (envp[i] != NULL)
 	{
-		if (ft_strnstr(env_path_arr[i], "PATH", ft_strlen("PATH")))
+		if (ft_strnstr(envp[i], "PATH", ft_strlen("PATH")))
 		{
-			new_paths = ft_split(env_path_arr[i], ':');
+			new_paths = ft_split(envp[i], ':');
 			if (!new_paths)
 				return (NULL);
 			break ;
@@ -45,17 +45,15 @@ char	*get_path_char(char **cmd, char **env_path_arr, t_pipes_struct *pipes)
 		}
 		pipes->path = ft_strjoin(path, cmd[0]);
 		if (!pipes->path)
+			free(path);
 		{
 			free(new_paths);
 			return (NULL);
 		}
 		if (access(pipes->path, X_OK) == 0)
 			return (pipes->path);
-		free(path);
 		j++;
 	}
-	// printf("HERE\n");
-	// set error code to 127 - command not found and exit
 	return (NULL);
 }
 
@@ -69,16 +67,16 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	if ((pipes->nr_pipes) == 0)
 	{
 		cmds = (*list)->content;
-		if (get_path_char(cmds->cmd_table, state->env_path_arr, pipes) != 0)
-			return (update_status_code(state, INTERNAL_ERROR), -1);
+		if (!get_path_char(cmds->cmd_table, state->env.envp, pipes))
+			return (update_status(state, INTERNAL_ERROR), -1);
 		return (0);
 	}
 	i = 0;
 	while (list)
 	{
 		cmds = (*list)->content;
-		if (!get_path_char(cmds->cmd_table, state->env_path_arr, pipes))
-			return (update_status_code(state, PIPE_ERROR), -1);
+		if (!get_path_char(cmds->cmd_table, state->env.envp, pipes))
+			return (update_status(state, PIPE_ERROR), -1);
 		*list = (*list)->next;
 		i++;
 	}
@@ -96,7 +94,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		cmds = (*list)->content;
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));
 		if (!pipes->fd_arr)
-			return (update_status_code(state, MALLOC_ERROR), -1);
+			return (update_status(state, MALLOC_ERROR), -1);
 		pipes->fd_arr[0][0] = STDIN_FILENO;
 		pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
 		if (nr == 0)
