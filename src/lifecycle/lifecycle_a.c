@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/21 15:40:33 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/21 15:44:46 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	start_minishell(int argc, char **argv, char **envp)
 		if (*line)
 		{
 			cmdlist = parse_input(line, &shell_state);
-			parse_test(&cmdlist);
+			// parse_test(&cmdlist);
 			execute_shell(&cmdlist, &shell_state);
 			ft_lstclear(&cmdlist, delete_cmd);
 			add_history(line);
