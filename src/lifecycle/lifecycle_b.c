@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/17 18:41:33 by codespace     #+#    #+#                 */
-/*   Updated: 2023/11/21 13:31:46 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 13:42:26 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,12 @@ void	update_status(t_shell_state *shell_state, t_status code)
 	shell_state->status = code;
 }
 
-//searches for by name and returns envp_value, or NULL if not found.
+/**
+ * Searches through env array by name and returns pointer to
+ * corresponding envp_value, or NULL if not found.
+ * 
+ * Note: Does NOT allocate new memory, so do not free!
+*/
 char	*getenvp_value(t_shell_state *shell_state, char *name)
 {
 	int		i;

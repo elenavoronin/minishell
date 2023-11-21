@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/21 13:32:11 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 14:00:31 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,15 @@ char	*_expand(t_split *split)
 
 	expand.i = 0;
 	result = NULL;
-	if (_expand_start(&expand, split))
+	while (split->parse->cmdstr != split->end)
 	{
-		if (_expand_tag(&expand, split))
+		if (_expand_start(&expand, split))
 		{
-			if (_expand_end(&expand, split))
-				result = expand_join(&expand);
+			if (_expand_tag(&expand, split))
+			{
+				if (_expand_end(&expand, split))
+					result = expand_join(&expand);
+			}
 		}
 	}
 	if (!result)
@@ -91,6 +94,7 @@ static int	_expand_end(t_expand *expand, t_split *split)
 	if (!expand->strs[expand->i])
 		return (update_status(split->parse->shell_state, MALLOC_ERROR), 0);
 	expand->i++;
+	split->parse->cmdstr = split->end;
 	return (1);
 }
 
@@ -115,5 +119,7 @@ static char	*expand_join(t_expand *expand)
 		}
 		i++;
 	}
+	if (!joined)
+		joined = ft_strdup("");
 	return (joined);
 }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/20 20:08:22 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 13:55:10 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_split
 typedef struct s_expand
 {
 	int			i;
-	char		*strs[4];
+	char		**strs;
 }	t_expand;
 
 
