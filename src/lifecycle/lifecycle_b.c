@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/17 18:41:33 by codespace     #+#    #+#                 */
-/*   Updated: 2023/11/20 19:39:35 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 13:31:46 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*getenvp_value(t_shell_state *shell_state, char *name)
 	while (shell_state->env.envp_name[i]
 		&& ft_strcmp(shell_state->env.envp_name[i], name))
 		i++;
-	if (ft_strcmp(shell_state->env.envp[i], name) == 0)
+	if (ft_strcmp(shell_state->env.envp_name[i], name) == 0)
 		return (shell_state->env.envp_value[i]);
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/20 20:11:25 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 12:30:03 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,14 @@ void	_extract(t_split *split)
 	else
 	{
 		split->end = split->parse->cmdstr;
+		split->tag = ft_strchr(split->parse->cmdstr, '$');
 		while (*split->end
 			&& !ft_isspace(*split->end) && !ft_isquote(*split->end))
 			split->end++;
-		_extract_expand(split, 1);
+		if (split->tag && split->tag < split->end)
+			_extract_expand(split, 1);
+		else
+			_extract_expand(split, 0);
 	}
 }
 
@@ -60,15 +64,13 @@ static void	_extract_expand(t_split *split, int expand)
 {
 	size_t	len;
 
-	if (!expand)
+	if (expand)
+		split->result[split->count] = _expand(split);
+	else
 	{
 		len = split->end - split->parse->cmdstr;
 		split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
 	}
-	else if (expand && split->tag == split->parse->cmdstr)
-		split->result[split->count] = _expand(split);
-	else if (expand && split->quote == 2)
-		split->result[split->count] = _expand(split);
 	if (!split->result[split->count])
 		return (update_status(split->parse->shell_state, MALLOC_ERROR));
 	split->count++;

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/20 20:08:12 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 13:32:11 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static int	_expand_tag(t_expand *expand, t_split *split)
 	if (!ename)
 		return (update_status(split->parse->shell_state, MALLOC_ERROR), 0);
 	evalue = getenvp_value(split->parse->shell_state, ename);
+	free(ename);
 	if (evalue)
 	{
 		expand->strs[expand->i] = ft_strdup(evalue);

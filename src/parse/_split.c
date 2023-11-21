@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/20 17:12:35 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 12:30:30 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	_count_split(char *line, t_split *split)
 			}
 			line++;
 		}
-		else if (*line && !ft_isspace(*line) && !ft_isquote(*line))
+		else if (*line)
 		{
 			split->count++;
 			while (*line && !ft_isspace(*line) && !ft_isquote(*line))

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/20 17:32:13 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 12:33:13 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ static char	**_get_dest(char *token, t_parse *parse);
 void	_parse_tokens(t_parse *parse)
 {
 	char	**tokens;
-	char	*cmdstr;
+	char	*save_cmdstr;
 
-	cmdstr = parse->cmdstr;
+	save_cmdstr = parse->cmdstr;
 	tokens = _split(parse);
 	if (parse->shell_state->status == SUCCESS)
 		_tokens_to_cmd(tokens, parse);
 	ft_free_strarr(tokens);
-	free(cmdstr);
+	free(save_cmdstr);
 }
 
 static void	_tokens_to_cmd(char **tokens, t_parse *parse)
