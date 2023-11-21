@@ -1,22 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
+/*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/21 17:22:21 by evoronin      ########   odam.nl         */
+/*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
+/*   Updated: 2023/11/21 17:52:04 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "libft.h"
-# include "lifecycle.h"
-# include "parse.h"
-# include "execute.h"
-# include "builtins.h"
-
-#endif
+void    ft_env(char **cmd, t_shell_state *shell_state)
+{
+    if (ft_strncmp("env", cmd[0], 4) == 0)
+        print_env(shell_state);
+}

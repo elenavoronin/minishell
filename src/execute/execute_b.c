@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/21 15:57:44 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/21 17:55:30 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 	char	*path;
 	int		i;
 	int		j;
+	
 
 	i = 0;
 	j = 0;
 	new_paths = NULL;
-	// if (cmds == builtin ... look in directory, else ... getpath)
+	// if (ft_strncmp(cmd[0], )
 	while (envp[i] != NULL)
 	{
 		if (ft_strnstr(envp[i], "PATH", ft_strlen("PATH")))
@@ -69,7 +70,6 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		cmds = (*list)->content;
 		if (get_path_char(cmds->cmd_table, state->env.envp, pipes) == NULL)
 			return (update_status(state, INTERNAL_ERROR), -1);
-		dprintf(2, "HERE\n");
 		return (0);
 	}
 	i = 0;
