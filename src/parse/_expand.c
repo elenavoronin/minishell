@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/22 18:37:34 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/22 19:46:20 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*_expand(t_split *split)
 	char		*expanded;
 
 	expanded = NULL;
+	expand.count = 0;
 	if (!_init_expand(&expand, split))
 		return (NULL);
 	while (split->parse->cmdstr < split->end
@@ -30,8 +31,8 @@ char	*_expand(t_split *split)
 	{
 		if (split->parse->cmdstr == split->tag)
 			_extract_tag(&expand, split);
-		else if ((!split->tag && split->parse->cmdstr < split->end)
-			|| (split->tag < split->end && split->parse->cmdstr < split->tag))
+		else if ((split->tag && split->parse->cmdstr < split->tag)
+			|| (!split->tag && split->parse->cmdstr < split->end))
 			_extract_word(&expand, split);
 	}
 	if (split->parse->shell_state->status == SUCCESS)
@@ -56,7 +57,7 @@ int	_init_expand(t_expand *expand, t_split *split)
 		}
 		else
 		{
-			while (*str && *str != '$')
+			while (str < split->end && *str != '$')
 				str++;
 		}
 	}
@@ -91,6 +92,8 @@ static	void	_extract_tag(t_expand *expand, t_split *split)
 		return (update_status(split->parse->shell_state, MALLOC_ERROR));
 	expand->count++;
 	split->tag = ft_strchr(split->parse->cmdstr, '$');
+	if (split->tag > split->end)
+		split->tag = NULL;
 	split->parse->cmdstr += len;
 }
 

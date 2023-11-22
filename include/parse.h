@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/22 18:17:42 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/22 19:36:00 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ typedef struct s_expand
 
 void	_parse_tokens(t_parse *parse);
 char	**_split(t_parse *parse);
-void	_extract(t_split *split);
 char	*_expand(t_split *split);
 void	_terminate(t_list **cmdlist, char *message, int status);
 void	parse_test(t_list **cmdlist);
