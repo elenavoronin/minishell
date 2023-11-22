@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/21 12:30:03 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/22 18:08:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ void	_extract(t_split *split)
 static void	_extract_quote(t_split *split)
 {
 	split->parse->cmdstr++;
-	if (split->end == split->parse->cmdstr)
-	{
-		_extract_expand(split, 0);
-		split->parse->cmdstr++;
-		return ;
-	}
 	if (split->quote == 2)
 	{
 		split->tag = ft_strchr(split->parse->cmdstr, '$');
@@ -70,9 +64,9 @@ static void	_extract_expand(t_split *split, int expand)
 	{
 		len = split->end - split->parse->cmdstr;
 		split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
+		split->parse->cmdstr = split->end;
 	}
 	if (!split->result[split->count])
 		return (update_status(split->parse->shell_state, MALLOC_ERROR));
 	split->count++;
-	split->parse->cmdstr = split->end;
 }
