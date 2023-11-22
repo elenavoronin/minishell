@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/09 13:06:05 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 15:18:46 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/21 13:35:51 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	parse_test(t_list **cmdlist)
 			printf("\ncmdtable args:");
 			while (cmd->cmd_table && cmd->cmd_table[i])
 			{
-				printf("	%s", cmd->cmd_table[i]);
+				printf("	%s\n", cmd->cmd_table[i]);
 				i++;
 			}
 			printf("\n");

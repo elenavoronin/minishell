@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/17 19:46:39 by codespace     ########   odam.nl         */
+/*   Updated: 2023/11/21 13:29:58 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,19 @@ void	start_minishell(int argc, char **argv, char **envp)
 			clear_history();
 			exit(EXIT_SUCCESS);
 		}
-		if (ft_strcmp(line, "env") == 0)
-			print_env_test((const t_shell_state)shell_state);
-		else {
-		cmdlist = parse_input(line, &shell_state);
-		parse_test(&cmdlist);
-		// execute_shell(&cmdlist, &shell_state);
-		ft_lstclear(&cmdlist, delete_cmd); }
-		add_history(line);
+		if (*line)
+		{
+			if (ft_strcmp(line, "env") == 0)
+				print_env_test((const t_shell_state)shell_state);
+			else
+			{
+				cmdlist = parse_input(line, &shell_state);
+				parse_test(&cmdlist);
+				// execute_shell(&cmdlist, &shell_state);
+				ft_lstclear(&cmdlist, delete_cmd);
+			}
+			add_history(line);
+		}
 		free(line);
 	}
 	clear_shell_state(&shell_state);
