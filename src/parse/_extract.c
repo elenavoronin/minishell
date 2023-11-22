@@ -6,59 +6,41 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/22 18:08:22 by dliu          ########   odam.nl         */
+/*   Updated: 2023/11/22 18:54:23 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	_extract_quote(t_split *split);
-static void	_extract_expand(t_split *split, int expand);
+static void	_extract_expand(t_split *split);
 
 void	_extract(t_split *split)
 {
 	split->quote = ft_isquote(*(split->parse->cmdstr));
+	split->tag = ft_strchr(split->parse->cmdstr, '$');
 	if (split->quote)
 	{
 		split->end = ft_strchr(split->parse->cmdstr + 1, *split->parse->cmdstr);
-		_extract_quote(split);
+		split->parse->cmdstr++;
+		_extract_expand(split);
+		split->parse->cmdstr++;
+		split->quote = 0;
 	}
 	else
 	{
 		split->end = split->parse->cmdstr;
-		split->tag = ft_strchr(split->parse->cmdstr, '$');
 		while (*split->end
 			&& !ft_isspace(*split->end) && !ft_isquote(*split->end))
 			split->end++;
-		if (split->tag && split->tag < split->end)
-			_extract_expand(split, 1);
-		else
-			_extract_expand(split, 0);
+		_extract_expand(split);
 	}
 }
 
-static void	_extract_quote(t_split *split)
-{
-	split->parse->cmdstr++;
-	if (split->quote == 2)
-	{
-		split->tag = ft_strchr(split->parse->cmdstr, '$');
-		if (split->tag && split->tag < split->end)
-		{
-			_extract_expand(split, 1);
-			split->parse->cmdstr++;
-			return ;
-		}
-	}
-	_extract_expand(split, 0);
-	split->parse->cmdstr++;
-}
-
-static void	_extract_expand(t_split *split, int expand)
+static void	_extract_expand(t_split *split)
 {
 	size_t	len;
 
-	if (expand)
+	if (split->tag && split->tag < split->end && split->quote != 1)
 		split->result[split->count] = _expand(split);
 	else
 	{
