@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/21 15:39:12 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/23 16:39:00 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,25 +68,31 @@ void	clear_pipes(t_pipes_struct *pipes, int nr)
 void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 			t_pipes_struct *pipes)
 {
-	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
-	if (!pipes->pid)
-		return (update_status(shell_state, MALLOC_ERROR));
-	pipes->pid[i] = fork();
-	if (pipes->pid[i] == -1)
-		return (update_status(shell_state, FORK_ERROR));
-	if (pipes->pid[i] != 0)
-		return ;
+	if (pipes->nr_pipes == 0)
+		pipes->pid[i] = 0;
+	else
+	{
+		pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
+		if (!pipes->pid)
+			return (update_status(shell_state, MALLOC_ERROR));
+		pipes->pid[i] = fork();
+		if (pipes->pid[i] == -1)
+			return (update_status(shell_state, FORK_ERROR));
+		if (pipes->pid[i] != 0)
+			return ;
+	}
 	close_useless_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{
 		update_status(shell_state, REDIRECT_ERROR);
 		return ;
 	}
-	execve(pipes->path, cmd, shell_state->env.envp);
-	clear_pipes(pipes, pipes->nr_pipes);
-	// perror("execve");
-	fprintf(stderr, "execve failed\n");
-	// exit(127);
+	if (execve(pipes->path, cmd, shell_state->env.envp) == -1)
+	{
+		clear_pipes(pipes, pipes->nr_pipes);
+		fprintf(stderr, "execve failed\n");
+		exit(127);
+	}
 }
 
 void	create_children(t_list **list, t_shell_state *shell_state,

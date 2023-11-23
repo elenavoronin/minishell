@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/21 17:55:30 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/23 13:45:49 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		return (0);
 	}
 	i = 0;
-	while (list)
+	while (*list)
 	{
 		cmds = (*list)->content;
 		if (!get_path_char(cmds->cmd_table, state->env.envp, pipes))
@@ -90,7 +90,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	t_cmd		*cmds;
 
 	nr = ft_lstsize(*list) - 1;
-	while (list)
+	while (*list)
 	{
 		cmds = (*list)->content;
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));

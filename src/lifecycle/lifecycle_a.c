@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/23 13:15:38 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/23 15:27:03 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	start_minishell(int argc, char **argv, char **envp)
 		}
 		if (*line)
 		{
+			if (ft_strcmp("env", line) == 0)	
+				print_env_test(shell_state);
 			cmdlist = parse_input(line, &shell_state);
 			// parse_test(&cmdlist);
 			execute_shell(&cmdlist, &shell_state);
