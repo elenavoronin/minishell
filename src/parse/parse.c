@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state);
-static void	_extract_cmdstr(char *input, t_parse *parse);
-static int	_valid_str(char *str);
+static void		_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell);
+static size_t	_extract_cmdstr(char *input, t_parse *parse);
+static int		_valid_str(char *str);
 
 /**
  * Parses input. Allocates memory.
@@ -33,13 +33,12 @@ t_list	*parse_input(char *input, t_shell_state	*shell_state)
 	while (*input)
 	{
 		_init(&parse, &cmdlist, shell_state);
-		_extract_cmdstr(input, &parse);
+		input += _extract_cmdstr(input, &parse);
 		if (parse.shell_state->status != SUCCESS)
 			_terminate(&cmdlist, NULL, parse.shell_state->status);
 		_parse_tokens(&parse);
 		if (parse.shell_state->status != SUCCESS)
 			_terminate(&cmdlist, NULL, parse.shell_state->status);
-		input += parse.pos;
 		if (*input == '|')
 			input++;
 	}
@@ -71,7 +70,6 @@ static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
 	parse->shell_state = shell_state;
 	parse->shell_state->status = 0;
 	parse->cmdstr = NULL;
-	parse->pos = 0;
 	parse->argc = 0;
 	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
 	if (!parse->cmd)
@@ -91,25 +89,27 @@ static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
 	parse->shell_state = shell_state;
 }
 
-static void	_extract_cmdstr(char *input, t_parse *parse)
+static size_t	_extract_cmdstr(char *input, t_parse *parse)
 {
+	size_t	len;
 	char	*str;
 	char	*end;
 
 	end = ft_strchr(input, '|');
 	if (end)
-		parse->pos = end - 1 - input;
+		len = end - input;
 	else
-		parse->pos = ft_strlen(input);
-	str = ft_substr(input, 0, parse->pos);
+		len = ft_strlen(input);
+	str = ft_substr(input, 0, len);
 	if (!str)
-		return (update_status(parse->shell_state, MALLOC_ERROR));
+		return (update_status(parse->shell_state, MALLOC_ERROR), 0);
 	if (!_valid_str(str))
 	{
 		free(str);
-		return (update_status(parse->shell_state, SYNTAX_ERROR));
+		return (update_status(parse->shell_state, SYNTAX_ERROR), 0);
 	}
 	parse->cmdstr = str;
+	return (len);
 }
 
 static int	_valid_str(char *str)

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/21 13:42:09 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/23 13:16:22 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,33 @@ static char	**_get_dest(char *token, t_parse *parse);
 void	_parse_tokens(t_parse *parse)
 {
 	char	**tokens;
-	char	*cmdstr;
+	char	*save_cmdstr;
 
-	cmdstr = parse->cmdstr;
+	save_cmdstr = parse->cmdstr;
 	tokens = _split(parse);
 	if (parse->shell_state->status == SUCCESS)
 		_tokens_to_cmd(tokens, parse);
 	ft_free_strarr(tokens);
-	free(cmdstr);
+	free(save_cmdstr);
 }
 
 static void	_tokens_to_cmd(char **tokens, t_parse *parse)
 {
 	char	**dest;
 
-	while (*tokens && !parse->shell_state->status)
+	while (*tokens)
 	{
 		dest = _get_dest(*tokens, parse);
 		if (dest && *dest != parse->cmd->cmd_table[0])
 		{
 			tokens++;
 			if (!*tokens)
-			{
-				parse->shell_state->status = SYNTAX_ERROR;
-				return ;
-			}
+				return (update_status(parse->shell_state, SYNTAX_ERROR));
 			if (*dest)
 				free(*dest);
 			*dest = ft_strdup(*tokens);
 			if (!*dest)
-				parse->shell_state->status = MALLOC_ERROR;
+				return (update_status(parse->shell_state, MALLOC_ERROR));
 		}
 		else if (dest == &parse->cmd->cmd_table[0])
 			_tokens_to_cmdtable(*tokens, parse);
@@ -72,7 +69,7 @@ static char	**_get_dest(char *token, t_parse *parse)
 		parse->cmd->output_flag = 'a';
 		dest = &(parse->cmd->outfile);
 	}
-	else
+	else if (*token)
 	{
 		parse->argc++;
 		dest = &(parse->cmd->cmd_table[0]);
@@ -87,10 +84,7 @@ static void	_tokens_to_cmdtable(char *token, t_parse *parse)
 
 	cmdtable = ft_malloc_wrapper((parse->argc + 1) * sizeof(*cmdtable));
 	if (!cmdtable)
-	{
-		parse->shell_state->status = MALLOC_ERROR;
-		return ;
-	}
+		return (update_status(parse->shell_state, MALLOC_ERROR));
 	i = 0;
 	while (i < parse->argc)
 	{
