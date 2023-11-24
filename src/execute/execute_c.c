@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/23 16:39:00 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/24 13:15:44 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,14 @@ void	clear_pipes(t_pipes_struct *pipes, int nr)
 void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 			t_pipes_struct *pipes)
 {
-	if (pipes->nr_pipes == 0)
-		pipes->pid[i] = 0;
-	else
-	{
-		pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
-		if (!pipes->pid)
-			return (update_status(shell_state, MALLOC_ERROR));
-		pipes->pid[i] = fork();
-		if (pipes->pid[i] == -1)
-			return (update_status(shell_state, FORK_ERROR));
-		if (pipes->pid[i] != 0)
-			return ;
-	}
+	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
+	if (!pipes->pid)
+		return (update_status(shell_state, MALLOC_ERROR));
+	pipes->pid[i] = fork();
+	if (pipes->pid[i] == -1)
+		return (update_status(shell_state, FORK_ERROR));
+	if (pipes->pid[i] != 0)
+		return ;
 	close_useless_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{

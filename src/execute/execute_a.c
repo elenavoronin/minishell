@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/23 16:36:15 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/24 13:05:28 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	wait_all(t_pipes_struct *pipes)
+void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
 {
 	int		status;
 	int		i;
@@ -24,24 +24,21 @@ int	wait_all(t_pipes_struct *pipes)
 			waitpid(pipes->pid[i], &status, 0);
 		i++;
 	}
-	return (status);
+	if (WIFEXITED(status))
+		shell_state->return_value = WEXITSTATUS(status);
+	else
+		shell_state->return_value = 128 + WTERMSIG(status);
 }
 
-int	execute_shell(t_list **cmds, t_shell_state *shell_state)
+void	execute_shell(t_list **cmds, t_shell_state *shell_state)
 {
 	t_pipes_struct	pipes;
-	int				retcode;
 
 	pipes.nr_pipes = 0;
 	if (create_pipes(cmds, &pipes, shell_state) != 0)
-		return (update_status(shell_state, INTERNAL_ERROR), -1);
+		update_status(shell_state, INTERNAL_ERROR);
 	if (get_path(cmds, &pipes, shell_state) != 0)
-		return (update_status(shell_state, INTERNAL_ERROR), -1);
+		update_status(shell_state, INTERNAL_ERROR);
 	create_children(cmds, shell_state, &pipes);
-	retcode = wait_all(&pipes);
-	return (retcode);
-	// if (WIFEXITED(status))
-	// 	exit(WEXITSTATUS(status));
 	//after each return add cleanup and proper exit
-	// proper_exit_code() exit codes should match bash + use the status code for this
 }
