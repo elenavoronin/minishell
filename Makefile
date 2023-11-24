@@ -6,7 +6,7 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/23 13:15:50 by evoronin      ########   odam.nl          #
+#    Updated: 2023/11/24 13:32:36 by elenavoroni   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,10 @@ CFLAGS = -Wall -Wextra -Werror -I ./include -g -fsanitize=address
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
 
-# execute_a.c execute_b.c execute_c.c
-VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute
+VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute ./src/builtins
 SRCS_NAMES = main.c lifecycle_a.c lifecycle_b.c \
 parse.c _tokens.c _split.c _expand.c _errors.c \
+builtins_a.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \

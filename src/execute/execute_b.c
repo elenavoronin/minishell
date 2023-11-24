@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/23 13:45:49 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/24 13:33:49 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 	i = 0;
 	j = 0;
 	new_paths = NULL;
-	// if (ft_strncmp(cmd[0], )
+	if (check_builtins(cmd, pipes) == 0)
+		return (pipes->path);
 	while (envp[i] != NULL)
 	{
 		if (ft_strnstr(envp[i], "PATH", ft_strlen("PATH")))

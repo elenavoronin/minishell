@@ -3,16 +3,16 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/21 17:52:04 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/11/24 13:38:24 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    ft_env(char **cmd, t_shell_state *shell_state)
+void    ft_env(char **cmd, const t_shell_state shell_state)
 {
     if (ft_strncmp("env", cmd[0], 4) == 0)
         print_env(shell_state);

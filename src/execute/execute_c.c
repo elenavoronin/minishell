@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/24 13:15:44 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/24 16:16:43 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	close_useless_pipes(int i, t_pipes_struct *pipes)
 	int	j;
 
 	j = 0;
-	while (j < pipes->nr_pipes)
+	while (j <= pipes->nr_pipes)
 	{
 		if (j != i)
 		{
@@ -33,13 +33,15 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
 	if (i > 0)
 	{
-		dup2(pipes->fd_arr[i - 1][0], STDIN_FILENO);
-		close(pipes->fd_arr[i - 1][0]);
-		close(pipes->fd_arr[i - 1][1]);
+		if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
+			return (-1);
+		close(pipes->fd_arr[i][0]);
+		close(pipes->fd_arr[i][1]);
 	}
-	if (i < pipes->nr_pipes - 1)
+	if (i < pipes->nr_pipes)
 	{
-		dup2(pipes->fd_arr[i][1], STDOUT_FILENO);
+		if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
+			return (-1);
 		close(pipes->fd_arr[i][0]);
 		close(pipes->fd_arr[i][1]);
 	}
@@ -77,6 +79,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 	if (pipes->pid[i] != 0)
 		return ;
 	close_useless_pipes(i, pipes);
+	printf("path: %s\n", pipes->path);
 	if (redirect_stuff(i, pipes) != 0)
 	{
 		update_status(shell_state, REDIRECT_ERROR);
@@ -96,7 +99,7 @@ void	create_children(t_list **list, t_shell_state *shell_state,
 	int		i;
 	t_cmd	*cmds;
 
-	i = 1;
+	i = 0;
 	while (*list)
 	{
 		cmds = (*list)->content;
