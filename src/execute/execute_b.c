@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/24 13:33:49 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/27 16:19:52 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 	char	*path;
 	int		i;
 	int		j;
-	
 
 	i = 0;
 	j = 0;
@@ -91,6 +90,9 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	t_cmd		*cmds;
 
 	nr = ft_lstsize(*list) - 1;
+	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
+	if (!pipes->pid)
+		return (update_status(state, MALLOC_ERROR), -1);
 	while (*list)
 	{
 		cmds = (*list)->content;

@@ -6,37 +6,26 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/24 16:16:43 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/27 16:29:33 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Close unnecessary pipe ends in the child process
-void	close_useless_pipes(int i, t_pipes_struct *pipes)
+void	connect_pipes(int i, t_pipes_struct *pipes)
 {
-	int	j;
-
-	j = 0;
-	while (j <= pipes->nr_pipes)
-	{
-		if (j != i)
-		{
-			close(pipes->fd_arr[j][0]);
-			close(pipes->fd_arr[j][1]);
-		}
-		j++;
-	}
+	if (i > 0)
+		pipes->fd_arr[i][0] = pipes->fd_arr[i - 1][1];
 }
 
 int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
 	if (i > 0)
 	{
-		if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
+		if (dup2(pipes->fd_arr[i - 1][0], STDIN_FILENO) == -1)
 			return (-1);
-		close(pipes->fd_arr[i][0]);
-		close(pipes->fd_arr[i][1]);
+		close(pipes->fd_arr[i - 1][0]);
+		close(pipes->fd_arr[i - 1][1]);
 	}
 	if (i < pipes->nr_pipes)
 	{
@@ -70,16 +59,15 @@ void	clear_pipes(t_pipes_struct *pipes, int nr)
 void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 			t_pipes_struct *pipes)
 {
-	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
-	if (!pipes->pid)
-		return (update_status(shell_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
-	if (pipes->pid[i] == -1)
+	if (pipes->pid[i] < 0)
+	{
+		perror("fork");
 		return (update_status(shell_state, FORK_ERROR));
+	}
 	if (pipes->pid[i] != 0)
 		return ;
-	close_useless_pipes(i, pipes);
-	printf("path: %s\n", pipes->path);
+	connect_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{
 		update_status(shell_state, REDIRECT_ERROR);
@@ -103,6 +91,7 @@ void	create_children(t_list **list, t_shell_state *shell_state,
 	while (*list)
 	{
 		cmds = (*list)->content;
+		dprintf(2, "cmd: %s\n", cmds->cmd_table[0]);
 		fork_cmds(cmds->cmd_table, i, shell_state, pipes);
 		i++;
 		*list = (*list)->next;

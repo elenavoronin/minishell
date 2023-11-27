@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/24 13:05:28 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/27 16:20:18 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
 	i = 0;
 	while (pipes->pid[i])
 	{
+		printf("pipes->pid: %d\n", pipes->pid[i]);
 		if (pipes->pid[i] > 0)
 			waitpid(pipes->pid[i], &status, 0);
 		i++;
@@ -40,5 +41,6 @@ void	execute_shell(t_list **cmds, t_shell_state *shell_state)
 	if (get_path(cmds, &pipes, shell_state) != 0)
 		update_status(shell_state, INTERNAL_ERROR);
 	create_children(cmds, shell_state, &pipes);
+	wait_all(&pipes, shell_state);
 	//after each return add cleanup and proper exit
 }
