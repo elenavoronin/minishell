@@ -6,40 +6,31 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/17 15:47:30 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/11 11:43:32 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Close unnecessary pipe ends in the child process
-void	close_useless_pipes(int i, t_pipes_struct *pipes)
+void	connect_pipes(int i, t_pipes_struct *pipes)
 {
-	int	j;
-
-	j = 0;
-	while (j < pipes->nr_pipes)
-	{
-		if (j != i)
-		{
-			close(pipes->fd_arr[j][0]);
-			close(pipes->fd_arr[j][1]);
-		}
-		j++;
-	}
+	if (i > 0)
+		pipes->fd_arr[i][0] = pipes->fd_arr[i - 1][1];
 }
 
 int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
 	if (i > 0)
 	{
-		dup2(pipes->fd_arr[i - 1][0], STDIN_FILENO);
+		if (dup2(pipes->fd_arr[i - 1][0], STDIN_FILENO) == -1)
+			return (-1);
 		close(pipes->fd_arr[i - 1][0]);
 		close(pipes->fd_arr[i - 1][1]);
 	}
-	if (i < pipes->nr_pipes - 1)
+	if (i < pipes->nr_pipes)
 	{
-		dup2(pipes->fd_arr[i][1], STDOUT_FILENO);
+		if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
+			return (-1);
 		close(pipes->fd_arr[i][0]);
 		close(pipes->fd_arr[i][1]);
 	}
@@ -68,25 +59,31 @@ void	clear_pipes(t_pipes_struct *pipes, int nr)
 void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 			t_pipes_struct *pipes)
 {
-	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
-	if (!pipes->pid)
-		return (update_status_code(shell_state, MALLOC_ERROR));
 	pipes->pid[i] = fork();
-	if (pipes->pid[i] == -1)
-		return (update_status_code(shell_state, FORK_ERROR));
+	if (pipes->pid[i] < 0)
+	{
+		perror("fork");
+		return (update_status(shell_state, FORK_ERROR));
+	}
 	if (pipes->pid[i] != 0)
 		return ;
-	close_useless_pipes(i, pipes);
+	connect_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
 	{
-		update_status_code(shell_state, REDIRECT_ERROR);
+		update_status(shell_state, REDIRECT_ERROR);
 		return ;
 	}
-	execve(pipes->path, cmd, shell_state->env_path_arr);
-	clear_pipes(pipes, pipes->nr_pipes);
-	// perror("execve");
-	fprintf(stderr, "execve failed\n");
-	// exit(127);
+	if (check_builtins(cmd) == 1)
+	{
+		execute_builtins(cmd, shell_state);
+		return ;
+	}
+	if (execve(pipes->path, cmd, shell_state->env.envp) == -1)
+	{
+		clear_pipes(pipes, pipes->nr_pipes);
+		fprintf(stderr, "execve failed\n");
+		exit(127);
+	}
 }
 
 void	create_children(t_list **list, t_shell_state *shell_state,
@@ -95,7 +92,7 @@ void	create_children(t_list **list, t_shell_state *shell_state,
 	int		i;
 	t_cmd	*cmds;
 
-	i = 1;
+	i = 0;
 	while (*list)
 	{
 		cmds = (*list)->content;
