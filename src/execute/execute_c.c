@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 11:43:32 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 15:46:20 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,21 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
 	if (i > 0)
 	{
-		if (dup2(pipes->fd_arr[i - 1][0], STDIN_FILENO) == -1)
-			return (-1);
-		close(pipes->fd_arr[i - 1][0]);
-		close(pipes->fd_arr[i - 1][1]);
+		if (pipes->fd_arr[i][0] == STDIN_FILENO)
+		{
+			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
+				return (-1);
+			close(pipes->fd_arr[i][0]);
+		}
 	}
 	if (i < pipes->nr_pipes)
 	{
-		if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
-			return (-1);
-		close(pipes->fd_arr[i][0]);
-		close(pipes->fd_arr[i][1]);
+		if (pipes->fd_arr[i][i] == STDOUT_FILENO)
+		{
+			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
+				return (-1);
+			close(pipes->fd_arr[i][1]);
+		}
 	}
 	return (0);
 }
@@ -69,14 +73,11 @@ void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 		return ;
 	connect_pipes(i, pipes);
 	if (redirect_stuff(i, pipes) != 0)
-	{
-		update_status(shell_state, REDIRECT_ERROR);
-		return ;
-	}
+		return (update_status(shell_state, REDIRECT_ERROR));
 	if (check_builtins(cmd) == 1)
 	{
 		execute_builtins(cmd, shell_state);
-		return ;
+		exit(0);
 	}
 	if (execve(pipes->path, cmd, shell_state->env.envp) == -1)
 	{

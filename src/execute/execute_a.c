@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 11:44:22 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 15:09:03 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ void	execute_shell(t_list **cmds, t_shell_state *shell_state)
 	if (create_pipes(cmds, &pipes, shell_state) != 0)
 		update_status(shell_state, INTERNAL_ERROR);
 	if (get_path(cmds, &pipes, shell_state) != 0)
-		update_status(shell_state, INTERNAL_ERROR);	
+		update_status(shell_state, INTERNAL_ERROR);
+	if (redirect_input(cmds, &pipes) != 0)
+		update_status(shell_state, INTERNAL_ERROR);
+	if (redirect_output(cmds, &pipes) != 0)
+		update_status(shell_state, INTERNAL_ERROR);
 	create_children(cmds, shell_state, &pipes);
 	wait_all(&pipes, shell_state);
 	//after each return add cleanup and proper exit
