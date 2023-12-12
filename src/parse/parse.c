@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void		_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell);
+static void		_init(t_parse *parse, t_list **cmdlist, t_shell *shell);
 static size_t	_extract_cmdstr(char *input, t_parse *parse);
 static int		_valid_str(char *str);
 
@@ -22,7 +22,7 @@ static int		_valid_str(char *str);
  * @return On success, returns pointer to head of list.
  * Will terminate program with appropriate exit code on failure.
 */
-t_list	*parse_input(char *input, t_shell_state	*shell_state)
+t_list	*parse_input(char *input, t_shell	*shell)
 {
 	t_list	*cmdlist;
 	t_parse	parse;
@@ -32,13 +32,13 @@ t_list	*parse_input(char *input, t_shell_state	*shell_state)
 	cmdlist = NULL;
 	while (*input)
 	{
-		_init(&parse, &cmdlist, shell_state);
+		_init(&parse, &cmdlist, shell);
 		input += _extract_cmdstr(input, &parse);
-		if (parse.shell_state->status != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.shell_state->status);
+		if (parse.shell->status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.shell->status);
 		_parse_tokens(&parse);
-		if (parse.shell_state->status != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.shell_state->status);
+		if (parse.shell->status != SUCCESS)
+			_terminate(&cmdlist, NULL, parse.shell->status);
 		if (*input == '|')
 			input++;
 	}
@@ -63,12 +63,12 @@ void	delete_cmd(void *content)
 	free(cmd);
 }
 
-static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
+static void	_init(t_parse *parse, t_list **cmdlist, t_shell *shell)
 {
 	t_list	*new;
 
-	parse->shell_state = shell_state;
-	parse->shell_state->status = 0;
+	parse->shell = shell;
+	parse->shell->status = 0;
 	parse->cmdstr = NULL;
 	parse->argc = 0;
 	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
@@ -86,7 +86,7 @@ static void	_init(t_parse *parse, t_list **cmdlist, t_shell_state *shell_state)
 		_terminate(NULL, NULL, MALLOC_ERROR);
 	}
 	ft_lstadd_back(cmdlist, new);
-	parse->shell_state = shell_state;
+	parse->shell = shell;
 }
 
 static size_t	_extract_cmdstr(char *input, t_parse *parse)
@@ -102,11 +102,11 @@ static size_t	_extract_cmdstr(char *input, t_parse *parse)
 		len = ft_strlen(input);
 	str = ft_substr(input, 0, len);
 	if (!str)
-		return (update_status(parse->shell_state, MALLOC_ERROR), 0);
+		return (update_status(parse->shell, MALLOC_ERROR), 0);
 	if (!_valid_str(str))
 	{
 		free(str);
-		return (update_status(parse->shell_state, SYNTAX_ERROR), 0);
+		return (update_status(parse->shell, SYNTAX_ERROR), 0);
 	}
 	parse->cmdstr = str;
 	return (len);

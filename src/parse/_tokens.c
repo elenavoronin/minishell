@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/23 13:16:22 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/12 17:17:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	_parse_tokens(t_parse *parse)
 
 	save_cmdstr = parse->cmdstr;
 	tokens = _split(parse);
-	if (parse->shell_state->status == SUCCESS)
+	if (parse->shell->status == SUCCESS)
 		_tokens_to_cmd(tokens, parse);
 	ft_free_strarr(tokens);
 	free(save_cmdstr);
@@ -40,12 +40,12 @@ static void	_tokens_to_cmd(char **tokens, t_parse *parse)
 		{
 			tokens++;
 			if (!*tokens)
-				return (update_status(parse->shell_state, SYNTAX_ERROR));
+				return (update_status(parse->shell, SYNTAX_ERROR));
 			if (*dest)
 				free(*dest);
 			*dest = ft_strdup(*tokens);
 			if (!*dest)
-				return (update_status(parse->shell_state, MALLOC_ERROR));
+				return (update_status(parse->shell, MALLOC_ERROR));
 		}
 		else if (dest == &parse->cmd->cmd_table[0])
 			_tokens_to_cmdtable(*tokens, parse);
@@ -84,7 +84,7 @@ static void	_tokens_to_cmdtable(char *token, t_parse *parse)
 
 	cmdtable = ft_malloc_wrapper((parse->argc + 1) * sizeof(*cmdtable));
 	if (!cmdtable)
-		return (update_status(parse->shell_state, MALLOC_ERROR));
+		return (update_status(parse->shell, MALLOC_ERROR));
 	i = 0;
 	while (i < parse->argc)
 	{

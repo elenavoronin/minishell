@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/22 19:46:20 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/12 17:18:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*_expand(t_split *split)
 	if (!_init_expand(&expand, split))
 		return (NULL);
 	while (split->parse->cmdstr < split->end
-		&& split->parse->shell_state->status == SUCCESS)
+		&& split->parse->shell->status == SUCCESS)
 	{
 		if (split->parse->cmdstr == split->tag)
 			_extract_tag(&expand, split);
@@ -35,7 +35,7 @@ char	*_expand(t_split *split)
 			|| (!split->tag && split->parse->cmdstr < split->end))
 			_extract_word(&expand, split);
 	}
-	if (split->parse->shell_state->status == SUCCESS)
+	if (split->parse->shell->status == SUCCESS)
 		expanded = _join_strs(&expand);
 	ft_free_strarr(expand.strs);
 	return (expanded);
@@ -81,15 +81,15 @@ static	void	_extract_tag(t_expand *expand, t_split *split)
 		len++;
 	ename = ft_substr(split->tag, 0, len);
 	if (!ename)
-		return (update_status(split->parse->shell_state, MALLOC_ERROR));
-	evalue = getenvp_value(split->parse->shell_state, ename);
+		return (update_status(split->parse->shell, MALLOC_ERROR));
+	evalue = getenvp_value(split->parse->shell, ename);
 	if (evalue)
 		expand->strs[expand->count] = ft_strdup(evalue);
 	else
 		expand->strs[expand->count] = ft_strdup("");
 	free(ename);
 	if (!expand->strs[expand->count])
-		return (update_status(split->parse->shell_state, MALLOC_ERROR));
+		return (update_status(split->parse->shell, MALLOC_ERROR));
 	expand->count++;
 	split->tag = ft_strchr(split->parse->cmdstr, '$');
 	if (split->tag > split->end)
@@ -114,7 +114,7 @@ static void	_extract_word(t_expand *expand, t_split *split)
 	}
 	expand->strs[expand->count] = ft_substr(split->parse->cmdstr, 0, len);
 	if (!expand->strs[expand->count])
-		return (update_status(split->parse->shell_state, MALLOC_ERROR));
+		return (update_status(split->parse->shell, MALLOC_ERROR));
 	expand->count++;
 	split->parse->cmdstr += len;
 }

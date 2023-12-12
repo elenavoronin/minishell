@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/22 19:36:00 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/12 17:17:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_cmd
 	char				**cmd_table;
 }	t_cmd;
 
-t_list	*parse_input(char *input, t_shell_state	*shell_state);
+t_list	*parse_input(char *input, t_shell *shell);
 void	delete_cmd(void *content);
 
 //For parsing internal use, WARNING: VOLATILE
@@ -48,10 +48,10 @@ typedef enum e_token_type
 
 typedef struct s_parse
 {
-	char			*cmdstr;
-	size_t			argc;
-	t_cmd			*cmd;
-	t_shell_state	*shell_state;
+	char	*cmdstr;
+	size_t	argc;
+	t_cmd	*cmd;
+	t_shell	*shell;
 }	t_parse;
 
 typedef struct s_split
