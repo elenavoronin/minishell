@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/27 16:29:33 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/11 11:43:32 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,11 @@ void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 		update_status(shell_state, REDIRECT_ERROR);
 		return ;
 	}
+	if (check_builtins(cmd) == 1)
+	{
+		execute_builtins(cmd, shell_state);
+		return ;
+	}
 	if (execve(pipes->path, cmd, shell_state->env.envp) == -1)
 	{
 		clear_pipes(pipes, pipes->nr_pipes);
@@ -91,7 +96,6 @@ void	create_children(t_list **list, t_shell_state *shell_state,
 	while (*list)
 	{
 		cmds = (*list)->content;
-		dprintf(2, "cmd: %s\n", cmds->cmd_table[0]);
 		fork_cmds(cmds->cmd_table, i, shell_state, pipes);
 		i++;
 		*list = (*list)->next;

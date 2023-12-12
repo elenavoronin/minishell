@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/27 16:19:52 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/11 11:41:37 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 	i = 0;
 	j = 0;
 	new_paths = NULL;
-	if (check_builtins(cmd, pipes) == 0)
-		return (pipes->path);
 	while (envp[i] != NULL)
 	{
 		if (ft_strnstr(envp[i], "PATH", ft_strlen("PATH")))
@@ -68,6 +66,8 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	if (pipes->nr_pipes == 0)
 	{
 		cmds = (*list)->content;
+		if (check_builtins(&cmds->cmd_table[i]) == 1)
+			return (0);
 		if (get_path_char(cmds->cmd_table, state->env.envp, pipes) == NULL)
 			return (update_status(state, INTERNAL_ERROR), -1);
 		return (0);
@@ -76,6 +76,8 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	while (*list)
 	{
 		cmds = (*list)->content;
+		if (check_builtins(&cmds->cmd_table[i]) == 1)
+			return (0);
 		if (!get_path_char(cmds->cmd_table, state->env.envp, pipes))
 			return (update_status(state, PIPE_ERROR), -1);
 		*list = (*list)->next;
