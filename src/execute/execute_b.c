@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:52:01 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/12 17:26:01 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,13 @@ int	redirect_input(t_list **list, t_pipes_struct *pipes)
 	{
 		cmd = (*list)->content;
 		if (cmd->infile == NULL)
-			pipes->fd_arr[0][i] = STDIN_FILENO;
+			pipes->fd_arr[i][0] = dup2(pipes->fd_arr[i][0], STDIN_FILENO);
 		else
 		{
 			fd = open(cmd->infile, O_RDONLY, 0644);
 			if (fd == -1)
 				return (perror(cmd->infile), -1);
-			pipes->fd_arr[0][i] = fd;
+			pipes->fd_arr[i][0] = fd;
 			close(fd);
 		}
 		(*list) = (*list)->next;
@@ -123,7 +123,7 @@ int	redirect_output(t_list **list, t_pipes_struct *pipes)
 	{
 		cmd = (*list)->content;
 		if (cmd->outfile == NULL)
-			pipes->fd_arr[i][1] = STDOUT_FILENO;
+			pipes->fd_arr[i][1] = dup2(pipes->fd_arr[i][1], STDOUT_FILENO);
 		else
 		{
 			fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
@@ -144,7 +144,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	t_cmd		*cmds;
 
 	nr = ft_lstsize(*list) - 1;
-	pipes->pid = malloc(sizeof(int *) * (nr + 1));
+	pipes->pid = malloc(sizeof(int) * (nr + 1));
 	if (!pipes->pid)
 		return (update_status(state, MALLOC_ERROR), -1);
 	while (*list)

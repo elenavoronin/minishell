@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:09:03 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/12 17:07:04 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
 	int		i;
 
 	i = 0;
-	while (pipes->pid[i])
+	while (i <= pipes->nr_pipes)
 	{
 		if (pipes->pid[i] > 0)
 			waitpid(pipes->pid[i], &status, 0);

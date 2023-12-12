@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:46:20 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/12 17:17:41 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 {
 	if (i > 0)
 	{
-		if (pipes->fd_arr[i][0] == STDIN_FILENO)
+		if (pipes->fd_arr[i][0] != STDIN_FILENO)
 		{
 			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
 				return (-1);
@@ -31,7 +31,7 @@ int	redirect_stuff(int i, t_pipes_struct *pipes)
 	}
 	if (i < pipes->nr_pipes)
 	{
-		if (pipes->fd_arr[i][i] == STDOUT_FILENO)
+		if (pipes->fd_arr[i][i] != STDOUT_FILENO)
 		{
 			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
 				return (-1);
