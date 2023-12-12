@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 10:44:49 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 13:58:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 
 int		check_builtins(char **cmd);
 void	execute_builtins(char **cmd, t_shell_state *state);
-void	ft_env(t_shell_state *shell_state);
+void	mini_env(char **envp);
+void	mini_echo(char **cmd);
+void	mini_pwd(void);
+void	mini_exit(t_shell_state *state);
 
 #endif

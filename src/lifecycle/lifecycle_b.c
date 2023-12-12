@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/17 18:41:33 by codespace     #+#    #+#                 */
-/*   Updated: 2023/11/21 13:42:26 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/12 13:27:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,7 @@ char	*getenvp_value(t_shell_state *shell_state, char *name)
 	return (NULL);
 }
 
-void	print_env(const t_shell_state shell_state)
-{
-	size_t		i;
-	const char	**env;
-
-	i = 0;
-	env = (const char **)shell_state.env.envp;
-	while (env[i])
-	{
-		printf("%s\n", env[i]);
-		i++;
-	}
-}
-
-void	print_env_test(const t_shell_state shell_state)
+void	test_print_env(const t_shell_state shell_state)
 {
 	size_t		i;
 	const char	**name;

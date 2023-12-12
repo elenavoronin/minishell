@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:52:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/24 13:02:59 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 13:35:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ typedef struct s_shell_state
 }	t_shell_state;
 
 void	start_minishell(int argc, char **argv, char **envp);
-void	print_env(const t_shell_state shell_state);
 char	*getenvp_value(t_shell_state *shell_state, char *name);
-void	print_env_test(const t_shell_state shell_state);
 void	update_status(t_shell_state *shell_state, t_status status);
+void	test_print_env(const t_shell_state shell_state);
+void	clear_shell_state(t_shell_state *shell_state);
 
 #endif

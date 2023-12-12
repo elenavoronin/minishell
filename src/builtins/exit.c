@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   exit.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/12 13:25:02 by dliu          ########   odam.nl         */
+/*   Created: 2023/12/12 13:30:16 by dliu          #+#    #+#                 */
+/*   Updated: 2023/12/12 13:44:07 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+//needs to exit before forking if this is the first command
+void	mini_exit(t_shell_state *state)
 {
-	start_minishell(argc, argv, envp);
-	return (0);
+	clear_shell_state(state);
+	exit(EXIT_SUCCESS);
 }

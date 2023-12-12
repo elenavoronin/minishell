@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   pwd.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/12 13:25:02 by dliu          ########   odam.nl         */
+/*   Created: 2023/12/12 13:47:55 by dliu          #+#    #+#                 */
+/*   Updated: 2023/12/12 14:01:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	mini_pwd(void)
 {
-	start_minishell(argc, argv, envp);
-	return (0);
+	char	*buffer;
+
+	buffer = NULL;
+	getcwd(buffer, 0);
+	if (!buffer)
+		write(STDERR_FILENO, "ERROR", 5);
+	write(STDOUT_FILENO, buffer, ft_strlen(buffer));
+	write(STDOUT_FILENO, "\n", 1);
+	free(buffer);
 }

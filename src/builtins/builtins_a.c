@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/11 10:44:45 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 13:57:54 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,14 @@ int	check_builtins(char **cmd)
 	return (0);
 }
 
-
 void	execute_builtins(char **cmd, t_shell_state *state)
 {
 	if (ft_strcmp(cmd[0], "env") == 0)
-		ft_env(state);
+		mini_env(state->env.envp);
+	else if (ft_strcmp(cmd[0], "echo") == 0)
+		mini_echo(cmd);
+	else if (ft_strcmp(cmd[0], "pwd") == 0)
+		mini_pwd();
+	else if (ft_strcmp(cmd[0], "exit") == 0)
+		mini_exit(state);
 }

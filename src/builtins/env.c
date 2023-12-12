@@ -6,13 +6,21 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 10:42:16 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 13:27:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_shell_state *shell_state)
+void	mini_env(char **envp)
 {
-	print_env(*shell_state);
+	size_t	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		write(STDOUT_FILENO, envp[i], ft_strlen(envp[i]));
+		write(STDOUT_FILENO, "\n", 1);
+		i++;
+	}
 }

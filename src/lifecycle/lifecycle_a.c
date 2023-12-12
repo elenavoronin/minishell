@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/24 13:30:45 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/12 13:38:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	init_shell_state(t_shell_state *shell_state, char **envp);
 static int	populate_shell_state(t_shell_state *shell_state, char **envp);
-static void	clear_shell_state(t_shell_state *shell_state);
 
 void	start_minishell(int argc, char **argv, char **envp)
 {
@@ -38,8 +37,6 @@ void	start_minishell(int argc, char **argv, char **envp)
 		}
 		if (*line)
 		{
-			// if (ft_strcmp("env", line) == 0)	
-			// 	print_env_test(shell_state);
 			cmdlist = parse_input(line, &shell_state);
 			// parse_test(&cmdlist);
 			execute_shell(&cmdlist, &shell_state);
@@ -62,9 +59,7 @@ static void	init_shell_state(t_shell_state *shell_state, char **envp)
 	if (!shell_state->env.envp
 		|| !shell_state->env.envp_name || !shell_state->env.envp_value)
 	{
-		free(shell_state->env.envp);
-		free(shell_state->env.envp_name);
-		free(shell_state->env.envp_value);
+		clear_shell_state(shell_state);
 		exit(EXIT_FAILURE);
 	}
 	if (!populate_shell_state(shell_state, envp))
@@ -101,7 +96,7 @@ static int	populate_shell_state(t_shell_state *shell_state, char **envp)
 	return (1);
 }
 
-static void	clear_shell_state(t_shell_state *shell_state)
+void	clear_shell_state(t_shell_state *shell_state)
 {
 	ft_free_strarr(shell_state->env.envp);
 	ft_free_strarr(shell_state->env.envp_name);
