@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/23 13:16:33 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/12 17:17:57 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ char	**_split(t_parse *parse)
 
 	split.parse = parse;
 	_count_split(parse->cmdstr, &split);
-	if (parse->shell_state->status != SUCCESS)
+	if (parse->shell->status != SUCCESS)
 		return (NULL);
 	split.result = NULL;
 	split.result = ft_calloc(split.count + 1, sizeof(*split.result));
 	split.count = 0;
 	if (!split.result)
-		parse->shell_state->status = MALLOC_ERROR;
+		parse->shell->status = MALLOC_ERROR;
 	else
 		_do_split(&split);
-	if (parse->shell_state->status == SUCCESS)
+	if (parse->shell->status == SUCCESS)
 		return (split.result);
 	ft_free_strarr(split.result);
 	return (NULL);
@@ -51,7 +51,7 @@ static void	_count_split(char *line, t_split *split)
 			line = ft_strchr(line + 1, *line);
 			if (!line)
 			{
-				split->parse->shell_state->status = SYNTAX_ERROR;
+				split->parse->shell->status = SYNTAX_ERROR;
 				ft_perror("SYNTAX ERROR", NULL, "Unclosed brackets found.");
 				return ;
 			}
@@ -68,7 +68,7 @@ static void	_count_split(char *line, t_split *split)
 
 static void	_do_split(t_split *split)
 {
-	while (split->parse->shell_state->status == SUCCESS
+	while (split->parse->shell->status == SUCCESS
 		&& *(split->parse->cmdstr))
 	{
 		while (ft_isspace(*split->parse->cmdstr))
@@ -114,6 +114,6 @@ static void	_extract_expand(t_split *split)
 		split->parse->cmdstr = split->end;
 	}
 	if (!split->result[split->count])
-		return (update_status(split->parse->shell_state, MALLOC_ERROR));
+		return (update_status(split->parse->shell, MALLOC_ERROR));
 	split->count++;
 }
