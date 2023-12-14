@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 17:37:33 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/14 11:29:55 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static void	clear_shell_state(t_shell *shell);
 void	start_minishell(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
-	t_list			*cmdlist;
-	char			*line;
-	char			*prompt;
+	t_list	*cmdlist;
+	char	*line;
+	char	*prompt;
 
 	(void)argv;
 	(void)argc;
@@ -105,14 +105,14 @@ static char	*get_prompt(t_shell *shell)
 	char	*home;
 	size_t	i;
 
-	i = 0;
 	home = getenvp_value(shell, "HOME");
 	curpath = getenvp_value(shell, "PWD");
 	if (ft_strcmp(home, curpath) == 0)
 		curpath = "~";
+	i = 0;
 	while (curpath[i] == home[i])
 		i++;
-	if (i)
+	if (i == ft_strlen(home))
 		prompt = ft_joinstrs(3, "🐢shell:~", &curpath[i], "$ ");
 	else
 		prompt = ft_joinstrs(3, "🐢shell:", curpath, "$ ");

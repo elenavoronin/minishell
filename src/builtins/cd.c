@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/13 16:22:15 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/14 11:28:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void	cd_dot(t_cd *cd)
 			cd->i--;
 			cd->curpath[cd->i] = '\0';
 		}
-		if (cd->i)
+		if (cd->curpath[cd->i - 1] == '/' && cd->i > 1)
 		{
 			cd->i--;
 			cd->curpath[cd->i] = '\0';
