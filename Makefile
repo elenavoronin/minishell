@@ -6,14 +6,14 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/12/12 16:03:37 by evoronin      ########   odam.nl          #
+#    Updated: 2023/12/12 13:57:14 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./include -g 
-CFLAGS += -fsanitize=address
+# CFLAGS += -fsanitize=address
 
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include

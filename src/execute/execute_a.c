@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 17:07:04 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/15 15:16:51 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
+void	wait_all(t_pipes *pipes, t_shell *shell)
 {
 	int		status;
 	int		i;
@@ -25,25 +25,27 @@ void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
 		i++;
 	}
 	if (WIFEXITED(status))
-		shell_state->return_value = WEXITSTATUS(status);
+		shell->return_value = WEXITSTATUS(status);
 	else
-		shell_state->return_value = 128 + WTERMSIG(status);
+		shell->return_value = 128 + WTERMSIG(status);
 }
 
-void	execute_shell(t_list **cmds, t_shell_state *shell_state)
+void	execute_shell(t_list **cmds, t_shell *shell)
 {
-	t_pipes_struct	pipes;
+	int		nr;
+	t_pipes	pipes;
 
 	pipes.nr_pipes = 0;
-	if (create_pipes(cmds, &pipes, shell_state) != 0)
-		update_status(shell_state, INTERNAL_ERROR);
-	if (get_path(cmds, &pipes, shell_state) != 0)
-		update_status(shell_state, INTERNAL_ERROR);
+	nr = ft_lstsize(*cmds) - 1;
+	if (create_pipes(cmds, &pipes, shell, nr) != 0)
+		update_status(shell, INTERNAL_ERROR);
+	if (get_path(cmds, &pipes, shell) != 0)
+		update_status(shell, INTERNAL_ERROR);
 	if (redirect_input(cmds, &pipes) != 0)
-		update_status(shell_state, INTERNAL_ERROR);
+		update_status(shell, INTERNAL_ERROR);
 	if (redirect_output(cmds, &pipes) != 0)
-		update_status(shell_state, INTERNAL_ERROR);
-	create_children(cmds, shell_state, &pipes);
-	wait_all(&pipes, shell_state);
+		update_status(shell, INTERNAL_ERROR);
+	create_children(cmds, shell, &pipes);
+	wait_all(&pipes, shell);
 	//after each return add cleanup and proper exit
 }

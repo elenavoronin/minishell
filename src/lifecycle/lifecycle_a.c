@@ -6,16 +6,16 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:58:48 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/14 13:09:36 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/15 15:38:39 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	init_shell_state(t_shell *shell, char **envp);
-static int	populate_shell_state(t_shell *shell, char **envp);
+static void	init_shell(t_shell *shell, char **envp);
+static int	populate_shell(t_shell *shell, char **envp);
 static char	*get_prompt(t_shell *shell);
-static void	clear_shell_state(t_shell *shell);
+static void	clear_shell(t_shell *shell);
 
 void	start_minishell(int argc, char **argv, char **envp)
 {
@@ -27,7 +27,7 @@ void	start_minishell(int argc, char **argv, char **envp)
 	(void)argv;
 	(void)argc;
 	cmdlist = NULL;
-	init_shell_state(&shell, envp);
+	init_shell(&shell, envp);
 	while (1)
 	{
 		prompt = get_prompt(&shell);
@@ -36,24 +36,24 @@ void	start_minishell(int argc, char **argv, char **envp)
 		if (!line)
 		{
 			free(line);
-			clear_shell_state(&shell);
+			clear_shell(&shell);
 			clear_history();
 			exit(EXIT_SUCCESS);
 		}
 		if (*line)
 		{
 			cmdlist = parse_input(line, &shell);
-			// parse_test(&cmdlist);
+			parse_test(&cmdlist);
 			execute_shell(&cmdlist, &shell);
 			ft_lstclear(&cmdlist, delete_cmd);
 			add_history(line);
 		}
 		free(line);
 	}
-	clear_shell_state(&shell);
+	clear_shell(&shell);
 }
 
-static void	init_shell_state(t_shell *shell, char **envp)
+static void	init_shell(t_shell *shell, char **envp)
 {
 	size_t	count;
 
@@ -63,18 +63,18 @@ static void	init_shell_state(t_shell *shell, char **envp)
 	shell->env.envp_value = ft_calloc(count + 1, sizeof(char *));
 	if (!shell->env.envp || !shell->env.envp_name || !shell->env.envp_value)
 	{
-		clear_shell_state(shell);
+		clear_shell(shell);
 		exit(EXIT_FAILURE);
 	}
-	if (!populate_shell_state(shell, envp))
+	if (!populate_shell(shell, envp))
 	{
-		clear_shell_state(shell);
+		clear_shell(shell);
 		exit(EXIT_FAILURE);
 	}
 	shell->status = SUCCESS;
 }
 
-static int	populate_shell_state(t_shell *shell, char **envp)
+static int	populate_shell(t_shell *shell, char **envp)
 {
 	size_t	i;
 	size_t	len;
@@ -119,7 +119,7 @@ static char	*get_prompt(t_shell *shell)
 	return (prompt);
 }
 
-static void	clear_shell_state(t_shell *shell)
+static void	clear_shell(t_shell *shell)
 {
 	ft_free_strarr(shell->env.envp);
 	ft_free_strarr(shell->env.envp_name);

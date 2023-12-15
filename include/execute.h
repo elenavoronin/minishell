@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/14 13:10:18 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/15 13:07:11 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,19 @@ typedef struct s_pipes_struct
 	char			*path;
 	int				*pid;
 	t_pipe_fd		*fd_arr;
-}	t_pipes_struct;
+}	t_pipes;
 
 void	execute_shell(t_list **cmds, t_shell *shell);
-int		create_pipes(t_list **list, t_pipes_struct *pipes, t_shell *shell);
-void	create_children(t_list **list, t_shell *shell, t_pipes_struct *pipes);
-void	fork_cmds(char **cmd, int i, t_shell *shell, t_pipes_struct *pipes);
-char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes);
-int		get_path(t_list **list, t_pipes_struct *pipes, t_shell *shell);
-void	close_useless_pipes(int i, t_pipes_struct *pipes);
-void	clear_pipes(t_pipes_struct *pipes, int nr);
-void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state);
-void	connect_pipes(int i, t_pipes_struct *pipes);
-int		redirect_input(t_list **list, t_pipes_struct *pipes);
-int		redirect_output(t_list **list, t_pipes_struct *pipes);
-
+int		create_pipes(t_list **list, t_pipes *pipes, t_shell *shell, int nr);
+void	create_children(t_list **list, t_shell *shell, t_pipes *pipes);
+void	fork_cmds(char **cmd, int i, t_shell *shell, t_pipes *pipes);
+char	*get_path_char(char **cmd, char **envp, t_pipes *pipes);
+int		get_path(t_list **list, t_pipes *pipes, t_shell *shell);
+void	close_useless_pipes(int i, t_pipes *pipes);
+void	clear_pipes(t_pipes *pipes, int nr);
+void	wait_all(t_pipes *pipes, t_shell *shell);
+void	connect_pipes(int i, t_pipes *pipes);
+int		redirect_input(t_list **list, t_pipes *pipes);
+int		redirect_output(t_list **list, t_pipes *pipes);
 
 #endif
