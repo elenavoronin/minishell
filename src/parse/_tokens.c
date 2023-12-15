@@ -6,11 +6,11 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/12 17:17:53 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/15 12:39:51 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse.h"
 
 static void	_tokens_to_cmd(char **tokens, t_parse *parse);
 static void	_tokens_to_cmdtable(char *token, t_parse *parse);

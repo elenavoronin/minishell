@@ -3,14 +3,14 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 17:38:24 by dliu          ########   odam.nl         */
+/*   Created: 2023/12/15 12:58:24 by codespace     #+#    #+#                 */
+/*   Updated: 2023/12/15 13:17:00 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "builtins.h"
 
 void	mini_env(t_env env)
 {

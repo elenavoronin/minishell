@@ -6,11 +6,11 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/14 11:28:18 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/15 14:24:35 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "builtins.h"
 
 static void	cd_init(t_cd *cd, char **cmd, t_shell *shell);
 static void	cd_slash(t_cd *cd);
@@ -22,6 +22,8 @@ void	mini_cd(char **cmd, t_shell *shell)
 	t_cd	cd;
 
 	update_envp(shell, "OLDPWD", getenvp_value(shell, "PWD"));
+	if (shell->status != SUCCESS)
+		return ;
 	cmd++;
 	if (!*cmd)
 		return (update_envp(shell, "PWD", getenvp_value(shell, "HOME")));
@@ -37,13 +39,10 @@ void	mini_cd(char **cmd, t_shell *shell)
 		if (stat(cd.curpath, &cd.statbuf) != 0)
 			return (perror("🐢shell: cd"));
 	}
-	if (cd.curpath[0] && cd.i < PATH_MAX)
-	{
-		update_envp(shell, "PWD", cd.curpath);
-		chdir(cd.curpath);
-	}
-	else
-		ft_perror("🐢shell", "cd", "Error out of scope.");
+	update_envp(shell, "PWD", cd.curpath);
+	if (shell->status != SUCCESS)
+		return ;
+	chdir(cd.curpath);
 }
 
 void	cd_init(t_cd *cd, char **cmd, t_shell *shell)

@@ -6,11 +6,11 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/12 17:17:57 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/15 12:39:50 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse.h"
 
 static void	_count_split(char *line, t_split *split);
 static void	_do_split(t_split *split);

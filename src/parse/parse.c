@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse.h"
 
 static void		_init(t_parse *parse, t_list **cmdlist, t_shell *shell);
 static size_t	_extract_cmdstr(char *input, t_parse *parse);

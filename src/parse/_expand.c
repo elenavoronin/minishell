@@ -6,11 +6,11 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/12 17:18:02 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/15 12:39:49 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse.h"
 
 int			_init_expand(t_expand *expand, t_split *split);
 static void	_extract_tag(t_expand *expand, t_split *split);

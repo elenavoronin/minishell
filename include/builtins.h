@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/13 15:55:27 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/15 13:16:43 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ typedef struct s_cd
 
 int		check_builtins(char **cmd);
 void	execute_builtins(char **cmd, t_shell *shell);
-void	mini_env(t_env env);
 void	mini_echo(char **cmd);
 void	mini_pwd(t_shell *shell);
 void	mini_cd(char **cmd, t_shell *shell);
+void	mini_env(t_env enviro);
+void	mini_export(char **cmd, t_shell *shell);
+void	mini_unset(char **cmd, t_shell *shell);
 void	mini_exit(t_shell *shell);
 
 #endif

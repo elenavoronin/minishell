@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 11:43:32 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/15 13:02:20 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	clear_pipes(t_pipes_struct *pipes, int nr)
 	free(pipes->fd_arr);
 }
 
-void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
+void	fork_cmds(char **cmd, int i, t_shell *shell_state,
 			t_pipes_struct *pipes)
 {
 	pipes->pid[i] = fork();
@@ -86,7 +86,7 @@ void	fork_cmds(char **cmd, int i, t_shell_state *shell_state,
 	}
 }
 
-void	create_children(t_list **list, t_shell_state *shell_state,
+void	create_children(t_list **list, t_shell *shell_state,
 	t_pipes_struct *pipes)
 {
 	int		i;

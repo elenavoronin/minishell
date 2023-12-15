@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 11:44:22 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/15 13:02:15 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
+void	wait_all(t_pipes_struct *pipes, t_shell *shell_state)
 {
 	int		status;
 	int		i;
@@ -30,7 +30,7 @@ void	wait_all(t_pipes_struct *pipes, t_shell_state *shell_state)
 		shell_state->return_value = 128 + WTERMSIG(status);
 }
 
-void	execute_shell(t_list **cmds, t_shell_state *shell_state)
+void	execute_shell(t_list **cmds, t_shell *shell_state)
 {
 	t_pipes_struct	pipes;
 
