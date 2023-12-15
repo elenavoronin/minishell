@@ -6,27 +6,61 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 16:12:15 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/15 17:17:23 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-void	mini_export(char **cmd, t_shell *shell)
+static void	export_var(char **cmd, t_shell *shell)
 {
-	char **sort_envp;
+	char **new_env;
 	int	i;
 
-	i = ft_strarray_count(shell->env.envp);
-	sort_envp = ft_calloc(i, sizeof(*sort_envp));
-	if (!sort_envp)
-		return ;
+	i = ft_strarray_count(cmd) + shell->env.count;
+	new_env = ft_calloc(i, sizeof(*new_env));
+	if (!new_env)
+		return (update_status(shell, MALLOC_ERROR));
 	i = 0;
-	while (shell->env.envp[i] && i < shell->env.count)
+	while (i < shell->env.count)
 	{
-		if (ft_strcmp(shell->env.envp[i], cmd[1]) == 0)
-			shell->env.envp[i] = cmd[1];
+		new_env[i] = ft_strdup(shell->env.envp[i]);
+		if (!new_env[i])
+		{
+			ft_free_strarr(new_env);
+			return (update_status(shell, MALLOC_ERROR));
+		}
 		i++;
 	}
-	
+	cmd++;
+	while (*cmd)
+	{
+		new_env[i] = ft_strdup(*cmd);
+		if (!new_env[i])
+		{
+			ft_free_strarr(new_env);
+			return (update_status(shell, MALLOC_ERROR));
+		}
+		cmd++;
+		i++;
+	}
+	new_env[i] = NULL;
+	clear_env(shell);
+	init_env(shell, new_env);
+	ft_free_strarr(new_env);
+}
+
+void	mini_export(char **cmd, t_shell *shell)
+{
+	// char **sorted_envp;
+
+	if (cmd[1])
+		export_var(cmd, shell);
+	// else
+	// {
+	// 	sorted_envp = sort_env(shell);
+	// 	if (!sorted_envp)
+	// 		return ;
+	// 	declare_x(sorted_envp);
+	// }
 }

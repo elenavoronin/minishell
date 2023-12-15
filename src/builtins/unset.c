@@ -6,14 +6,14 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 16:10:04 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/15 16:34:56 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
 static int	find_var(char *name, t_shell *shell);
-static char	**copy_enviro(t_shell *shell, int var);
+static char	**copy_enviro(int var, t_shell *shell);
 
 void	mini_unset(char **cmd, t_shell *shell)
 {
@@ -23,8 +23,7 @@ void	mini_unset(char **cmd, t_shell *shell)
 	var = find_var(cmd[1], shell);
 	if (var < 0)
 		return ;
-	// printf("FOUND VAR: %s\n", shell->env.envp[var]);
-	new_envp = copy_enviro(shell, var);
+	new_envp = copy_enviro(var, shell);
 	if (shell->status != SUCCESS)
 		return ;
 	clear_env(shell);
@@ -46,7 +45,7 @@ static int	find_var(char *name, t_shell *shell)
 	return (-1);
 }
 
-static char	**copy_enviro(t_shell *shell, int var)
+static char	**copy_enviro(int var, t_shell *shell)
 {
 	char	**new_envp;
 	char	**old_envp;

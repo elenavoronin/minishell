@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/15 12:20:10 by codespace     #+#    #+#                 */
-/*   Updated: 2023/12/15 16:13:39 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/15 17:20:55 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,20 @@ static void	populate_env(t_shell *shell, char **envp)
 		if (!shell->env.envp[i])
 			return (update_status(shell, MALLOC_ERROR));
 		val = ft_strchr(envp[i], '=');
-		len = val - envp[i];
+		if (!val)
+			len = ft_strlen(envp[i]);
+		else
+			len = val - envp[i];
 		shell->env.envp_name[i] = ft_substr(envp[i], 0, len);
 		if (!shell->env.envp_name[i])
 			return (update_status(shell, MALLOC_ERROR));
-		val++;
-		shell->env.envp_value[i] = ft_strdup(val);
-		if (!shell->env.envp_value[i])
-			return (update_status(shell, MALLOC_ERROR));
+		if (val)
+		{
+			val++;
+			shell->env.envp_value[i] = ft_strdup(val);
+			if (!shell->env.envp_value[i])
+				return (update_status(shell, MALLOC_ERROR));
+		}
 		i++;
 	}
 	shell->env.count = i;

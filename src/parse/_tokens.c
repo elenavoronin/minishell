@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 12:39:51 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/15 17:15:17 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void	_tokens_to_cmdtable(char *token, t_parse *parse)
 	char	**cmdtable;
 	size_t	i;
 
-	cmdtable = ft_malloc_wrapper((parse->argc + 1) * sizeof(*cmdtable));
+	cmdtable = ft_calloc((parse->argc + 1), sizeof(*cmdtable));
 	if (!cmdtable)
 		return (update_status(parse->shell, MALLOC_ERROR));
 	i = 0;
@@ -92,9 +92,13 @@ static void	_tokens_to_cmdtable(char *token, t_parse *parse)
 			cmdtable[i] = ft_strdup(parse->cmd->cmd_table[i]);
 		else
 			cmdtable[i] = ft_strdup(token);
+		if (!cmdtable[i])
+			break ;
 		i++;
 	}
 	cmdtable[i] = NULL;
 	ft_free_strarr(parse->cmd->cmd_table);
 	parse->cmd->cmd_table = cmdtable;
+	if (i < parse->argc)
+		return (update_status(parse->shell, MALLOC_ERROR));
 }
