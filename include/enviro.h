@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 15:06:49 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 16:31:28 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_shell
 {
 	t_status	status;
 	t_env		env;
+	char		*line;
+	t_list		*cmdlist;
 	int			return_value;
 }	t_shell;
 

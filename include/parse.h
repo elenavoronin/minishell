@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/12 17:17:18 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/17 16:56:10 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_cmd
 	char				**cmd_table;
 }	t_cmd;
 
-t_list	*parse_input(char *input, t_shell *shell);
+void	parse_input(t_shell *shell);
 void	delete_cmd(void *content);
 
 //For parsing internal use, WARNING: VOLATILE
@@ -73,7 +73,6 @@ typedef struct s_expand
 void	_parse_tokens(t_parse *parse);
 char	**_split(t_parse *parse);
 char	*_expand(t_split *split);
-void	_terminate(t_list **cmdlist, char *message, int status);
 void	parse_test(t_list **cmdlist);
 
 #endif

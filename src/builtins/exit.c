@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:30:16 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 13:44:29 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 16:25:46 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 //needs to exit before forking if this is the only command
 void	mini_exit(t_shell *shell)
 {
+	clear_history();
+	free(shell->line);
+	ft_lstclear(&shell->cmdlist, delete_cmd);
 	clear_env(shell);
-	exit(EXIT_SUCCESS);
+	exit(shell->status);
 }

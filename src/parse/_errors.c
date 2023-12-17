@@ -6,18 +6,11 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/09 13:06:05 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 12:48:08 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 16:56:05 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
-
-//Encountered parsing error, terminates program with given exit code.
-void	_terminate(t_list **cmdlist, char *message, int status)
-{
-	ft_lstclear(cmdlist, delete_cmd);
-	ft_errexit(message, status);
-}
 
 //For testing and debugging use
 void	parse_test(t_list **cmdlist)

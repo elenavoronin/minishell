@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 14:24:35 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 16:10:44 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ void	mini_cd(char **cmd, t_shell *shell)
 {
 	t_cd	cd;
 
+	if (ft_strarray_count(cmd) > 2)
+	{
+		ft_perror("🐢shell", "cd", "too many arguments");
+		return (update_status(shell, SYNTAX_ERROR));
+	}
 	update_envp(shell, "OLDPWD", getenvp_value(shell, "PWD"));
 	if (shell->status != SUCCESS)
 		return ;

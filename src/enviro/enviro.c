@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/15 12:20:10 by codespace     #+#    #+#                 */
-/*   Updated: 2023/12/15 17:20:55 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 17:06:30 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,10 @@ static void	populate_env(t_shell *shell, char **envp);
 
 void	init_env(t_shell *shell, char **envp)
 {
-	int	count;
-
-	shell->status = SUCCESS;
-	count = ft_strarray_count(envp);
-	shell->env.envp = ft_calloc(count + 1, sizeof(char *));
-	shell->env.envp_name = ft_calloc(count + 1, sizeof(char *));
-	shell->env.envp_value = ft_calloc(count + 1, sizeof(char *));
+	shell->env.count = ft_strarray_count(envp);
+	shell->env.envp = ft_calloc(shell->env.count + 1, sizeof(char *));
+	shell->env.envp_name = ft_calloc(shell->env.count + 1, sizeof(char *));
+	shell->env.envp_value = ft_calloc(shell->env.count + 1, sizeof(char *));
 	if (!shell->env.envp || !shell->env.envp_name || !shell->env.envp_value)
 		return (update_status(shell, MALLOC_ERROR));
 	populate_env(shell, envp);
@@ -107,6 +104,7 @@ void	clear_env(t_shell *shell)
 	int	i;
 
 	i = 0;
+	ft_lstclear(&shell->cmdlist, delete_cmd);
 	while (i < shell->env.count)
 	{
 		free(shell->env.envp[i]);

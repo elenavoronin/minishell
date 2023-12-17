@@ -6,13 +6,14 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/15 14:34:23 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 17:05:23 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void	start_minishell(char **envp);
+static void	init(t_shell *shell, char **envp);
 static char	*get_prompt(t_shell *shell);
 
 int	main(int argc, char **argv, char **envp)
@@ -26,35 +27,38 @@ int	main(int argc, char **argv, char **envp)
 static void	start_minishell(char **envp)
 {
 	t_shell	shell;
-	t_list	*cmdlist;
-	char	*line;
 	char	*prompt;
+	char	*line;
 
-	cmdlist = NULL;
-	init_env(&shell, envp);
+	init(&shell, envp);
 	while (shell.status == SUCCESS)
 	{
 		prompt = get_prompt(&shell);
 		line = readline(prompt);
 		free(prompt);
 		if (!line)
-		{
-			free(line);
-			clear_env(&shell);
-			clear_history();
-			exit(EXIT_SUCCESS);
-		}
+			mini_exit(&shell);
 		if (*line)
 		{
-			cmdlist = parse_input(line, &shell);
-			// parse_test(&cmdlist);
-			execute_shell(&cmdlist, &shell);
-			ft_lstclear(&cmdlist, delete_cmd);
+			shell.line = line;
+			parse_input(&shell);
+			//parse_test(&shell.cmdlist);
+			execute_shell(&shell.cmdlist, &shell);
 			add_history(line);
 		}
 		free(line);
+		line = NULL;
 	}
+	clear_history();
 	clear_env(&shell);
+}
+
+static void	init(t_shell *shell, char **envp)
+{
+	shell->status = SUCCESS;
+	shell->line = NULL;
+	shell->cmdlist = NULL;
+	init_env(shell, envp);
 }
 
 static char	*get_prompt(t_shell *shell)
