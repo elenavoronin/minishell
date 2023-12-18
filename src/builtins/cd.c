@@ -6,64 +6,65 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/17 16:10:44 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/18 14:34:18 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-static void	cd_init(t_cd *cd, char **cmd, t_shell *shell);
-static void	cd_slash(t_cd *cd);
-static void	cd_dot(t_cd *cd);
-static void	cd_appendpath(t_cd *cd);
+static int	_setcurpath(t_cd *cd, char **cmd, t_shell *shell);
+static void	_slash(t_cd *cd);
+static void	_dot(t_cd *cd);
+static void	_appendpath(t_cd *cd);
 
 void	mini_cd(char **cmd, t_shell *shell)
 {
 	t_cd	cd;
 
 	if (ft_strarray_count(cmd) > 2)
-	{
-		ft_perror("🐢shell", "cd", "too many arguments");
-		return (update_status(shell, SYNTAX_ERROR));
-	}
-	update_envp(shell, "OLDPWD", getenvp_value(shell, "PWD"));
-	if (shell->status != SUCCESS)
-		return ;
+		return (ft_perror("🐢shell", "cd", "too many arguments"));
+	if (!update_envp(&shell->env, "OLDPWD", getenvp_value(&shell->env, "PWD")))
+		return (update_status(shell, MALLOC_ERROR));
 	cmd++;
 	if (!*cmd)
-		return (update_envp(shell, "PWD", getenvp_value(shell, "HOME")));
-	cd_init(&cd, cmd, shell);
-	while (*cd.cmd && cd.i < PATH_MAX)
 	{
-		if (*cd.cmd == '/')
-			cd_slash(&cd);
-		else if (*cd.cmd == '.')
-			cd_dot(&cd);
-		else
-			cd_appendpath(&cd);
-		if (stat(cd.curpath, &cd.statbuf) != 0)
-			return (perror("🐢shell: cd"));
-	}
-	update_envp(shell, "PWD", cd.curpath);
-	if (shell->status != SUCCESS)
+		if (update_envp(&shell->env, "PWD", getenvp_value(&shell->env, "HOME")))
+			return (update_status(shell, MALLOC_ERROR));
 		return ;
+	}
+	if (!_setcurpath(&cd, cmd, shell))
+		return (perror("🐢shell: cd"));
+	if (!update_envp(&shell->env, "PWD", cd.curpath))
+		return (update_status(shell, MALLOC_ERROR));
 	chdir(cd.curpath);
 }
 
-void	cd_init(t_cd *cd, char **cmd, t_shell *shell)
+static int	_setcurpath(t_cd *cd, char **cmd, t_shell *shell)
 {
 	cd->i = 0;
 	cd->cmd = *cmd;
 	if (*cd->cmd == '/')
-		cd_slash(cd);
+		_slash(cd);
 	else
 	{
-		ft_strlcpy(cd->curpath, getenvp_value(shell, "PWD"), PATH_MAX);
+		ft_strlcpy(cd->curpath, getenvp_value(&shell->env, "PWD"), PATH_MAX);
 		cd->i = ft_strlen(cd->curpath);
 	}
+	while (*cd->cmd && cd->i < PATH_MAX)
+	{
+		if (*cd->cmd == '/')
+			_slash(cd);
+		else if (*cd->cmd == '.')
+			_dot(cd);
+		else
+			_appendpath(cd);
+		if (stat(cd->curpath, &cd->statbuf) != 0)
+			return (0);
+	}
+	return (1);
 }
 
-static void	cd_slash(t_cd *cd)
+static void	_slash(t_cd *cd)
 {
 	while (*cd->cmd == '/')
 		cd->cmd++;
@@ -75,7 +76,7 @@ static void	cd_slash(t_cd *cd)
 	}
 }
 
-static void	cd_dot(t_cd *cd)
+static void	_dot(t_cd *cd)
 {
 	while (cd->cmd[0] == '.' && cd->cmd[1] == '/')
 		cd->cmd += 2;
@@ -95,7 +96,7 @@ static void	cd_dot(t_cd *cd)
 	}
 }
 
-static void	cd_appendpath(t_cd *cd)
+static void	_appendpath(t_cd *cd)
 {
 	int	i;
 

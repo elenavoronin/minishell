@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 17:15:17 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/18 15:53:48 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	_parse_tokens(t_parse *parse)
 		_tokens_to_cmd(tokens, parse);
 	ft_free_strarr(tokens);
 	free(save_cmdstr);
+	parse->cmdstr = NULL;
 }
 
 static void	_tokens_to_cmd(char **tokens, t_parse *parse)
@@ -36,18 +37,21 @@ static void	_tokens_to_cmd(char **tokens, t_parse *parse)
 	while (*tokens)
 	{
 		dest = _get_dest(*tokens, parse);
-		if (dest && *dest != parse->cmd->cmd_table[0])
+		if (dest && dest != parse->cmd->cmd_table)
 		{
 			tokens++;
 			if (!*tokens)
+			{
+				ft_perror("🐢shell", NULL, "syntax error");
 				return (update_status(parse->shell, SYNTAX_ERROR));
+			}
 			if (*dest)
 				free(*dest);
 			*dest = ft_strdup(*tokens);
 			if (!*dest)
 				return (update_status(parse->shell, MALLOC_ERROR));
 		}
-		else if (dest == &parse->cmd->cmd_table[0])
+		else if (*tokens && dest == parse->cmd->cmd_table)
 			_tokens_to_cmdtable(*tokens, parse);
 		tokens++;
 	}
@@ -72,7 +76,7 @@ static char	**_get_dest(char *token, t_parse *parse)
 	else if (*token)
 	{
 		parse->argc++;
-		dest = &(parse->cmd->cmd_table[0]);
+		dest = parse->cmd->cmd_table;
 	}
 	return (dest);
 }

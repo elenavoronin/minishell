@@ -12,7 +12,8 @@
 
 #include "parse.h"
 
-static void		_init(t_parse *parse, t_shell *shell);
+static void		_init_parse(t_parse *parse, t_shell *shell);
+static t_cmd	*_init_cmd(void);
 static size_t	_extract_cmdstr(char *input, t_parse *parse);
 
 /**
@@ -28,7 +29,9 @@ void	parse_input(t_shell *shell)
 	line = shell->line;
 	while (*line)
 	{
-		_init(&parse, shell);
+		_init_parse(&parse, shell);
+		if (shell->status != SUCCESS)
+			mini_exit(shell);
 		line += _extract_cmdstr(line, &parse);
 		if (shell->status != SUCCESS)
 			mini_exit(shell);
@@ -47,32 +50,46 @@ void	delete_cmd(void *content)
 {
 	t_cmd	*cmd;
 
-	cmd = content;
-	ft_free_strarr(cmd->cmd_table);
-	free(cmd->delimiter);
-	free(cmd->infile);
-	free(cmd->outfile);
-	free(cmd);
+	if (content)
+	{
+		cmd = content;
+		ft_free_strarr(cmd->cmd_table);
+		free(cmd->delimiter);
+		free(cmd->infile);
+		free(cmd->outfile);
+		free(cmd);
+	}
 }
 
-static void	_init(t_parse *parse, t_shell *shell)
+static t_cmd	*_init_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = ft_calloc(1, sizeof(*cmd));
+	if (cmd)
+	{
+		cmd->delimiter = NULL;
+		cmd->infile = NULL;
+		cmd->outfile = NULL;
+		cmd->output_flag = 'w';
+		cmd->cmd_table = NULL;
+	}
+	return (cmd);
+}
+
+static void	_init_parse(t_parse *parse, t_shell *shell)
 {
 	t_list	*new;
 
+	new = NULL;
 	parse->shell = shell;
-	parse->cmdstr = NULL;
 	parse->argc = 0;
-	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
-	if (!parse->cmd)
-		mini_exit(shell);
-	parse->cmd->delimiter = NULL;
-	parse->cmd->infile = NULL;
-	parse->cmd->outfile = NULL;
-	parse->cmd->output_flag = 'w';
-	parse->cmd->cmd_table = NULL;
-	new = ft_lstnew(parse->cmd);
+	parse->cmd = _init_cmd();
+	if (parse->cmd)
+		new = ft_lstnew(parse->cmd);
 	if (!new)
 	{
+		update_status(shell, MALLOC_ERROR);
 		delete_cmd(parse->cmd);
 		parse->cmd = NULL;
 		mini_exit(shell);
@@ -94,7 +111,7 @@ static size_t	_extract_cmdstr(char *input, t_parse *parse)
 		len = ft_strlen(input);
 	str = ft_substr(input, 0, len);
 	if (!str)
-		return (update_status(parse->shell, MALLOC_ERROR), 0);
+		update_status(parse->shell, MALLOC_ERROR);
 	parse->cmdstr = str;
 	return (len);
 }

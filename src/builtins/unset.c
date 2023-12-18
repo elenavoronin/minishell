@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 16:34:56 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/18 14:36:28 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void	mini_unset(char **cmd, t_shell *shell)
 	if (var < 0)
 		return ;
 	new_envp = copy_enviro(var, shell);
-	if (shell->status != SUCCESS)
-		return ;
-	clear_env(shell);
-	init_env(shell, new_envp);
+	if (!new_envp)
+		return (update_status(shell, MALLOC_ERROR));
+	clear_env(&shell->env);
+	init_env(&shell->env, new_envp);
 	ft_free_strarr(new_envp);
 }
 
@@ -54,7 +54,7 @@ static char	**copy_enviro(int var, t_shell *shell)
 	old_envp = shell->env.envp;
 	new_envp = ft_calloc(ft_strarray_count(old_envp), sizeof(*new_envp));
 	if (!new_envp)
-		return (update_status(shell, MALLOC_ERROR), NULL);
+		return (NULL);
 	i = 0;
 	while (*old_envp)
 	{
@@ -64,7 +64,7 @@ static char	**copy_enviro(int var, t_shell *shell)
 			if (!new_envp[i])
 			{
 				ft_free_strarr(new_envp);
-				return (update_status(shell, MALLOC_ERROR), NULL);
+				return (NULL);
 			}
 			i++;
 		}

@@ -6,14 +6,14 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/17 17:05:23 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/18 16:13:31 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void	start_minishell(char **envp);
-static void	init(t_shell *shell, char **envp);
+static void	init_shell(t_shell *shell, char **envp);
 static char	*get_prompt(t_shell *shell);
 
 int	main(int argc, char **argv, char **envp)
@@ -28,50 +28,51 @@ static void	start_minishell(char **envp)
 {
 	t_shell	shell;
 	char	*prompt;
-	char	*line;
 
-	init(&shell, envp);
+	init_shell(&shell, envp);
 	while (shell.status == SUCCESS)
 	{
 		prompt = get_prompt(&shell);
-		line = readline(prompt);
+		shell.line = readline(prompt);
 		free(prompt);
-		if (!line)
+		if (!shell.line)
 			mini_exit(&shell);
-		if (*line)
+		if (*shell.line)
 		{
-			shell.line = line;
 			parse_input(&shell);
 			//parse_test(&shell.cmdlist);
 			execute_shell(&shell.cmdlist, &shell);
-			add_history(line);
+			add_history(shell.line);
 		}
-		free(line);
-		line = NULL;
+		free(shell.line);
+		shell.line = NULL;
 	}
-	clear_history();
-	clear_env(&shell);
+	mini_exit(&shell);
 }
 
-static void	init(t_shell *shell, char **envp)
+static void	init_shell(t_shell *shell, char **envp)
 {
 	shell->status = SUCCESS;
 	shell->line = NULL;
 	shell->cmdlist = NULL;
-	init_env(shell, envp);
+	if (!init_env(&shell->env, envp))
+		return (update_status(shell, MALLOC_ERROR));
 }
 
 static char	*get_prompt(t_shell *shell)
 {
-	char	*curpath;
 	char	*prompt;
 	char	*home;
+	char	curpath[PATH_MAX];
 	size_t	i;
 
-	home = getenvp_value(shell, "HOME");
-	curpath = getenvp_value(shell, "PWD");
+	home = getenvp_value(&shell->env, "HOME");
+	getcwd(curpath, PATH_MAX);
 	if (ft_strcmp(home, curpath) == 0)
-		curpath = "~";
+	{
+		curpath[0] = '~';
+		curpath[1] = '\0';
+	}
 	i = 0;
 	while (curpath[i] == home[i])
 		i++;

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 13:43:09 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/18 14:32:24 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,34 @@
 
 # include "libft.h"
 # include "enviro.h"
+
+typedef enum e_status
+{
+	SUCCESS,
+	MALLOC_ERROR,
+	SYNTAX_ERROR,
+	UNSUPPORTED,
+	PIPE_ERROR,
+	INTERNAL_ERROR,
+	REDIRECT_ERROR,
+	FORK_ERROR,
+}	t_status;
+
+typedef struct s_shell
+{
+	t_status	status;
+	t_env		env;
+	char		*line;
+	t_list		*cmdlist;
+	int			return_value;
+}	t_shell;
+
 # include "parse.h"
 # include "execute.h"
 # include "builtins.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+
+void	update_status(t_shell *shell, t_status status);
 
 #endif
