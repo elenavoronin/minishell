@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/11 11:41:37 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/15 13:02:53 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 }
 
 
-int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
+int	get_path(t_list **list, t_pipes_struct *pipes, t_shell *state)
 {
 	int				i;
 	t_cmd			*cmds;
@@ -86,10 +86,10 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 	return (0);
 }
 
-int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
+int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell *state)
 {
 	int			nr;
-	t_cmd		*cmds;
+	// t_cmd		*cmds;
 
 	nr = ft_lstsize(*list) - 1;
 	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
@@ -97,7 +97,7 @@ int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell_state *state)
 		return (update_status(state, MALLOC_ERROR), -1);
 	while (*list)
 	{
-		cmds = (*list)->content;
+		// cmds = (*list)->content;
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));
 		if (!pipes->fd_arr)
 			return (update_status(state, MALLOC_ERROR), -1);

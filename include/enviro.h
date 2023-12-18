@@ -1,48 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minishell.h                                        :+:    :+:            */
+/*   enviro.h                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/18 14:32:24 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/18 14:16:59 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef ENVIRO_H
+# define ENVIRO_H
 
-# include "libft.h"
-# include "enviro.h"
+# include "minishell.h"
 
-typedef enum e_status
+typedef struct s_env
 {
-	SUCCESS,
-	MALLOC_ERROR,
-	SYNTAX_ERROR,
-	UNSUPPORTED,
-	PIPE_ERROR,
-	INTERNAL_ERROR,
-	REDIRECT_ERROR,
-	FORK_ERROR,
-}	t_status;
+	int		count;
+	char	**envp;
+	char	**envp_name;
+	char	**envp_value;
+}	t_env;
 
-typedef struct s_shell
+typedef struct s_exp
 {
-	t_status	status;
-	t_env		env;
-	char		*line;
-	t_list		*cmdlist;
-	int			return_value;
-}	t_shell;
+	t_env	cmdenv;
+	int		ipos;
+	char	**cmd;
+	char	**newenvp;
+}	t_exp;
 
-# include "parse.h"
-# include "execute.h"
-# include "builtins.h"
-# include <readline/readline.h>
-# include <readline/history.h>
-
-void	update_status(t_shell *shell, t_status status);
+int		init_env(t_env *env, char **envp);
+char	*getenvp_value(t_env *env, char *name);
+int		update_envp(t_env *env, char *name, char *value);
+void	clear_env(t_env *env);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 12:37:49 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/12 15:23:24 by dliu          ########   odam.nl         */
+/*   Updated: 2023/12/15 16:11:38 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	mini_echo(char **cmd)
 
 	nl = 1;
 	cmd++;
-	if (ft_strcmp(*cmd, "-n") == 0)
+	if (*cmd && ft_strcmp(*cmd, "-n") == 0)
 	{
 		nl = 0;
 		cmd++;

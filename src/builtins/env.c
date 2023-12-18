@@ -3,23 +3,24 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/12 17:38:24 by dliu          ########   odam.nl         */
+/*   Created: 2023/12/15 12:58:24 by codespace     #+#    #+#                 */
+/*   Updated: 2023/12/15 17:22:25 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "builtins.h"
 
 void	mini_env(t_env env)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (env.envp[i])
+	while (i < env.count)
 	{
-		ft_putendl_fd(env.envp[i], STDOUT_FILENO);
+		if (env.envp_value[i])
+			ft_putendl_fd(env.envp[i], STDOUT_FILENO);
 		i++;
 	}
 }

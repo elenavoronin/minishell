@@ -6,18 +6,11 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/09 13:06:05 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/21 13:35:51 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/17 16:56:05 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-//Encountered parsing error, terminates program with given exit code.
-void	_terminate(t_list **cmdlist, char *message, int status)
-{
-	ft_lstclear(cmdlist, delete_cmd);
-	ft_errexit(message, status);
-}
+#include "parse.h"
 
 //For testing and debugging use
 void	parse_test(t_list **cmdlist)
@@ -48,31 +41,3 @@ void	parse_test(t_list **cmdlist)
 		printlist = printlist->next;
 	}
 }
-
-/*
-int	main(void)
-{
-	t_list		*cmdlist;
-	static char	line[128] = "hello 'args' < infile > outfile << here \
-		 >> outfile_append 'args again'";
-
-	printf("\nMinishell Parsing Tester\n");
-	if (line)
-	{
-		if (ft_strncmp(line, "exit", ft_strlen(line)) == 0)
-		{
-			free(line);
-			return (0);
-		}
-		cmdlist = parse_input(line);
-		if (!cmdlist)
-		{
-			printf("parsing failed!");
-			return (0);
-		}
-		parse_test(&cmdlist);
-		ft_lstclear(&cmdlist, delete_cmd);
-	}
-	return (0);
-}
-*/
