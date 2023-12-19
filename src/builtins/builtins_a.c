@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/15 11:28:56 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/19 09:58:35 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ void	execute_builtins(char **cmd, t_shell *shell)
 		mini_pwd(shell);
 	else if (ft_strcmp(cmd[0], "cd") == 0)
 		mini_cd(cmd, shell);
+	else if (ft_strcmp(cmd[0], "unset") == 0)
+		mini_unset(cmd, shell);
+	else if (ft_strcmp(cmd[0], "export") == 0)
+		mini_export(cmd, shell);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
 		mini_exit(shell);
 }

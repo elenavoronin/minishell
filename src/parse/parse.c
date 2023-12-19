@@ -10,82 +10,91 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse.h"
 
-static void		_init(t_parse *parse, t_list **cmdlist, t_shell *shell);
+static void		_init_parse(t_parse *parse, t_shell *shell);
+static t_cmd	*_init_cmd(void);
 static size_t	_extract_cmdstr(char *input, t_parse *parse);
-static int		_valid_str(char *str);
 
 /**
- * Parses input. Allocates memory.
- * @param input The string to parses.
+ * Parses shell->line. Allocates memory.
  * @return On success, returns pointer to head of list.
  * Will terminate program with appropriate exit code on failure.
 */
-t_list	*parse_input(char *input, t_shell	*shell)
+void	parse_input(t_shell *shell)
 {
-	t_list	*cmdlist;
 	t_parse	parse;
+	char	*line;
 
-	if (!input)
-		_terminate(NULL, "ERROR: Parser input NULL.", INTERNAL_ERROR);
-	cmdlist = NULL;
-	while (*input)
+	line = shell->line;
+	while (*line)
 	{
-		_init(&parse, &cmdlist, shell);
-		input += _extract_cmdstr(input, &parse);
-		if (parse.shell->status != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.shell->status);
+		_init_parse(&parse, shell);
+		if (shell->status != SUCCESS)
+			mini_exit(shell);
+		line += _extract_cmdstr(line, &parse);
+		if (shell->status != SUCCESS)
+			mini_exit(shell);
 		_parse_tokens(&parse);
-		if (parse.shell->status != SUCCESS)
-			_terminate(&cmdlist, NULL, parse.shell->status);
-		if (*input == '|')
-			input++;
+		if (shell->status != SUCCESS)
+			mini_exit(shell);
+		if (*line == '|')
+			line++;
 	}
-	return (cmdlist);
 }
 
 /**
- * Use this function in ft_lstclear after processing each line of input,
- * to free linked list content.
- * 
- * ft_lstclear(cmdlist, delete_cmd);
+ * Use this function in ft_lstclear
 */
 void	delete_cmd(void *content)
 {
 	t_cmd	*cmd;
 
-	cmd = content;
-	ft_free_strarr(cmd->cmd_table);
-	free(cmd->delimiter);
-	free(cmd->infile);
-	free(cmd->outfile);
-	free(cmd);
+	if (content)
+	{
+		cmd = content;
+		ft_free_strarr(cmd->cmd_table);
+		free(cmd->delimiter);
+		free(cmd->infile);
+		free(cmd->outfile);
+		free(cmd);
+	}
 }
 
-static void	_init(t_parse *parse, t_list **cmdlist, t_shell *shell)
+static t_cmd	*_init_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = ft_calloc(1, sizeof(*cmd));
+	if (cmd)
+	{
+		cmd->delimiter = NULL;
+		cmd->infile = NULL;
+		cmd->outfile = NULL;
+		cmd->output_flag = 'w';
+		cmd->cmd_table = NULL;
+	}
+	return (cmd);
+}
+
+static void	_init_parse(t_parse *parse, t_shell *shell)
 {
 	t_list	*new;
 
+	new = NULL;
 	parse->shell = shell;
-	parse->shell->status = 0;
-	parse->cmdstr = NULL;
 	parse->argc = 0;
-	parse->cmd = ft_malloc_wrapper(sizeof(*(parse->cmd)));
-	if (!parse->cmd)
-		_terminate(cmdlist, NULL, MALLOC_ERROR);
-	parse->cmd->delimiter = NULL;
-	parse->cmd->infile = NULL;
-	parse->cmd->outfile = NULL;
-	parse->cmd->output_flag = 'w';
-	parse->cmd->cmd_table = NULL;
-	new = ft_lstnew(parse->cmd);
+	parse->cmd = _init_cmd();
+	if (parse->cmd)
+		new = ft_lstnew(parse->cmd);
 	if (!new)
 	{
+		update_status(shell, MALLOC_ERROR);
 		delete_cmd(parse->cmd);
-		_terminate(NULL, NULL, MALLOC_ERROR);
+		parse->cmd = NULL;
+		mini_exit(shell);
 	}
-	ft_lstadd_back(cmdlist, new);
+	ft_lstadd_back(&shell->cmdlist, new);
 	parse->shell = shell;
 }
 
@@ -102,35 +111,7 @@ static size_t	_extract_cmdstr(char *input, t_parse *parse)
 		len = ft_strlen(input);
 	str = ft_substr(input, 0, len);
 	if (!str)
-		return (update_status(parse->shell, MALLOC_ERROR), 0);
-	if (!_valid_str(str))
-	{
-		free(str);
-		return (update_status(parse->shell, SYNTAX_ERROR), 0);
-	}
+		update_status(parse->shell, MALLOC_ERROR);
 	parse->cmdstr = str;
 	return (len);
-}
-
-static int	_valid_str(char *str)
-{
-	int	i;
-	int	valid;
-
-	i = 0;
-	valid = 0;
-	while (str[i])
-	{
-		if (ft_isalnum(str[i]))
-			valid = 1;
-		else if (!ft_isascii(str[i]))
-		{
-			valid = 0;
-			break ;
-		}
-		i++;
-	}
-	if (!valid)
-		ft_perror("SYNTAX ERROR:", NULL, "Invalid input found.");
-	return (valid);
 }

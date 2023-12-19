@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 13:07:11 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/19 09:59:16 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,6 @@
 # define EXECUTE_H
 
 # include "minishell.h"
-# include "libft.h"
-# include "lifecycle.h"
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
