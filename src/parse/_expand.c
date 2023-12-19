@@ -82,7 +82,7 @@ static	void	_extract_tag(t_expand *expand, t_split *split)
 	ename = ft_substr(split->tag, 0, len);
 	if (!ename)
 		return (update_status(split->parse->shell, MALLOC_ERROR));
-	evalue = getenvp_value(split->parse->shell, ename);
+	evalue = getenvp_value(&split->parse->shell->env, ename);
 	if (evalue)
 		expand->strs[expand->count] = ft_strdup(evalue);
 	else
