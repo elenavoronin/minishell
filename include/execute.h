@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/19 09:59:16 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/19 11:15:07 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "minishell.h"
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 
 typedef int	t_pipe_fd[2];
 
