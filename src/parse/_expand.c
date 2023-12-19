@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   _expand.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 12:39:49 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/19 11:13:17 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static	void	_extract_tag(t_expand *expand, t_split *split)
 	ename = ft_substr(split->tag, 0, len);
 	if (!ename)
 		return (update_status(split->parse->shell, MALLOC_ERROR));
-	evalue = getenvp_value(split->parse->shell, ename);
+	evalue = getenvp_value(&split->parse->shell->env, ename);
 	if (evalue)
 		expand->strs[expand->count] = ft_strdup(evalue);
 	else
