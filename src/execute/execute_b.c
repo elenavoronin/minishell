@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/19 10:05:20 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/19 15:53:54 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,14 @@ int	redirect_input(t_list **list, t_pipes *pipes)
 {
 	int		i;
 	t_cmd	*cmd;
+	t_list	*all_cmd;
 	int		fd;
 
 	i = 0;
-	while (*list)
+	all_cmd = (*list);
+	while (all_cmd)
 	{
-		cmd = (*list)->content;
+		cmd = all_cmd->content;
 		if (cmd->infile != NULL)
 		{
 			fd = open(cmd->infile, O_RDONLY, 0644);
@@ -105,7 +107,7 @@ int	redirect_input(t_list **list, t_pipes *pipes)
 			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
 				return (perror("dup2"), -1);
 		}
-		(*list) = (*list)->next;
+		all_cmd = all_cmd->next;
 		i++;
 	}
 	return (0);
@@ -116,12 +118,14 @@ int	redirect_output(t_list **list, t_pipes *pipes)
 {
 	int		i;
 	t_cmd	*cmd;
+	t_list	*all_cmd;
 	int		fd;
 
 	i = 0;
-	while (*list)
+	all_cmd = (*list);
+	while (all_cmd)
 	{
-		cmd = (*list)->content;
+		cmd = all_cmd->content;
 		if (cmd->outfile != NULL)
 		{
 			fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
@@ -131,7 +135,7 @@ int	redirect_output(t_list **list, t_pipes *pipes)
 			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
 				return (perror("dup2"), -1);
 		}
-		(*list) = (*list)->next;
+		all_cmd = all_cmd->next;
 		i++;
 	}
 	return (0);

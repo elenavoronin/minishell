@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/19 10:05:51 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/19 15:50:53 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	create_children(t_list **list, t_shell *shell,
 	t_cmd	*cmds;
 
 	i = 0;
-	while (*list)
+	while ((*list))
 	{
 		cmds = (*list)->content;
 		fork_cmds(cmds->cmd_table, i, shell, pipes);
