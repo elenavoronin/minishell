@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/18 14:34:18 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/20 12:08:56 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ void	mini_cd(char **cmd, t_shell *shell)
 	cmd++;
 	if (!*cmd)
 	{
-		if (update_envp(&shell->env, "PWD", getenvp_value(&shell->env, "HOME")))
+		if (!update_envp(&shell->env, "PWD", getenvp_value(&shell->env, "HOME")))
 			return (update_status(shell, MALLOC_ERROR));
+		if (chdir(getenvp_value(&shell->env, "HOME")) < 0)
+			return (perror("🐢shell: cd"));
 		return ;
 	}
 	if (!_setcurpath(&cd, cmd, shell))
