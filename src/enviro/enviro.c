@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.codam.nl>       +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/15 12:20:10 by codespace     #+#    #+#                 */
-/*   Updated: 2023/12/18 16:25:24 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/20 16:15:33 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,14 @@ char	*getenvp_value(t_env *env, char *name)
 	return (NULL);
 }
 
+/**
+ * Update environent variable
+ * @param name The name of the variable to update
+ * @param value The new value of the variable
+ * Automatically creates the respective envp value by joining the name and value with '='
+ * @return 1 if successful, 0 if there is a malloc error.
+ * Remember to update the status in shell.
+*/
 int	update_envp(t_env *env, char *name, char *value)
 {
 	int		i;

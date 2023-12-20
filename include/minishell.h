@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/18 14:32:24 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/20 16:05:38 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef enum e_status
 
 typedef struct s_shell
 {
+	int			run;
 	t_status	status;
 	t_env		env;
 	char		*line;

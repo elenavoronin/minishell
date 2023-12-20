@@ -31,13 +31,13 @@ void	parse_input(t_shell *shell)
 	{
 		_init_parse(&parse, shell);
 		if (shell->status != SUCCESS)
-			mini_exit(shell);
+			return ;
 		line += _extract_cmdstr(line, &parse);
 		if (shell->status != SUCCESS)
-			mini_exit(shell);
+			return ;
 		_parse_tokens(&parse);
 		if (shell->status != SUCCESS)
-			mini_exit(shell);
+			return ;
 		if (*line == '|')
 			line++;
 	}
