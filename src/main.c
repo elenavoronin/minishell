@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/19 15:48:40 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/20 15:37:23 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static void	start_minishell(char **envp)
 		}
 		free(shell.line);
 		shell.line = NULL;
+		ft_lstclear(&shell.cmdlist, delete_cmd);
+		shell.cmdlist = NULL;
 	}
 	mini_exit(&shell);
 }
