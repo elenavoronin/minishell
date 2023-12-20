@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 13:54:33 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/20 15:10:03 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes)
 			return (NULL);
 		}
 		pipes->path = ft_strjoin(path, cmd[0]);
-		free(path);
 		if (!pipes->path)
 		{
 			free(new_paths);
@@ -51,6 +50,7 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes)
 		}
 		if (access(pipes->path, X_OK) == 0)
 			return (pipes->path);
+		free(path);
 		j++;
 	}
 	return (NULL);
@@ -151,9 +151,7 @@ int	create_pipes(t_list **list, t_pipes *pipes, t_shell *state, int nr)
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
 		if (!pipes->fd_arr)
 			return (update_status(state, MALLOC_ERROR), -1);
-		pipes->return_value = malloc(sizeof(int) * (nr + 1));
-		if (!pipes->return_value)
-			return (update_status(state, MALLOC_ERROR), -1);
+		pipes->return_value = 0;
 		if (nr == 0)
 		{
 			pipes->nr_pipes = 0;

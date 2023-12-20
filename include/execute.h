@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 13:54:37 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/20 14:49:57 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_pipes_struct
 	int				nr_pipes;
 	char			*path;
 	int				*pid;
-	int				*return_value;
+	int				return_value;
 	t_pipe_fd		*fd_arr;
 }	t_pipes;
 
