@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/19 15:53:54 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/20 13:54:33 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,16 +143,16 @@ int	redirect_output(t_list **list, t_pipes *pipes)
 
 int	create_pipes(t_list **list, t_pipes *pipes, t_shell *state, int nr)
 {
-	t_cmd		*cmds;
-
 	pipes->pid = malloc(sizeof(int) * (nr + 1));
 	if (!pipes->pid)
 		return (update_status(state, MALLOC_ERROR), -1);
 	while (*list)
 	{
-		cmds = (*list)->content;
 		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
 		if (!pipes->fd_arr)
+			return (update_status(state, MALLOC_ERROR), -1);
+		pipes->return_value = malloc(sizeof(int) * (nr + 1));
+		if (!pipes->return_value)
 			return (update_status(state, MALLOC_ERROR), -1);
 		if (nr == 0)
 		{
