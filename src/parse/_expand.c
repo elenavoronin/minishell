@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   _expand.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 12:39:49 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/19 11:13:17 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

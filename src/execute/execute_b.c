@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/15 13:02:53 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/19 15:53:54 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
+char	*get_path_char(char **cmd, char **envp, t_pipes *pipes)
 {
 	char	**new_paths;
 	char	*path;
@@ -57,7 +57,7 @@ char	*get_path_char(char **cmd, char **envp, t_pipes_struct *pipes)
 }
 
 
-int	get_path(t_list **list, t_pipes_struct *pipes, t_shell *state)
+int	get_path(t_list **list, t_pipes *pipes, t_shell *state)
 {
 	int				i;
 	t_cmd			*cmds;
@@ -86,26 +86,77 @@ int	get_path(t_list **list, t_pipes_struct *pipes, t_shell *state)
 	return (0);
 }
 
-int	create_pipes(t_list **list, t_pipes_struct *pipes, t_shell *state)
+int	redirect_input(t_list **list, t_pipes *pipes)
 {
-	int			nr;
-	// t_cmd		*cmds;
+	int		i;
+	t_cmd	*cmd;
+	t_list	*all_cmd;
+	int		fd;
 
-	nr = ft_lstsize(*list) - 1;
-	pipes->pid = malloc(sizeof(int *) * (pipes->nr_pipes + 1));
+	i = 0;
+	all_cmd = (*list);
+	while (all_cmd)
+	{
+		cmd = all_cmd->content;
+		if (cmd->infile != NULL)
+		{
+			fd = open(cmd->infile, O_RDONLY, 0644);
+			if (fd == -1)
+				return (perror(cmd->infile), -1);
+			pipes->fd_arr[i][0] = fd;
+			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
+				return (perror("dup2"), -1);
+		}
+		all_cmd = all_cmd->next;
+		i++;
+	}
+	return (0);
+}
+
+
+int	redirect_output(t_list **list, t_pipes *pipes)
+{
+	int		i;
+	t_cmd	*cmd;
+	t_list	*all_cmd;
+	int		fd;
+
+	i = 0;
+	all_cmd = (*list);
+	while (all_cmd)
+	{
+		cmd = all_cmd->content;
+		if (cmd->outfile != NULL)
+		{
+			fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			if (fd == -1)
+				return (perror(cmd->outfile), -1);
+			pipes->fd_arr[i][1] = fd;
+			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
+				return (perror("dup2"), -1);
+		}
+		all_cmd = all_cmd->next;
+		i++;
+	}
+	return (0);
+}
+
+int	create_pipes(t_list **list, t_pipes *pipes, t_shell *state, int nr)
+{
+	t_cmd		*cmds;
+
+	pipes->pid = malloc(sizeof(int) * (nr + 1));
 	if (!pipes->pid)
 		return (update_status(state, MALLOC_ERROR), -1);
 	while (*list)
 	{
-		// cmds = (*list)->content;
-		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 2));
+		cmds = (*list)->content;
+		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
 		if (!pipes->fd_arr)
 			return (update_status(state, MALLOC_ERROR), -1);
-		pipes->fd_arr[0][0] = STDIN_FILENO;
-		pipes->fd_arr[nr + 1][1] = STDOUT_FILENO;
 		if (nr == 0)
 		{
-			pipes->nr_pipes = nr;
+			pipes->nr_pipes = 0;
 			return (0);
 		}
 		while (pipes->nr_pipes < nr)
