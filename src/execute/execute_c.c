@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 15:08:38 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/21 14:34:27 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	clear_pipes(t_pipes *pipes, int nr)
 	i = 0;
 	if (nr > 0)
 	{
-		while (i <= nr)
+		while (i < nr)
 		{
 			free(pipes->fd_arr[i]);
 			free(pipes->pid);
@@ -71,12 +71,12 @@ void	fork_cmds(char **cmd, int i, t_shell *shell, t_pipes *pipes)
 	}
 	if (pipes->pid[i] != 0)
 		return ;
-	// connect_pipes(i, pipes);
-	// if (redirect_stuff(i, pipes) != 0)
-	// {
-	// 	update_status(shell, REDIRECT_ERROR);
-	// 	return ;
-	// }
+	connect_pipes(i, pipes);
+	if (redirect_stuff(i, pipes) != 0)
+	{
+		update_status(shell, REDIRECT_ERROR);
+		return ;
+	}
 	if (check_builtins(cmd) == 1)
 	{
 		execute_builtins(cmd, shell);

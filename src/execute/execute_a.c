@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 15:08:02 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/12/21 14:08:21 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,4 @@ void	execute_shell(t_list **cmds, t_shell *shell)
 	}
 	create_children(cmds, shell, &pipes);
 	wait_all(&pipes, shell);
-	clear_pipes(&pipes, pipes.nr_pipes);
 }
