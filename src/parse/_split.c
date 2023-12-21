@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 12:39:50 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/20 15:46:15 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	_count_split(char *line, t_split *split)
 			if (!line)
 			{
 				split->parse->shell->status = SYNTAX_ERROR;
-				ft_perror("SYNTAX ERROR", NULL, "Unclosed brackets found.");
+				ft_perror("🐢shell", "syntax error", "Unclosed brackets.");
 				return ;
 			}
 			line++;

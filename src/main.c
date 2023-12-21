@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/19 15:48:40 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/20 16:33:19 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	start_minishell(char **envp)
 	char	*prompt;
 
 	init_shell(&shell, envp);
-	while (shell.status == SUCCESS)
+	while (shell.run)
 	{
 		prompt = get_prompt(&shell);
 		shell.line = readline(prompt);
@@ -39,19 +39,28 @@ static void	start_minishell(char **envp)
 			mini_exit(&shell);
 		if (*shell.line)
 		{
+			if (ft_strcmp(shell.line, "exit") == 0)
+				mini_exit(&shell);
 			parse_input(&shell);
 			//parse_test(&shell.cmdlist);
-			execute_shell(&shell.cmdlist, &shell);
-			add_history(shell.line);
+			if (shell.status == SUCCESS)
+				execute_shell(&shell.cmdlist, &shell);
+			if (shell.line)
+				add_history(shell.line);
 		}
 		free(shell.line);
 		shell.line = NULL;
+		ft_lstclear(&shell.cmdlist, delete_cmd);
+		shell.cmdlist = NULL;
+		shell.status = SUCCESS;
 	}
 	mini_exit(&shell);
 }
 
 static void	init_shell(t_shell *shell, char **envp)
 {
+	shell->run = 1;
+	shell->return_value = 0;
 	shell->status = SUCCESS;
 	shell->line = NULL;
 	shell->cmdlist = NULL;

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/18 15:53:48 by codespace     ########   odam.nl         */
+/*   Updated: 2023/12/20 15:46:44 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void	_tokens_to_cmd(char **tokens, t_parse *parse)
 			tokens++;
 			if (!*tokens)
 			{
-				ft_perror("🐢shell", NULL, "syntax error");
+				ft_perror("🐢shell", "syntax error", "bad command");
 				return (update_status(parse->shell, SYNTAX_ERROR));
 			}
 			if (*dest)
