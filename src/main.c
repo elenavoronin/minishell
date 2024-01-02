@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/02 15:07:53 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/02 15:41:50 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,11 @@ static void	start_minishell(char **envp)
 		free(prompt);
 		if (!shell.line || ft_strcmp(shell.line, "exit") == 0)
 			mini_exit(&shell);
-		if (!g_signal)
-		{
-			parse_input(&shell);
-			//parse_test(&shell.cmdlist);
-			if (shell.status == SUCCESS)
-				execute_shell(&shell.cmdlist, &shell);
-			add_history(shell.line);
-		}
-		else
-			g_signal = 0;
+		parse_input(&shell);
+		//parse_test(&shell.cmdlist);
+		if (shell.status == SUCCESS)
+			execute_shell(&shell.cmdlist, &shell);
+		add_history(shell.line);
 		init_shell(&shell, NULL);
 	}
 	mini_exit(&shell);
@@ -64,15 +59,15 @@ static void	start_minishell(char **envp)
 
 static int	init_shell(t_shell *shell, char **envp)
 {
-	if (envp && !init_env(&shell->env, envp))
-		return (update_status(shell, MALLOC_ERROR), 0);
-	else if (!envp)
+	if (!envp)
 	{
 		free(shell->line);
 		ft_lstclear(&shell->cmdlist, delete_cmd);
 	}
 	shell->line = NULL;
 	shell->cmdlist = NULL;
+	if (envp && !init_env(&shell->env, envp))
+		return (update_status(shell, MALLOC_ERROR), 0);
 	return (update_status(shell, SUCCESS), 1);
 }
 
