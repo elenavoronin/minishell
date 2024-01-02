@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 17:10:10 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/15 16:04:55 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/02 14:51:47 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 /**
  * Compares two strings until a difference, or '\0' is found in either string.
- * If either of the strings are NULL, 0 will be returned.
 */
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -109,7 +108,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 	i = 0;
 	if (!s1 || !s2)
+	{
+		if (s1 != s2)
+			return (444);
 		return (0);
+	}
 	while(s1[i] || s2[i])
 	{
 		if (s1[i] != s2[i])
