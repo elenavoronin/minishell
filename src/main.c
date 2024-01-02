@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/02 15:41:50 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/02 15:46:30 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,15 @@ static char	*get_prompt(t_shell *shell);
 
 int	main(int argc, char **argv, char **envp)
 {
-	struct sigaction	sa_c;
-	struct sigaction	sa_q;
+	struct sigaction	sa;
 
 	(void)argv;
 	(void)argc;
-	sa_c.sa_handler = &signal_handler;
-	sa_q.sa_handler = SIG_IGN;
-	if (sigaction(SIGINT, &sa_c, NULL) != 0 || sigaction(SIGQUIT, &sa_q, NULL) != 0)
-	{
-		perror("🐢shell");
-		return (0);
-	}
+	ft_bzero(&sa, sizeof(sa));
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	sa.sa_handler = &signal_handler;
+	sigaction(SIGINT, &sa, NULL);
 	start_minishell(envp);
 	return (0);
 }
