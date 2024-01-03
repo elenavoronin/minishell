@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 13:54:37 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/03 18:27:37 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ typedef int	t_pipe_fd[2];
 typedef struct s_pipes_struct
 {
 	int				nr_pipes;
-	char			*path;
+	char			**path;
 	int				*pid;
-	int				*return_value;
+	int				return_value;
 	t_pipe_fd		*fd_arr;
 }	t_pipes;
 
@@ -33,7 +33,7 @@ void	execute_shell(t_list **cmds, t_shell *shell);
 int		create_pipes(t_list **list, t_pipes *pipes, t_shell *shell, int nr);
 void	create_children(t_list **list, t_shell *shell, t_pipes *pipes);
 void	fork_cmds(char **cmd, int i, t_shell *shell, t_pipes *pipes);
-char	*get_path_char(char **cmd, char **envp, t_pipes *pipes);
+char	*get_path_char(char **cmd, char **envp, t_pipes *pipes, int nr);
 int		get_path(t_list **list, t_pipes *pipes, t_shell *shell);
 void	close_useless_pipes(int i, t_pipes *pipes);
 void	clear_pipes(t_pipes *pipes, int nr);

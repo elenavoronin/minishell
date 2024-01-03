@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/19 15:52:18 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/12/21 14:08:21 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	wait_all(t_pipes *pipes, t_shell *shell)
 	int		i;
 
 	i = 0;
-	while (i <= pipes->nr_pipes)
+	while (i < pipes->nr_pipes)
 	{
 		if (pipes->pid[i] > 0)
 			waitpid(pipes->pid[i], &status, 0);
@@ -38,14 +38,21 @@ void	execute_shell(t_list **cmds, t_shell *shell)
 	pipes.nr_pipes = 0;
 	nr = ft_lstsize(*cmds) - 1;
 	if (create_pipes(cmds, &pipes, shell, nr) != 0)
+	{
 		update_status(shell, INTERNAL_ERROR);
+		return ;
+	}
 	if (get_path(cmds, &pipes, shell) != 0)
+	{
 		update_status(shell, INTERNAL_ERROR);
-	if (redirect_input(cmds, &pipes) != 0)
+		return ;
+	}
+	if ((redirect_input(cmds, &pipes) != 0)
+		|| (redirect_output(cmds, &pipes) != 0))
+	{
 		update_status(shell, INTERNAL_ERROR);
-	if (redirect_output(cmds, &pipes) != 0)
-		update_status(shell, INTERNAL_ERROR);
+		return ;
+	}
 	create_children(cmds, shell, &pipes);
 	wait_all(&pipes, shell);
-	//after each return add cleanup and proper exit
 }
