@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 16:05:38 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/02 15:38:52 by codespace     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "enviro.h"
+# include "signals.h"
 
 typedef enum e_status
 {

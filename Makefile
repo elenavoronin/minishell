@@ -6,7 +6,7 @@
 #    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2024/01/03 18:38:20 by elenavoroni   ########   odam.nl          #
+#    Updated: 2024/01/03 18:53:44 by elenavoroni   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,10 @@ CFLAGS += -fsanitize=address
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
 
-VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute ./src/builtins ./src/enviro
+VPATH = ./src ./src/libft ./src/lifecycle ./src/parse ./src/execute ./src/builtins ./src/enviro ./src/signals
 SRCS_NAMES = main.c enviro.c \
-parse.c _tokens.c _split.c _expand.c _errors.c \
-builtins_a.c env.c echo.c cd.c pwd.c export.c unset.c exit.c\
+parse.c _tokens.c _split.c _expand.c _errors.c signals.c \
+builtins_a.c env.c echo.c cd.c pwd.c export.c unset.c exit.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \
