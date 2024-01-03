@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/03 18:35:01 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/03 18:50:13 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,13 @@ int	get_path(t_list **list, t_pipes *pipes, t_shell *state)
 	{
 		cmd = cmds->content;
 		if (check_builtins(&cmd->cmd_table[i]) == 1)
+			pipes->path[i] = NULL;
+		else
+		{
+			if (get_path_char(cmd->cmd_table, state->env.envp, pipes, i) == NULL)
+				return (update_status(state, INTERNAL_ERROR), -1);
 			return (0);
-		if (get_path_char(cmd->cmd_table, state->env.envp, pipes, i) == NULL)
-			return (update_status(state, INTERNAL_ERROR), -1);
-		return (0);
+		}
 	}
 	i = 0;
 	while (cmds)
@@ -157,7 +160,7 @@ int	create_pipes(t_list **list, t_pipes *pipes, t_shell *state, int nr)
 	pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
 	if (!pipes->fd_arr)
 		return (update_status(state, MALLOC_ERROR), -1);
-	pipes->path = malloc(sizeof(char) * (nr + 1));
+	pipes->path = malloc(sizeof(char *) * (nr + 1));
 	if (!pipes->path)
 		return (update_status(state, MALLOC_ERROR), -1);
 	while (cmds)
