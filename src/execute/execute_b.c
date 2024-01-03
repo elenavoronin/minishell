@@ -6,13 +6,13 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/20 15:10:03 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/03 18:35:01 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_path_char(char **cmd, char **envp, t_pipes *pipes)
+char	*get_path_char(char **cmd, char **envp, t_pipes *pipes, int nr)
 {
 	char	**new_paths;
 	char	*path;
@@ -42,14 +42,14 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes)
 			free(new_paths);
 			return (NULL);
 		}
-		pipes->path = ft_strjoin(path, cmd[0]);
-		if (!pipes->path)
+		pipes->path[nr] = ft_strjoin(path, cmd[0]);
+		if (!pipes->path[nr])
 		{
 			free(new_paths);
 			return (NULL);
 		}
-		if (access(pipes->path, X_OK) == 0)
-			return (pipes->path);
+		if (access(pipes->path[nr], X_OK) == 0)
+			return (pipes->path[nr]);
 		free(path);
 		j++;
 	}
@@ -60,27 +60,32 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes)
 int	get_path(t_list **list, t_pipes *pipes, t_shell *state)
 {
 	int				i;
-	t_cmd			*cmds;
+	t_cmd			*cmd;
+	t_list			*cmds;
 
 	i = 0;
+	cmds = (*list);
 	if (pipes->nr_pipes == 0)
 	{
-		cmds = (*list)->content;
-		if (check_builtins(&cmds->cmd_table[i]) == 1)
+		cmd = cmds->content;
+		if (check_builtins(&cmd->cmd_table[i]) == 1)
 			return (0);
-		if (get_path_char(cmds->cmd_table, state->env.envp, pipes) == NULL)
+		if (get_path_char(cmd->cmd_table, state->env.envp, pipes, i) == NULL)
 			return (update_status(state, INTERNAL_ERROR), -1);
 		return (0);
 	}
 	i = 0;
-	while (*list)
+	while (cmds)
 	{
-		cmds = (*list)->content;
-		if (check_builtins(&cmds->cmd_table[i]) == 1)
-			return (0);
-		if (!get_path_char(cmds->cmd_table, state->env.envp, pipes))
-			return (update_status(state, PIPE_ERROR), -1);
-		*list = (*list)->next;
+		cmd = cmds->content;
+		if (check_builtins(&cmd->cmd_table[i]) == 1)
+			pipes->path[i] = NULL;
+		else
+		{
+			if (!get_path_char(cmd->cmd_table, state->env.envp, pipes, i))
+				return (update_status(state, PIPE_ERROR), -1);	
+		}
+		cmds = cmds->next;
 		i++;
 	}
 	return (0);
@@ -143,14 +148,20 @@ int	redirect_output(t_list **list, t_pipes *pipes)
 
 int	create_pipes(t_list **list, t_pipes *pipes, t_shell *state, int nr)
 {
+	t_list	*cmds;
+
+	cmds = (*list);
 	pipes->pid = malloc(sizeof(int) * (nr + 1));
 	if (!pipes->pid)
 		return (update_status(state, MALLOC_ERROR), -1);
-	while (*list)
+	pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
+	if (!pipes->fd_arr)
+		return (update_status(state, MALLOC_ERROR), -1);
+	pipes->path = malloc(sizeof(char) * (nr + 1));
+	if (!pipes->path)
+		return (update_status(state, MALLOC_ERROR), -1);
+	while (cmds)
 	{
-		pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
-		if (!pipes->fd_arr)
-			return (update_status(state, MALLOC_ERROR), -1);
 		pipes->return_value = 0;
 		if (nr == 0)
 		{
@@ -163,7 +174,7 @@ int	create_pipes(t_list **list, t_pipes *pipes, t_shell *state, int nr)
 				return (clear_pipes(pipes, pipes->nr_pipes), -1);
 			pipes->nr_pipes++;
 		}
-		*list = (*list)->next;
+		cmds = cmds->next;
 	}
 	return (0);
 }
