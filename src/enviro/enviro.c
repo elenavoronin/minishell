@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   enviro.c                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: codespace <codespace@student.codam.nl>       +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/12/15 12:20:10 by codespace     #+#    #+#                 */
-/*   Updated: 2024/01/10 12:26:40 by dliu          ########   odam.nl         */
+/*   Created: 2023/12/15 12:20:10 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/10 12:52:10 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
