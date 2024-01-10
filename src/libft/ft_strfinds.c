@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 17:10:10 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/02 14:51:47 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/10 13:00:38 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 */
 int	ft_strcmp(const char *s1, const char *s2)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	if (!s1 || !s2)
@@ -113,7 +113,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 			return (444);
 		return (0);
 	}
-	while(s1[i] || s2[i])
+	while (s1[i] || s2[i])
 	{
 		if (s1[i] != s2[i])
 			return (s1[i] - s2[i]);

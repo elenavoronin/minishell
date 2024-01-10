@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/03 18:50:13 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/10 13:06:30 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes, int nr)
 	return (NULL);
 }
 
-
 int	get_path(t_list **list, t_pipes *pipes, t_shell *state)
 {
 	int				i;
@@ -86,7 +85,7 @@ int	get_path(t_list **list, t_pipes *pipes, t_shell *state)
 		else
 		{
 			if (!get_path_char(cmd->cmd_table, state->env.envp, pipes, i))
-				return (update_status(state, PIPE_ERROR), -1);	
+				return (update_status(state, PIPE_ERROR), -1);
 		}
 		cmds = cmds->next;
 		i++;
@@ -120,7 +119,6 @@ int	redirect_input(t_list **list, t_pipes *pipes)
 	}
 	return (0);
 }
-
 
 int	redirect_output(t_list **list, t_pipes *pipes)
 {
