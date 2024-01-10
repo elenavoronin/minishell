@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/12/18 14:36:28 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/10 12:39:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	mini_unset(char **cmd, t_shell *shell)
 static int	find_var(char *name, t_shell *shell)
 {
 	int	var;
-	
+
 	if (!name)
 		return (-1);
 	var = 0;
