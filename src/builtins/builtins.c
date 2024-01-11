@@ -1,16 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtins_a.c                                       :+:    :+:            */
+/*   builtins.c                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2023/12/19 09:58:35 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/11 16:20:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+int	only_one_builtin(t_shell *shell)
+{
+	t_cmd	*cmd;
+
+	if (ft_lstsize(shell->cmdlist) == 1)
+	{
+		cmd = shell->cmdlist->content;
+		if (check_builtins(cmd->cmd_table))
+		{
+			execute_builtins(cmd->cmd_table, shell);
+			return (1);
+		}
+	}
+	return (0);
+}
 
 int	check_builtins(char **cmd)
 {
