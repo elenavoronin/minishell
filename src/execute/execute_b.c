@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 14:07:59 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 17:23:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,18 +109,17 @@ void	get_path_a(t_list *list, t_pipes *pipes, t_shell *state)
 	else
 		get_path_b(list, pipes, state);
 }
-void	redirect_input(t_list **list, t_pipes *pipes, t_shell *shell)
+
+void	redirect_input(t_list *list, t_pipes *pipes, t_shell *shell)
 {
 	int		i;
 	t_cmd	*cmd;
-	t_list	*all_cmd;
 	int		fd;
 
 	i = 0;
-	all_cmd = (*list);
-	while (all_cmd)
+	while (list)
 	{
-		cmd = all_cmd->content;
+		cmd = list->content;
 		if (cmd->infile != NULL)
 		{
 			fd = open(cmd->infile, O_RDONLY, 0644);
@@ -136,23 +135,21 @@ void	redirect_input(t_list **list, t_pipes *pipes, t_shell *shell)
 				return ;
 			}
 		}
-		all_cmd = all_cmd->next;
+		list = list->next;
 		i++;
 	}
 }
 
-void	redirect_output(t_list **list, t_pipes *pipes, t_shell *shell)
+void	redirect_output(t_list *list, t_pipes *pipes, t_shell *shell)
 {
 	int		i;
 	t_cmd	*cmd;
-	t_list	*all_cmd;
 	int		fd;
 
 	i = 0;
-	all_cmd = (*list);
-	while (all_cmd && shell->return_value == 0)
+	while (list)
 	{
-		cmd = all_cmd->content;
+		cmd = list->content;
 		if (cmd->outfile != NULL)
 		{
 			fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
@@ -168,7 +165,7 @@ void	redirect_output(t_list **list, t_pipes *pipes, t_shell *shell)
 				return ;
 			}
 		}
-		all_cmd = all_cmd->next;
+		list = list->next;
 		i++;
 	}
 }

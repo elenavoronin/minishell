@@ -6,13 +6,13 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 15:18:16 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 17:21:40 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	create_pipes_b(t_list **list, t_pipes *pipes, int nr)
+void	create_pipes_b(t_list **list, t_pipes *pipes, int nr, t_shell *shell)
 {
 	t_list	*cmds;
 
@@ -23,32 +23,31 @@ int	create_pipes_b(t_list **list, t_pipes *pipes, int nr)
 		if (nr == 0)
 		{
 			pipes->nr_pipes = 0;
-			return (0);
+			return ;
 		}
 		while (pipes->nr_pipes < nr)
 		{
 			if (pipe(pipes->fd_arr[pipes->nr_pipes + 1]) != 0)
-				return (-1);
+				shell->return_value = errno;
 			pipes->nr_pipes++;
 		}
 		cmds = cmds->next;
 	}
-	return (0);
 }
 
-int	create_pipes_a(t_list **list, t_pipes *pipes, t_shell *state, int nr)
+void	create_pipes_a(t_list **list, t_pipes *pipes, t_shell *shell, int nr)
 {
 	t_list	*cmds;
 
 	cmds = (*list);
 	pipes->pid = malloc(sizeof(int) * (nr + 1));
 	if (!pipes->pid)
-		return (update_status(state, MALLOC_ERROR), -1);
+		shell->return_value = errno;
 	pipes->fd_arr = malloc(sizeof(t_pipe_fd) * (nr + 1));
 	if (!pipes->fd_arr)
-		return (update_status(state, MALLOC_ERROR), -1);
+		shell->return_value = errno;
 	pipes->path = malloc(sizeof(char *) * (nr + 1));
 	if (!pipes->path)
-		return (update_status(state, MALLOC_ERROR), -1);
-	return (create_pipes_b(list, pipes, nr));
+		shell->return_value = errno;
+	create_pipes_b(list, pipes, nr, shell);
 }

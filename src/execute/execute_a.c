@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 16:00:27 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 17:20:28 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,24 @@ void	execute_shell(t_list **cmds, t_shell *shell)
 {
 	int		nr;
 	t_pipes	pipes;
+	t_cmd	*cmd;
 
 	pipes.nr_pipes = 0;
 	nr = ft_lstsize(*cmds) - 1;
-	if (create_pipes_a(cmds, &pipes, shell, nr) != 0)
+	cmd = (*cmds)->content;
+	create_pipes_a(cmds, &pipes, shell, nr);
+	if (nr == 0 && check_builtins(&cmd->cmd_table[0]) == 1)
 	{
-		update_status(shell, INTERNAL_ERROR);
-		return ;
+		redirect_input(cmds, &pipes, shell);
+		redirect_output(cmds, &pipes, shell);
+		only_one_builtin(shell);
 	}
-	get_path_a(*cmds, &pipes, shell);
-	redirect_input(cmds, &pipes, shell);
-	redirect_output(cmds, &pipes, shell);
-	create_children(cmds, shell, &pipes);
-	wait_all(&pipes, shell);
-	clear_pipes(&pipes, nr);
+	else
+	{
+		get_path_a(*cmds, &pipes, shell);
+
+		create_children(cmds, shell, &pipes);
+		wait_all(&pipes, shell);
+		clear_pipes(&pipes, nr);
+	}
 }
