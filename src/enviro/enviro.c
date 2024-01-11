@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   enviro.c                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: codespace <codespace@student.codam.nl>       +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/12/15 12:20:10 by codespace     #+#    #+#                 */
-/*   Updated: 2023/12/20 16:15:33 by codespace     ########   odam.nl         */
+/*   Created: 2023/12/15 12:20:10 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/10 12:52:10 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	init_env(t_env *env, char **envp)
 
 static int	populate_env(t_env *env, char **envp)
 {
-	int	i;
+	int		i;
 	size_t	len;
 	char	*val;
 
@@ -78,7 +78,7 @@ char	*getenvp_value(t_env *env, char *name)
  * Update environent variable
  * @param name The name of the variable to update
  * @param value The new value of the variable
- * Automatically creates the respective envp value by joining the name and value with '='
+ * Automatically creates new envp value by joining the name and value with '='
  * @return 1 if successful, 0 if there is a malloc error.
  * Remember to update the status in shell.
 */
@@ -92,23 +92,19 @@ int	update_envp(t_env *env, char *name, char *value)
 	if (i < env->count)
 	{
 		free(env->envp_value[i]);
-		if (!value)
-			env->envp_value[i] = NULL;
-		else
-		{
-			env->envp_value[i] = ft_strdup(value);
-			if (!env->envp_value[i])
-				return (0);
-		}
 		free(env->envp[i]);
 		if (value)
 		{
+			env->envp_value[i] = ft_strdup(value);
 			env->envp[i] = ft_joinstrs(3, name, "=", value);
-			if (!env->envp[i])
-				return (0);
 		}
 		else
+		{
+			env->envp_value[i] = NULL;
 			env->envp[i] = ft_strdup(name);
+		}
+		if (!env->envp[i])
+			return (0);
 	}
 	return (1);
 }

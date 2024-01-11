@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   signals.h                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: codespace <codespace@student.codam.nl>       +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/01/02 13:03:30 by codespace     #+#    #+#                 */
-/*   Updated: 2024/01/02 13:42:17 by codespace     ########   odam.nl         */
+/*   Created: 2024/01/02 13:03:30 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/10 12:56:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

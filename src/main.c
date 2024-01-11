@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/02 15:46:30 by codespace     ########   odam.nl         */
+/*   Updated: 2024/01/11 12:20:16 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,16 @@ static void	start_minishell(char **envp)
 		free(prompt);
 		if (!shell.line || ft_strcmp(shell.line, "exit") == 0)
 			mini_exit(&shell);
+		add_history(shell.line);
 		parse_input(&shell);
 		//parse_test(&shell.cmdlist);
 		if (shell.status == SUCCESS)
 			execute_shell(&shell.cmdlist, &shell);
-		add_history(shell.line);
+		if (shell.status != SUCCESS)
+			mini_exit(&shell);
 		init_shell(&shell, NULL);
 	}
+	free(shell.line);
 	mini_exit(&shell);
 }
 
