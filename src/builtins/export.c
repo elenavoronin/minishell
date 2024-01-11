@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:50:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/11 17:58:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	mini_export(char **cmd, t_shell *shell)
 {
 	t_exp	exp;
 
-	exp.newenvp = ft_calloc(
-			ft_strarray_count(cmd) + shell->env.count, sizeof(*exp.newenvp));
-	if (!exp.newenvp)
-		return (update_status(shell, MALLOC_ERROR));
-	if (cmd[1])
+	if (cmd[1] && *cmd[1])
 	{
+		exp.newenvp = ft_calloc(ft_strarray_count(cmd) + shell->env.count,
+				sizeof(*exp.newenvp));
+		if (!exp.newenvp)
+			return (update_status(shell, MALLOC_ERROR));
 		exp.cmd = cmd + 1;
 		if (_replace_existing(&exp, shell->env))
 			_append_new(&exp);

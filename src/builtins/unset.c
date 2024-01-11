@@ -6,61 +6,51 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:51:42 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/11 18:08:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-static int	find_var(char *name, t_shell *shell);
-static char	**copy_enviro(int var, t_shell *shell);
+static char	**copy_enviro(t_shell *shell, char *var_name);
 
 void	mini_unset(char **cmd, t_shell *shell)
 {
+	int		i;
 	char	**new_envp;
-	int		var;
 
-	var = find_var(cmd[1], shell);
-	if (var < 0)
+	if (!cmd[1] || !*cmd[1])
 		return ;
-	new_envp = copy_enviro(var, shell);
+	i = 0;
+	while (i < shell->env.count && ft_strcmp(cmd[1], shell->env.envp_name[i]))
+		i++;
+	if (i == shell->env.count)
+		return ;
+	new_envp = copy_enviro(shell, cmd[1]);
 	if (!new_envp)
 		return (update_status(shell, MALLOC_ERROR));
 	clear_env(&shell->env);
-	init_env(&shell->env, new_envp);
+	if (!init_env(&shell->env, new_envp))
+		update_status(shell, MALLOC_ERROR);
 	ft_free_strarr(new_envp);
 }
 
-static int	find_var(char *name, t_shell *shell)
-{
-	int	var;
-
-	if (!name)
-		return (-1);
-	var = 0;
-	while (ft_strcmp(shell->env.envp_name[var], name))
-		var++;
-	if (var < shell->env.count)
-		return (var);
-	return (-1);
-}
-
-static char	**copy_enviro(int var, t_shell *shell)
+static char	**copy_enviro(t_shell *shell, char *var_name)
 {
 	char	**new_envp;
-	char	**old_envp;
+	int		j;
 	int		i;
 
-	old_envp = shell->env.envp;
-	new_envp = ft_calloc(ft_strarray_count(old_envp), sizeof(*new_envp));
+	new_envp = ft_calloc(shell->env.count, sizeof(*new_envp));
 	if (!new_envp)
 		return (NULL);
 	i = 0;
-	while (*old_envp)
+	j = 0;
+	while (i < shell->env.count - 1)
 	{
-		if (i != var)
+		if (ft_strcmp(shell->env.envp_name[j], var_name))
 		{
-			new_envp[i] = ft_strdup(*old_envp);
+			new_envp[i] = ft_strdup(shell->env.envp[j]);
 			if (!new_envp[i])
 			{
 				ft_free_strarr(new_envp);
@@ -68,7 +58,7 @@ static char	**copy_enviro(int var, t_shell *shell)
 			}
 			i++;
 		}
-		old_envp++;
+		j++;
 	}
 	new_envp[i] = NULL;
 	return (new_envp);

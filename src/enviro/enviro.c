@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/15 12:20:10 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:52:10 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/11 17:50:34 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static int	populate_env(t_env *env, char **envp);
 
 int	init_env(t_env *env, char **envp)
 {
+	if (!envp)
+		return (0);
 	env->count = ft_strarray_count(envp);
 	env->envp = ft_calloc(env->count + 1, sizeof(char *));
 	env->envp_name = ft_calloc(env->count + 1, sizeof(char *));
@@ -67,7 +69,7 @@ char	*getenvp_value(t_env *env, char *name)
 	if (!name)
 		return (NULL);
 	i = 0;
-	while (ft_strcmp(env->envp_name[i], name))
+	while (i < env->count && ft_strcmp(env->envp_name[i], name))
 		i++;
 	if (i < env->count)
 		return (env->envp_value[i]);

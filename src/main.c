@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/11 16:29:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/11 17:41:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,15 @@ static int	init_shell(t_shell *shell, char **envp)
 	}
 	shell->line = NULL;
 	shell->cmdlist = NULL;
-	if (envp && !init_env(&shell->env, envp))
-		return (update_status(shell, MALLOC_ERROR), 0);
+	if (envp)
+	{
+		if (!init_env(&shell->env, envp))
+		{
+			ft_perror("🐢shell", "init", "Could not initialize envp");
+			shell->run = 0;
+			return (shell->return_value = 1, 0);
+		}
+	}
 	return (update_status(shell, SUCCESS), 1);
 }
 
