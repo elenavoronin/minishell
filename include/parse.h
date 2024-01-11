@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:56:29 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/10 13:16:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 
 /**
- * Container for parsed input. Create this in stack memory.
+ * Container for parsed input.
  * @param delimiter If not NULL, delimiter for heredoc.
  * @param infile If not NULL, name of input file.
  * @param outfile If not NULL, name of output file.
@@ -35,7 +35,7 @@ typedef struct s_cmd
 void	parse_input(t_shell *shell);
 void	delete_cmd(void *content);
 
-//For parsing internal use, WARNING: VOLATILE
+//For parsing internal use.
 typedef enum e_token_type
 {
 	EMPTY,
