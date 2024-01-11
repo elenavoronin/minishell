@@ -6,27 +6,11 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/11 17:18:42 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 18:12:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
-
-int	only_one_builtin(t_shell *shell)
-{
-	t_cmd	*cmd;
-
-	if (ft_lstsize(shell->cmdlist) == 1)
-	{
-		cmd = shell->cmdlist->content;
-		if (check_builtins(cmd->cmd_table))
-		{
-			execute_builtins(cmd->cmd_table, shell);
-			return (1);
-		}
-	}
-	return (0);
-}
 
 int	check_builtins(char **cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 16:20:25 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/11 18:12:35 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ typedef struct s_cd
 	char		curpath[PATH_MAX];
 }	t_cd;
 
-int		only_one_builtin(t_shell *shell);
 int		check_builtins(char **cmd);
 void	execute_builtins(char **cmd, t_shell *shell);
 void	mini_echo(char **cmd);
