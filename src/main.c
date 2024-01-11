@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/11 12:20:16 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 14:05:25 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,11 @@ static void	start_minishell(char **envp)
 			mini_exit(&shell);
 		add_history(shell.line);
 		parse_input(&shell);
-		//parse_test(&shell.cmdlist);
+		parse_test(&shell.cmdlist);
 		if (shell.status == SUCCESS)
 			execute_shell(&shell.cmdlist, &shell);
-		if (shell.status != SUCCESS)
-			mini_exit(&shell);
 		init_shell(&shell, NULL);
 	}
-	free(shell.line);
 	mini_exit(&shell);
 }
 

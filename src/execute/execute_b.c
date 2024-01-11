@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 12:19:57 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 14:07:59 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,31 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes, int nr)
 		path = ft_strjoin(new_paths[j], "/");
 		if (!path)
 		{
-			free(new_paths);
+			ft_free_strarr(new_paths);
 			return (NULL);
 		}
 		pipes->path[nr] = ft_strjoin(path, cmd[0]);
 		if (!pipes->path[nr])
 		{
-			free(new_paths);
+			ft_free_strarr(new_paths);
+			free(path);
 			return (NULL);
 		}
 		if (access(pipes->path[nr], X_OK) == 0)
+		{
+			ft_free_strarr(new_paths);
+			free(path);
 			return (pipes->path[nr]);
+		}
 		free(path);
 		j++;
 	}
+	ft_free_strarr(new_paths);
+	pipes->path[nr] = NULL;
 	return (NULL);
 }
 
-int	get_path_b(t_list *list, t_pipes *pipes, t_shell *state)
+void	get_path_b(t_list *list, t_pipes *pipes, t_shell *state)
 {
 	int		i;
 	t_cmd	*cmd;
@@ -69,42 +76,40 @@ int	get_path_b(t_list *list, t_pipes *pipes, t_shell *state)
 			pipes->path[i] = NULL;
 		else
 		{
-			if (!get_path_char(cmd->cmd_table, state->env.envp, pipes, i))
-				return (update_status(state, PIPE_ERROR), -1);
+			if (get_path_char(cmd->cmd_table, state->env.envp,
+					pipes, i) == NULL)
+				state->return_value = 127;
 		}
 		list = list->next;
 		i++;
 	}
-	return (0);
 }
 
-int	get_path_a(t_list *list, t_pipes *pipes, t_shell *state)
+void	get_path_a(t_list *list, t_pipes *pipes, t_shell *state)
 {
 	int				i;
 	t_cmd			*cmd;
 
 	i = 0;
-	if (list == NULL)
-		return (0);
 	if (pipes->nr_pipes == 0)
 	{
 		cmd = list->content;
 		if (check_builtins(&cmd->cmd_table[i]) == 1)
-			pipes->path[i] = NULL;
+		{
+			free(pipes->path);
+			pipes->path = NULL;
+		}
 		else
 		{
 			if (get_path_char(cmd->cmd_table,
 					state->env.envp, pipes, i) == NULL)
-				return (update_status(state, INTERNAL_ERROR), -1);
-			return (0);
+				state->return_value = 127;
 		}
 	}
 	else
-		return (get_path_b(list, pipes, state));
-	return (0);
+		get_path_b(list, pipes, state);
 }
-
-int	redirect_input(t_list **list, t_pipes *pipes)
+void	redirect_input(t_list **list, t_pipes *pipes, t_shell *shell)
 {
 	int		i;
 	t_cmd	*cmd;
@@ -120,18 +125,23 @@ int	redirect_input(t_list **list, t_pipes *pipes)
 		{
 			fd = open(cmd->infile, O_RDONLY, 0644);
 			if (fd == -1)
-				return (perror(cmd->infile), -1);
+			{
+				shell->return_value = errno;
+				return ;
+			}
 			pipes->fd_arr[i][0] = fd;
 			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
-				return (perror("dup2"), -1);
+			{
+				shell->return_value = errno;
+				return ;
+			}
 		}
 		all_cmd = all_cmd->next;
 		i++;
 	}
-	return (0);
 }
 
-int	redirect_output(t_list **list, t_pipes *pipes)
+void	redirect_output(t_list **list, t_pipes *pipes, t_shell *shell)
 {
 	int		i;
 	t_cmd	*cmd;
@@ -140,20 +150,25 @@ int	redirect_output(t_list **list, t_pipes *pipes)
 
 	i = 0;
 	all_cmd = (*list);
-	while (all_cmd)
+	while (all_cmd && shell->return_value == 0)
 	{
 		cmd = all_cmd->content;
 		if (cmd->outfile != NULL)
 		{
 			fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (fd == -1)
-				return (perror(cmd->outfile), -1);
+			{
+				shell->return_value = errno;
+				return ;
+			}
 			pipes->fd_arr[i][1] = fd;
 			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
-				return (perror("dup2"), -1);
+			{
+				shell->return_value = errno;
+				return ;
+			}
 		}
 		all_cmd = all_cmd->next;
 		i++;
 	}
-	return (0);
 }

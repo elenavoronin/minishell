@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 12:07:10 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 15:18:16 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	create_pipes_b(t_list **list, t_pipes *pipes, int nr)
 		while (pipes->nr_pipes < nr)
 		{
 			if (pipe(pipes->fd_arr[pipes->nr_pipes + 1]) != 0)
-				return (clear_pipes(pipes, pipes->nr_pipes), -1);
+				return (-1);
 			pipes->nr_pipes++;
 		}
 		cmds = cmds->next;
