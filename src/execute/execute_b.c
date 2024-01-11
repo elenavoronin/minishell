@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 12:01:30 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/11 12:19:57 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ int	redirect_input(t_list **list, t_pipes *pipes)
 	}
 	return (0);
 }
-
 
 int	redirect_output(t_list **list, t_pipes *pipes)
 {

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/12/15 12:58:24 by codespace     #+#    #+#                 */
-/*   Updated: 2023/12/19 09:59:41 by elenavoroni   ########   odam.nl         */
+/*   Created: 2023/12/15 12:58:24 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/10 12:51:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
