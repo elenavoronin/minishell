@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/15 12:20:10 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/11 17:50:34 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/12 17:35:08 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,19 @@ char	*getenvp_value(t_env *env, char *name)
 		return (env->envp_value[i]);
 	return (NULL);
 }
+char	*getenv_value(t_env env, char *name)
+{
+	int	i;
 
+	if (!name)
+		return (NULL);
+	i = 0;
+	while (i < env.count && ft_strcmp(env.envp_name[i], name))
+		i++;
+	if (i < env.count)
+		return (env.envp_value[i]);
+	return (NULL);
+}
 /**
  * Update environent variable
  * @param name The name of the variable to update

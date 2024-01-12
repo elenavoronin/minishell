@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 13:16:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/12 18:23:29 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@
  */
 typedef struct s_cmd
 {
-	char				*delimiter;
-	char				*infile;
-	char				*outfile;
-	char				output_flag;
-	char				**cmd_table;
+	char	*delimiter;
+	char	*infile;
+	char	*outfile;
+	char	output_flag;
+	char	**cmd_table;
+	int		cmd_argc;
 }	t_cmd;
 
 void	parse_input(t_shell *shell);
@@ -48,31 +49,36 @@ typedef enum e_token_type
 
 typedef struct s_parse
 {
-	char	*cmdstr;
-	size_t	argc;
+	char	*line;
+	char	*cmdend;
+	char	*pos;
+	int		quote;
+	char	*quote_end;
+	char	*m_expanded;
+	char	*m_join;
+	char	*m_hold;
 	t_cmd	*cmd;
-	t_shell	*shell;
 }	t_parse;
-
-typedef struct s_split
-{
-	t_parse		*parse;
-	size_t		count;
-	int			quote;
-	char		*end;
-	char		*tag;
-	char		**result;
-}	t_split;
 
 typedef struct s_expand
 {
-	char		**strs;
-	size_t		count;
+	char	*tag;
+	char	*value;
 }	t_expand;
 
-void	_parse_tokens(t_parse *parse);
+// typedef struct s_split
+// {
+// 	t_parse		*parse;
+// 	size_t		count;
+// 	int			quote;
+// 	char		*end;
+// 	char		*tag;
+// 	char		**result;
+// }	t_split;
+
+int		_extract(t_parse *parse, t_shell *shell);
 char	**_split(t_parse *parse);
-char	*_expand(t_split *split);
+int		_parse_tokens(t_parse *parse);
 void	parse_test(t_list **cmdlist);
 
 #endif

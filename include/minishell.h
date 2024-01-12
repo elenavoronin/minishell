@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   minishell.h                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/10 13:36:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/12 18:21:16 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@
 # include "execute.h"
 # include "builtins.h"
 
-void	update_status(t_shell *shell, t_status status);
+int	update_status(t_shell *shell, t_status status);
 
 #endif

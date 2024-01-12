@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/11 18:12:47 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/12 18:20:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ static void	start_minishell(char **envp)
 		shell.line = readline(prompt);
 		free(prompt);
 		if (!shell.line)
-			mini_exit(&shell);
+			break ;
 		add_history(shell.line);
 		parse_input(&shell);
 		if (DEBUG)
 			parse_test(&shell.cmdlist);
 		if (shell.status == SUCCESS)
 			execute_shell(&shell.cmdlist, &shell);
-		init_shell(&shell, NULL);
+		shell.run = init_shell(&shell, NULL);
 	}
 	mini_exit(&shell);
 }
@@ -68,9 +68,9 @@ static int	init_shell(t_shell *shell, char **envp)
 	{
 		if (!init_env(&shell->env, envp))
 		{
-			ft_perror("🐢shell", "init", "Could not initialize envp");
-			shell->run = 0;
-			return (shell->return_value = 1, 0);
+			ft_perror("🐢shell", "init_shell", "Could not initialize envp");
+			shell->return_value = INTERNAL_ERROR;
+			return (0);
 		}
 	}
 	return (update_status(shell, SUCCESS), 1);
@@ -102,7 +102,8 @@ static char	*get_prompt(t_shell *shell)
 	return (prompt);
 }
 
-void	update_status(t_shell *shell, t_status code)
+int	update_status(t_shell *shell, t_status code)
 {
 	shell->status = code;
+	return (code);
 }
