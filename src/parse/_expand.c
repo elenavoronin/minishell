@@ -3,143 +3,68 @@
 /*                                                        ::::::::            */
 /*   _expand.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2023/12/19 11:13:17 by elenavoroni   ########   odam.nl         */
+/*   Created: 2024/01/15 13:53:26 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/15 16:01:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-int			_init_expand(t_expand *expand, t_split *split);
-static void	_extract_tag(t_expand *expand, t_split *split);
-static void	_extract_word(t_expand *expand, t_split *split);
-static char	*_join_strs(t_expand *expand);
+static int	_expand_status(t_parse *parse, t_shell *shell);
+static int	_expand_env(t_parse *parse, t_shell *shell);
 
-char	*_expand(t_split *split)
+int	_expand(t_parse *parse, t_shell *shell)
 {
-	t_expand	expand;
-	char		*expanded;
-
-	expanded = NULL;
-	expand.count = 0;
-	if (!_init_expand(&expand, split))
-		return (NULL);
-	while (split->parse->cmdstr < split->end
-		&& split->parse->shell->status == SUCCESS)
-	{
-		if (split->parse->cmdstr == split->tag)
-			_extract_tag(&expand, split);
-		else if ((split->tag && split->parse->cmdstr < split->tag)
-			|| (!split->tag && split->parse->cmdstr < split->end))
-			_extract_word(&expand, split);
-	}
-	if (split->parse->shell->status == SUCCESS)
-		expanded = _join_strs(&expand);
-	ft_free_strarr(expand.strs);
-	return (expanded);
-}
-
-int	_init_expand(t_expand *expand, t_split *split)
-{
-	char	*str;
-
-	str = split->parse->cmdstr;
-	while (str < split->end)
-	{
-		expand->count++;
-		if (*str == '$')
-		{
-			str++;
-			while (ft_isalnum(*str) || *str == '_')
-				str++;
-		}
-		else
-		{
-			while (str < split->end && *str != '$')
-				str++;
-		}
-	}
-	expand->strs = ft_calloc(expand->count + 1, sizeof(*expand->strs));
-	expand->count = 0;
-	if (!expand->strs)
-		return (0);
-	return (1);
-}
-
-static	void	_extract_tag(t_expand *expand, t_split *split)
-{
-	size_t	len;
-	char	*ename;
-	char	*evalue;
-
-	split->tag++;
-	split->parse->cmdstr++;
-	len = 0;
-	while (ft_isalnum(split->tag[len]) || split->tag[len] == '_')
-		len++;
-	ename = ft_substr(split->tag, 0, len);
-	if (!ename)
-		return (update_status(split->parse->shell, MALLOC_ERROR));
-	evalue = getenvp_value(&split->parse->shell->env, ename);
-	if (evalue)
-		expand->strs[expand->count] = ft_strdup(evalue);
+	parse->line++;
+	if (!ft_isalpha(*parse->line) && *parse->line != '_' && *parse->line != '?')
+		return (SUCCESS);
+	if (*parse->line == '?')
+		return (_expand_status(parse, shell));
 	else
-		expand->strs[expand->count] = ft_strdup("");
-	free(ename);
-	if (!expand->strs[expand->count])
-		return (update_status(split->parse->shell, MALLOC_ERROR));
-	expand->count++;
-	split->tag = ft_strchr(split->parse->cmdstr, '$');
-	if (split->tag > split->end)
-		split->tag = NULL;
-	split->parse->cmdstr += len;
+		return (_expand_env(parse, shell));
 }
 
-static void	_extract_word(t_expand *expand, t_split *split)
+static int	_expand_status(t_parse *parse, t_shell *shell)
 {
-	size_t	len;
+	char	*value;
 
-	len = 0;
-	if (split->tag)
-	{
-		while (&split->parse->cmdstr[len] != split->tag)
-			len++;
-	}
+	parse->line++;
+	value = ft_itoa(shell->return_value);
+	if (!value)
+		return (update_status(shell, MALLOC_ERROR));
+	parse->cmdstr = ft_strcat_free(parse->cmdstr, value);
+	if (!parse->cmdstr)
+		return (update_status(shell, MALLOC_ERROR));
+	return (SUCCESS);
+}
+
+static int	_expand_env(t_parse *parse, t_shell *shell)
+{
+	char	*name;
+	char	*value;
+
+	parse->pos = parse->line;
+	while (ft_isalpha(*parse->pos) || *parse->pos == '_')
+		parse->pos++;
+	name = ft_substr(parse->line, 0, parse->pos - parse->line);
+	if (!name)
+		return (update_status(shell, MALLOC_ERROR));
+	value = getenv_value(shell->env, name);
+	free(name);
+	if (value)
+		value = ft_strdup(value);
 	else
-	{
-		while (&split->parse->cmdstr[len] != split->end)
-			len++;
-	}
-	expand->strs[expand->count] = ft_substr(split->parse->cmdstr, 0, len);
-	if (!expand->strs[expand->count])
-		return (update_status(split->parse->shell, MALLOC_ERROR));
-	expand->count++;
-	split->parse->cmdstr += len;
-}
-
-static char	*_join_strs(t_expand *expand)
-{
-	size_t	i;
-	char	*tmp;
-	char	*joined;
-
-	i = 0;
-	joined = NULL;
-	while (i < expand->count)
-	{
-		if (expand->strs[i][0])
-		{
-			tmp = ft_strjoin(joined, expand->strs[i]);
-			if (!tmp)
-				return (NULL);
-			free(joined);
-			joined = tmp;
-		}
-		i++;
-	}
-	if (!joined)
-		joined = ft_strdup("");
-	return (joined);
+		value = ft_strdup("");
+	if (!value)
+		return (update_status(shell, MALLOC_ERROR));
+	name = parse->cmdstr;
+	parse->cmdstr = ft_strjoin(name, value);
+	free(name);
+	free(value);
+	if (!parse->cmdstr)
+		return (update_status(shell, MALLOC_ERROR));
+	parse->line = parse->pos;
+	return (SUCCESS);
 }

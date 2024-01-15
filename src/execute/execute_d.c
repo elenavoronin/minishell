@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute_d.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 17:21:40 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/15 11:03:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void	create_pipes_b(t_list **list, t_pipes *pipes, int nr, t_shell *shell)
 
 void	create_pipes_a(t_list **list, t_pipes *pipes, t_shell *shell, int nr)
 {
-	t_list	*cmds;
-
-	cmds = (*list);
 	pipes->pid = malloc(sizeof(int) * (nr + 1));
 	if (!pipes->pid)
 		shell->return_value = errno;

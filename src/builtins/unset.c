@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/11 18:08:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/15 11:03:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	mini_unset(char **cmd, t_shell *shell)
 		return ;
 	new_envp = copy_enviro(shell, cmd[1]);
 	if (!new_envp)
-		return (update_status(shell, MALLOC_ERROR));
+	{
+		update_status(shell, MALLOC_ERROR);
+		return ;
+	}
 	clear_env(&shell->env);
 	if (!init_env(&shell->env, new_envp))
 		update_status(shell, MALLOC_ERROR);

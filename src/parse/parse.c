@@ -12,57 +12,106 @@
 
 #include "parse.h"
 
-static int		_init_parse(t_parse *parse, t_shell *shell);
-static void		_clear_cmdstr(t_parse *parse);
+static int	_extract_cmdstr(t_parse *parse, t_shell *shell);
+static int	_check_quote(t_parse *parse, t_shell *shell);
+static int	_join_cmdstr(t_parse *parse, t_shell *shell);
 
 /**
  * Parses shell->line. Allocates memory for linked list and content.
  * @return On success, returns pointer to head of list.
 */
-void	parse_input(t_shell *shell)
+int	parse_input(t_shell *shell)
 {
 	t_parse	parse;
+	char	**tokens;
 
 	parse.line = shell->line;
-	while (parse.line)
+	while (ft_isspace(*parse.line))
+		parse.line++;
+	if (*parse.line == '|')
 	{
-		if (_init_parse(&parse, shell) != SUCCESS)
-			return (_clear_parse(&parse));
-		if (_extract(&parse, shell) != SUCCESS)
-			return (_clear_parse(&parse));
-		if (_split(&parse) != SUCCESS)
-			return (_clear_parse(&parse));
-		if (_tokenise(&parse) != SUCCESS)
-			return (_clear_parse(&parse));
-		if (*parse.line == '|')
-			parse.line++;
+		ft_perror("🐢shell", NULL, "syntax error near unexpected token `|'");
+		return (update_status(shell, SYNTAX_ERROR));
 	}
-	_clear_parse(&parse);
+	if (_extract_cmdstr(&parse, shell) != SUCCESS)
+	{
+		free(parse.cmdstr);
+		return (shell->status);
+	}
+	tokens = ft_split2(parse.cmdstr);
+	free(parse.cmdstr);
+	if (!tokens)
+		return (update_status(shell, MALLOC_ERROR));
+	_tokenise(tokens, shell);
+	ft_free_strarr(tokens);
+	return (SUCCESS);
 }
 
-static int	_init_parse(t_parse *parse, t_shell *shell)
+static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
 {
-	t_list	*new;
-
-	parse->cmdend = ft_strchr(parse->line, '|');
-	if (!parse->cmdend)
-		parse->cmdend = ft_strchr(parse->line, '\0');
-	parse->cmd = ft_calloc(1, sizeof(*parse->cmd));
-	if (!parse->cmd)
-		return (update_status(shell, MALLOC_ERROR));
-	parse->cmd->delimiter = NULL;
-	parse->cmd->infile = NULL;
-	parse->cmd->outfile = NULL;
-	parse->cmd->output_flag = 'w';
-	parse->cmd->cmd_table = NULL;
-	parse->cmd->cmd_argc = 0;
-	new = ft_lstnew(parse->cmd);
-	if (!new)
+	parse->cmdstr = NULL;
+	parse->quote = 0;
+	while (*parse->line && shell->status == SUCCESS)
 	{
-		free(parse->cmd);
-		return (update_status(shell, MALLOC_ERROR));
+		if (ft_isquote(*parse->line))
+			_check_quote(parse, shell);
+		else if (*parse->line == '$')
+			_expand(parse, shell);
+		else
+		{
+			parse->pos = parse->line;
+			while (*parse->pos
+				&& !ft_isquote(*parse->pos) && *parse->pos != '$')
+				parse->pos++;
+		}
+		if (shell->status == SUCCESS && parse->pos > parse->line)
+			_join_cmdstr(parse, shell);
 	}
-	ft_lstadd_back(&shell->cmdlist, new);
+	printf("extracted line = %s\n", parse->cmdstr);
+	return (shell->status);
+}
+
+static int	_check_quote(t_parse *parse, t_shell *shell)
+{
+	parse->pos = parse->line + 1;
+	if (parse->quote)
+	{
+		parse->quote = 0;
+		return (SUCCESS);
+	}
+	parse->quote = ft_isquote(*parse->line);
+	parse->quote_end = ft_strchr(parse->pos, *(parse->line));
+	if (!parse->quote_end)
+	{
+		ft_perror("🐢shell", "parsing", "Ew, close your quotes when you type");
+		return (update_status(shell, SYNTAX_ERROR));
+	}
+	if (parse->quote == 1)
+		parse->pos = parse->quote_end + 1;
+	else
+	{
+		parse->pos = parse->line;
+		while (parse->pos < parse->quote_end && *parse->pos != '$')
+			parse->pos++;
+	}
+	return (SUCCESS);
+}
+
+static int	_join_cmdstr(t_parse *parse, t_shell *shell)
+{
+	char	*join;
+	char	*old;
+
+	join = ft_substr(parse->line, 0, parse->pos - parse->line);
+	if (!join)
+		return (update_status(shell, MALLOC_ERROR));
+	old = parse->cmdstr;
+	parse->cmdstr = ft_strjoin(old, join);
+	free(old);
+	free(join);
+	if (!parse->cmdstr)
+		return (update_status(shell, MALLOC_ERROR));
+	parse->line = parse->pos;
 	return (SUCCESS);
 }
 

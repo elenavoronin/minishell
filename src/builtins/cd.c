@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:47:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/15 10:59:08 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,30 @@ static void	_slash(t_cd *cd);
 static void	_dot(t_cd *cd);
 static void	_appendpath(t_cd *cd);
 
-void	mini_cd(char **cmd, t_shell *shell)
+int	mini_cd(char **cmd, t_shell *shell)
 {
 	t_cd	cd;
 
 	if (ft_strarray_count(cmd) > 2)
-		return (ft_perror("🐢shell", "cd", "too many arguments"));
+		return (ft_perror("🐢shell", "cd", "too many arguments"),
+			update_status(shell, SYNTAX_ERROR));
 	if (!update_envp(&shell->env, "OLDPWD", getenvp_value(&shell->env, "PWD")))
 		return (update_status(shell, MALLOC_ERROR));
 	cmd++;
 	if (!*cmd)
 	{
-		if (!update_envp(&shell->env, "PWD",
-				getenvp_value(&shell->env, "HOME")))
+		if (!update_envp(&shell->env, "PWD", getenvp_value(&shell->env, "HOME")))
 			return (update_status(shell, MALLOC_ERROR));
 		if (chdir(getenvp_value(&shell->env, "HOME")) < 0)
-			return (perror("🐢shell: cd"));
-		return ;
+			return (perror("🐢shell: cd"), update_status(shell, INTERNAL_ERROR));
+		return (SUCCESS);
 	}
 	if (!_setcurpath(&cd, cmd, shell))
-		return (perror("🐢shell: cd"));
+		return (perror("🐢shell: cd"), update_status(shell, INTERNAL_ERROR));
 	if (!update_envp(&shell->env, "PWD", cd.curpath))
 		return (update_status(shell, MALLOC_ERROR));
 	chdir(cd.curpath);
+	return (SUCCESS);
 }
 
 static int	_setcurpath(t_cd *cd, char **cmd, t_shell *shell)

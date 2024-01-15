@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtins.h                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 18:12:35 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/15 17:50:38 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int		check_builtins(char **cmd);
 void	execute_builtins(char **cmd, t_shell *shell);
 void	mini_echo(char **cmd);
 void	mini_pwd(t_shell *shell);
-void	mini_cd(char **cmd, t_shell *shell);
+int		mini_cd(char **cmd, t_shell *shell);
 void	mini_env(t_env enviro);
-void	mini_export(char **cmd, t_shell *shell);
+int		mini_export(char **cmd, t_shell *shell);
 void	mini_unset(char **cmd, t_shell *shell);
 void	mini_exit(t_shell *shell);
 

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/12 16:54:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/15 17:51:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	_export_print(t_env env);
 
 //handle spaces
 
-void	mini_export(char **cmd, t_shell *shell)
+int	mini_export(char **cmd, t_shell *shell)
 {
 	t_exp	exp;
 
@@ -41,6 +41,7 @@ void	mini_export(char **cmd, t_shell *shell)
 	}
 	else
 		_export_print(shell->env);
+	return (SUCCESS);
 }
 
 static int	_replace_existing(t_exp *exp, t_env env)
