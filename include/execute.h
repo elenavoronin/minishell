@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 17:22:57 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/12 13:47:52 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	close_useless_pipes(int i, t_pipes *pipes);
 void	clear_pipes(t_pipes *pipes, int nr);
 void	wait_all(t_pipes *pipes, t_shell *shell);
 void	connect_pipes(int i, t_pipes *pipes);
-void	redirect_input(t_list *list, t_pipes *pipes, t_shell *shell);
-void	redirect_output(t_list *list, t_pipes *pipes, t_shell *shell);
+void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
+void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 
 #endif
