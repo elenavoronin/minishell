@@ -6,11 +6,40 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/11 17:21:40 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/15 17:30:28 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	connect_pipes(int i, t_pipes *pipes)
+{
+	if (i > 0)
+		pipes->fd_arr[i][0] = pipes->fd_arr[i - 1][1];
+}
+
+int	redirect_stuff(int i, t_pipes *pipes)
+{
+	if (i > 0)
+	{
+		if (pipes->fd_arr[i][0] != STDIN_FILENO)
+		{
+			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
+				return (perror("dup2"), -1);
+			close(pipes->fd_arr[i][0]);
+		}
+	}
+	if (i < pipes->nr_pipes)
+	{
+		if (pipes->fd_arr[i][1] != STDOUT_FILENO)
+		{
+			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
+				return (perror("dup2"), -1);
+			close(pipes->fd_arr[i][1]);
+		}
+	}
+	return (0);
+}
 
 void	create_pipes_b(t_list **list, t_pipes *pipes, int nr, t_shell *shell)
 {

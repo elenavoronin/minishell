@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/12 13:41:59 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/15 14:43:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,13 +118,13 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 	{
 		fd = open(cmd->infile, O_RDONLY, 0644);
 		if (fd == -1)
-			shell->return_value = errno;
-		else
 		{
-			pipes->fd_arr[i][0] = fd;
-			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
-				shell->return_value = errno;
+			shell->return_value = errno;
+			return ;
 		}
+		pipes->fd_arr[i][0] = fd;
+		if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
+			shell->return_value = errno;
 	}
 }
 
@@ -136,12 +136,12 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 	{
 		fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd == -1)
-			shell->return_value = errno;
-		else
 		{
-			pipes->fd_arr[i][1] = fd;
-			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
-				shell->return_value = errno;
+			shell->return_value = errno;
+			return ;
 		}
+		pipes->fd_arr[i][1] = fd;
+		if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
+			shell->return_value = errno;
 	}
 }
