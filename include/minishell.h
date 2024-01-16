@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/12 18:21:16 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 14:29:37 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # include "execute.h"
 # include "builtins.h"
 
-int	update_status(t_shell *shell, t_status status);
+void	start_minishell(t_shell	*shell);
+int		update_status(t_shell *shell, t_status status);
+void	delete_cmd(void *content);
 
 #endif

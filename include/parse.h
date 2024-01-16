@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/15 15:28:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 14:23:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_cmd
 }	t_cmd;
 
 int		parse_input(t_shell *shell);
-void	delete_cmd(void *content);
 
 //For parsing internal use.
 typedef enum e_token_type
@@ -51,10 +50,7 @@ typedef struct s_parse
 {
 	char	*line;
 	char	*pos;
-	int		quote;
-	char	*quote_end;
 	char	*cmdstr;
-	char	*tmp_join;
 }	t_parse;
 
 typedef struct s_tokens
@@ -64,6 +60,6 @@ typedef struct s_tokens
 
 int		_expand(t_parse *parse, t_shell *shell);
 int		_tokenise(char	**tokens, t_shell *shell);
-void	parse_test(t_list **cmdlist);
+void	parse_test(t_list *cmdlist);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/15 17:51:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 17:55:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ static char	*_find_envp(t_env env, t_exp *exp);
 static int	_replace_existing(t_exp *exp, t_env env);
 static int	_append_new(t_exp *exp);
 static void	_export_print(t_env env);
-
-//handle spaces
 
 int	mini_export(char **cmd, t_shell *shell)
 {
@@ -30,7 +28,7 @@ int	mini_export(char **cmd, t_shell *shell)
 		if (!exp.newenvp)
 			return (update_status(shell, MALLOC_ERROR));
 		exp.cmd = cmd + 1;
-		if (_replace_existing(&exp, shell->env))
+		if (_replace_existing(&exp, shell->env) == SUCCESS)
 			_append_new(&exp);
 		if (!exp.newenvp)
 			return (update_status(shell, MALLOC_ERROR));
@@ -50,7 +48,7 @@ static int	_replace_existing(t_exp *exp, t_env env)
 	{
 		ft_free_strarr(exp->newenvp);
 		exp->newenvp = NULL;
-		return (0);
+		return (MALLOC_ERROR);
 	}
 	exp->ipos = 0;
 	while (env.envp[exp->ipos])
@@ -61,11 +59,11 @@ static int	_replace_existing(t_exp *exp, t_env env)
 			ft_free_strarr(exp->newenvp);
 			exp->newenvp = NULL;
 			clear_env(&exp->cmdenv);
-			return (0);
+			return (MALLOC_ERROR);
 		}
 		exp->ipos++;
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 static char	*_find_envp(t_env env, t_exp *exp)

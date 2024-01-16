@@ -13,7 +13,8 @@
 #include "parse.h"
 
 static int	_extract_cmdstr(t_parse *parse, t_shell *shell);
-static int	_check_quote(t_parse *parse, t_shell *shell);
+static int	_handle_quotes(t_parse *parse, t_shell *shell);
+static int	_expand_in_quotes(t_parse *parse, t_shell *t_shell);
 static int	_join_cmdstr(t_parse *parse, t_shell *shell);
 
 /**
@@ -44,26 +45,21 @@ int	parse_input(t_shell *shell)
 		return (update_status(shell, MALLOC_ERROR));
 	_tokenise(tokens, shell);
 	ft_free_strarr(tokens);
-	return (SUCCESS);
+	return (update_status(shell, SUCCESS));
 }
 
 static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
 {
 	parse->cmdstr = NULL;
-	parse->quote = 0;
+	parse->pos = parse->line;
 	while (*parse->line && shell->status == SUCCESS)
 	{
 		if (ft_isquote(*parse->line))
-			_check_quote(parse, shell);
+			_handle_quotes(parse, shell);
 		else if (*parse->line == '$')
 			_expand(parse, shell);
-		else
-		{
-			parse->pos = parse->line;
-			while (*parse->pos
-				&& !ft_isquote(*parse->pos) && *parse->pos != '$')
-				parse->pos++;
-		}
+		while (*parse->pos && !ft_isquote(*parse->pos) && *parse->pos != '$')
+			parse->pos++;
 		if (shell->status == SUCCESS && parse->pos > parse->line)
 			_join_cmdstr(parse, shell);
 	}
@@ -71,30 +67,39 @@ static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
 	return (shell->status);
 }
 
-static int	_check_quote(t_parse *parse, t_shell *shell)
+static int	_handle_quotes(t_parse *parse, t_shell *shell)
 {
+	int		qtype;
+	char	*qend;
+
+	qtype = ft_isquote(*parse->line);
 	parse->pos = parse->line + 1;
-	if (parse->quote)
-	{
-		parse->quote = 0;
-		return (SUCCESS);
-	}
-	parse->quote = ft_isquote(*parse->line);
-	parse->quote_end = ft_strchr(parse->pos, *(parse->line));
-	if (!parse->quote_end)
+	qend = ft_strchr(parse->pos, *(parse->line));
+	if (!qend)
 	{
 		ft_perror("🐢shell", "parsing", "Ew, close your quotes when you type");
 		return (update_status(shell, SYNTAX_ERROR));
 	}
-	if (parse->quote == 1)
-		parse->pos = parse->quote_end + 1;
-	else
+	if (qtype == 1)
+		parse->pos = qend + 1;
+	while (parse->pos <= qend)
 	{
-		parse->pos = parse->line;
-		while (parse->pos < parse->quote_end && *parse->pos != '$')
+		if (*parse->pos != '$')
 			parse->pos++;
+		else if (_expand_in_quotes(parse, shell) != SUCCESS)
+			return (shell->status);
 	}
-	return (SUCCESS);
+	return (_join_cmdstr(parse, shell));
+}
+
+static int	_expand_in_quotes(t_parse *parse, t_shell *shell)
+{
+	if (parse->pos > parse->line)
+	{
+		if (_join_cmdstr(parse, shell) != SUCCESS)
+			return (shell->status);
+	}
+	return (_expand(parse, shell));
 }
 
 static int	_join_cmdstr(t_parse *parse, t_shell *shell)
@@ -106,26 +111,9 @@ static int	_join_cmdstr(t_parse *parse, t_shell *shell)
 	if (!join)
 		return (update_status(shell, MALLOC_ERROR));
 	old = parse->cmdstr;
-	parse->cmdstr = ft_strjoin(old, join);
-	free(old);
-	free(join);
+	parse->cmdstr = ft_strcat_free(old, join);
 	if (!parse->cmdstr)
 		return (update_status(shell, MALLOC_ERROR));
 	parse->line = parse->pos;
 	return (SUCCESS);
-}
-
-void	delete_cmd(void *content)
-{
-	t_cmd	*cmd;
-
-	if (content)
-	{
-		cmd = content;
-		ft_free_strarr(cmd->cmd_table);
-		free(cmd->delimiter);
-		free(cmd->infile);
-		free(cmd->outfile);
-		free(cmd);
-	}
 }

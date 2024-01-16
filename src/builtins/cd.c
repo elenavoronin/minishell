@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/15 10:59:08 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 13:16:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@ int	mini_cd(char **cmd, t_shell *shell)
 	if (ft_strarray_count(cmd) > 2)
 		return (ft_perror("🐢shell", "cd", "too many arguments"),
 			update_status(shell, SYNTAX_ERROR));
-	if (!update_envp(&shell->env, "OLDPWD", getenvp_value(&shell->env, "PWD")))
+	if (!update_envp(&shell->env, "OLDPWD", getenv_value(shell->env, "PWD")))
 		return (update_status(shell, MALLOC_ERROR));
 	cmd++;
 	if (!*cmd)
 	{
-		if (!update_envp(&shell->env, "PWD", getenvp_value(&shell->env, "HOME")))
+		if (!update_envp(&shell->env, "PWD",
+				getenv_value(shell->env, "HOME")))
 			return (update_status(shell, MALLOC_ERROR));
-		if (chdir(getenvp_value(&shell->env, "HOME")) < 0)
+		if (chdir(getenv_value(shell->env, "HOME")) < 0)
 			return (perror("🐢shell: cd"), update_status(shell, INTERNAL_ERROR));
 		return (SUCCESS);
 	}
@@ -51,7 +52,7 @@ static int	_setcurpath(t_cd *cd, char **cmd, t_shell *shell)
 		_slash(cd);
 	else
 	{
-		ft_strlcpy(cd->curpath, getenvp_value(&shell->env, "PWD"), PATH_MAX);
+		ft_strlcpy(cd->curpath, getenv_value(shell->env, "PWD"), PATH_MAX);
 		cd->i = ft_strlen(cd->curpath);
 	}
 	while (*cd->cmd && cd->i < PATH_MAX)
