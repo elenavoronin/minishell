@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/12 17:35:35 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 21:20:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,6 @@ typedef struct s_env
 	char	**envp_name;
 	char	**envp_value;
 }	t_env;
-
-typedef struct s_exp
-{
-	t_env	cmdenv;
-	int		ipos;
-	char	**cmd;
-	char	**newenvp;
-}	t_exp;
 
 typedef struct s_shell
 {

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/15 17:50:38 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 21:20:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@ typedef struct s_cd
 	char		*cmd;
 	char		curpath[PATH_MAX];
 }	t_cd;
+
+typedef struct s_exp
+{
+	t_env	cmdenv;
+	int		ipos;
+	char	**cmd;
+	char	**newenvp;
+}	t_exp;
 
 int		check_builtins(char **cmd);
 void	execute_builtins(char **cmd, t_shell *shell);

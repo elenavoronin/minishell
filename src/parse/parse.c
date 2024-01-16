@@ -45,7 +45,7 @@ int	parse_input(t_shell *shell)
 		return (update_status(shell, MALLOC_ERROR));
 	_tokenise(tokens, shell);
 	ft_free_strarr(tokens);
-	return (update_status(shell, INTERNAL_ERROR));
+	return (update_status(shell, SUCCESS));
 }
 
 static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
