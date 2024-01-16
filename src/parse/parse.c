@@ -39,13 +39,13 @@ int	parse_input(t_shell *shell)
 		free(parse.cmdstr);
 		return (shell->status);
 	}
-	tokens = ft_split2(parse.cmdstr);
+	tokens = _split(parse.cmdstr);
 	free(parse.cmdstr);
 	if (!tokens)
 		return (update_status(shell, MALLOC_ERROR));
 	_tokenise(tokens, shell);
 	ft_free_strarr(tokens);
-	return (update_status(shell, SUCCESS));
+	return (update_status(shell, INTERNAL_ERROR));
 }
 
 static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
@@ -63,7 +63,6 @@ static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
 		if (shell->status == SUCCESS && parse->pos > parse->line)
 			_join_cmdstr(parse, shell);
 	}
-	printf("extracted line = %s\n", parse->cmdstr);
 	return (shell->status);
 }
 

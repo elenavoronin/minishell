@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/16 14:23:49 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 20:55:43 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,16 @@ typedef struct s_parse
 	char	*cmdstr;
 }	t_parse;
 
-typedef struct s_tokens
+typedef struct s_split
 {
-	char	**words;
-}	t_tokens;
+	char	*str;
+	char	*pos;
+	char	*tmp;
+	char	**result;
+}	t_split;
 
 int		_expand(t_parse *parse, t_shell *shell);
+char	**_split(char *s);
 int		_tokenise(char	**tokens, t_shell *shell);
 void	parse_test(t_list *cmdlist);
 
