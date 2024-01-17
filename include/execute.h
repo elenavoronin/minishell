@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/15 17:53:16 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/17 14:21:00 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ int		redirect_stuff(int i, t_pipes *pipes);
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	execute_children(t_list *list, t_shell *shell, t_pipes *pipes);
+int		read_heredoc(t_cmd *cmd);
 
 #endif
