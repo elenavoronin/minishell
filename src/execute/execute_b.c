@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/15 14:43:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/17 09:00:51 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ char	*get_path_char(char **cmd, char **envp, t_pipes *pipes, int nr)
 		j++;
 	}
 	ft_free_strarr(new_paths);
-	pipes->path[nr] = NULL;
-	return (NULL);
+	if (access(*cmd, X_OK) == 0)
+		return (*cmd);
+	else
+		return (NULL);
 }
 
 void	get_path_b(t_list *list, t_pipes *pipes, t_shell *state)

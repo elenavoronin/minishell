@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/15 17:50:13 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/17 09:00:22 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #  define DEBUG 0
 # endif
 
-# include <linux/limits.h>
+// # include <linux/limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft.h"
