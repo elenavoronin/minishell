@@ -6,18 +6,18 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/11 17:58:41 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 21:43:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
 static char	*_find_envp(t_env env, t_exp *exp);
-static int	_replace_existing(t_exp *exp, t_env env);
+static int	_replace_existing(t_exp *exp, t_env oldenv);
 static int	_append_new(t_exp *exp);
 static void	_export_print(t_env env);
 
-void	mini_export(char **cmd, t_shell *shell)
+int	mini_export(char **cmd, t_shell *shell)
 {
 	t_exp	exp;
 
@@ -28,8 +28,9 @@ void	mini_export(char **cmd, t_shell *shell)
 		if (!exp.newenvp)
 			return (update_status(shell, MALLOC_ERROR));
 		exp.cmd = cmd + 1;
-		if (_replace_existing(&exp, shell->env))
-			_append_new(&exp);
+		if (_replace_existing(&exp, shell->env) != SUCCESS)
+			return (update_status(shell, MALLOC_ERROR));
+		_append_new(&exp);
 		if (!exp.newenvp)
 			return (update_status(shell, MALLOC_ERROR));
 		clear_env(&exp.cmdenv);
@@ -39,30 +40,25 @@ void	mini_export(char **cmd, t_shell *shell)
 	}
 	else
 		_export_print(shell->env);
+	return (SUCCESS);
 }
 
-static int	_replace_existing(t_exp *exp, t_env env)
+static int	_replace_existing(t_exp *exp, t_env oldenv)
 {
-	if (!init_env(&exp->cmdenv, exp->cmd))
-	{
-		ft_free_strarr(exp->newenvp);
-		exp->newenvp = NULL;
-		return (0);
-	}
+	if (init_env(&exp->cmdenv, exp->cmd) != SUCCESS)
+		return (ft_free_strarr(exp->newenvp), MALLOC_ERROR);
 	exp->ipos = 0;
-	while (env.envp[exp->ipos])
+	while (oldenv.envp[exp->ipos])
 	{
-		exp->newenvp[exp->ipos] = _find_envp(env, exp);
+		exp->newenvp[exp->ipos] = _find_envp(oldenv, exp);
 		if (!exp->newenvp[exp->ipos])
 		{
 			ft_free_strarr(exp->newenvp);
-			exp->newenvp = NULL;
-			clear_env(&exp->cmdenv);
-			return (0);
+			return (clear_env(&exp->cmdenv), MALLOC_ERROR);
 		}
 		exp->ipos++;
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 static char	*_find_envp(t_env env, t_exp *exp)
@@ -72,7 +68,7 @@ static char	*_find_envp(t_env env, t_exp *exp)
 	i = 0;
 	while (i < exp->cmdenv.count)
 	{
-		if (!ft_strcmp(env.envp_name[exp->ipos], exp->cmdenv.envp_name[i]))
+		if (ft_strcmp(env.envp_name[exp->ipos], exp->cmdenv.envp_name[i]) == 0)
 			break ;
 		i++;
 	}

@@ -5,115 +5,117 @@
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/11/14 15:05:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:54:34 by dliu          ########   odam.nl         */
+/*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/16 21:13:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse.h"
+#include "minishell.h"
 
-static void	_count_split(char *line, t_split *split);
-static void	_do_split(t_split *split);
-static void	_extract(t_split *split);
-static void	_extract_expand(t_split *split);
+static size_t	split_count(const char *s);
+static int		split_extract(t_split *split);
+static int		handle_quote(t_split *split);
+static int		safe_copy(t_split	*split);
 
-char	**_split(t_parse *parse)
+/**
+ * Splits a string into an array of strings allocated (with malloc(3)).
+ * Uses space as delimiter while respecting and removing quotation marks.
+ * @param s The string to be split.
+ * @return The array of new strings ending with a NULL pointer
+ * or NULL if the allocation fails.
+*/
+char	**_split(char *s)
 {
 	t_split	split;
+	size_t	count;
 
-	split.parse = parse;
-	_count_split(parse->cmdstr, &split);
-	if (parse->shell->status != SUCCESS)
+	count = split_count(s);
+	if (!count)
 		return (NULL);
-	split.result = NULL;
-	split.result = ft_calloc(split.count + 1, sizeof(*split.result));
-	split.count = 0;
-	if (!split.result)
-		parse->shell->status = MALLOC_ERROR;
-	else
-		_do_split(&split);
-	if (parse->shell->status == SUCCESS)
+	split.str = s;
+	split.tmp = NULL;
+	split.result = ft_calloc((count + 1), sizeof(*split.result));
+	if (split.result && split_extract(&split) == SUCCESS)
 		return (split.result);
 	ft_free_strarr(split.result);
 	return (NULL);
 }
 
-static void	_count_split(char *line, t_split *split)
+static size_t	split_count(const char *s)
 {
-	split->count = 0;
-	while (line && *line)
+	size_t	count;
+
+	count = 0;
+	while (s && *s)
 	{
-		while (ft_isspace(*line))
-			line++;
-		if (ft_isquote(*line))
+		while (ft_isspace(*s))
+			s++;
+		if (*s)
+			count++;
+		while (*s && !ft_isspace(*s))
 		{
-			split->count++;
-			line = ft_strchr(line + 1, *line);
-			if (!line)
+			if (ft_isquote(*s))
 			{
-				split->parse->shell->status = SYNTAX_ERROR;
-				ft_perror("🐢shell", "syntax error", "Unclosed brackets.");
-				return ;
+				s = ft_strchr(s + 1, *s);
+				if (!s)
+					return (0);
 			}
-			line++;
+			s++;
 		}
-		else if (*line)
+	}
+	return (count);
+}
+
+static int	split_extract(t_split *split)
+{
+	size_t	i;
+
+	i = 0;
+	while (*split->str)
+	{
+		while (ft_isspace(*split->str))
+			split->str++;
+		split->pos = split->str;
+		while (*split->pos && !ft_isspace(*split->pos))
 		{
-			split->count++;
-			while (*line && !ft_isspace(*line) && !ft_isquote(*line))
-				line++;
+			if (!ft_isquote(*split->pos))
+				split->pos++;
+			else if (handle_quote(split) != SUCCESS)
+				return (MALLOC_ERROR);
 		}
+		if (safe_copy(split) != SUCCESS)
+			return (MALLOC_ERROR);
+		split->result[i] = split->tmp;
+		split->tmp = NULL;
+		i++;
 	}
+	return (SUCCESS);
 }
 
-static void	_do_split(t_split *split)
+static int	handle_quote(t_split *split)
 {
-	while (split->parse->shell->status == SUCCESS
-		&& *(split->parse->cmdstr))
-	{
-		while (ft_isspace(*split->parse->cmdstr))
-			split->parse->cmdstr++;
-		if (*(split->parse->cmdstr))
-			_extract(split);
-	}
+	if (safe_copy(split) != SUCCESS)
+		return (MALLOC_ERROR);
+	split->str++;
+	split->pos = ft_strchr(split->str, *split->pos);
+	if (safe_copy(split) != SUCCESS)
+		return (MALLOC_ERROR);
+	split->pos++;
+	split->str = split->pos;
+	return (SUCCESS);
 }
 
-static void	_extract(t_split *split)
+static int	safe_copy(t_split	*split)
 {
-	split->quote = ft_isquote(*(split->parse->cmdstr));
-	split->tag = ft_strchr(split->parse->cmdstr, '$');
-	if (split->quote)
-	{
-		split->end = ft_strchr(split->parse->cmdstr + 1, *split->parse->cmdstr);
-		split->parse->cmdstr++;
-		_extract_expand(split);
-		split->parse->cmdstr++;
-	}
-	else
-	{
-		split->end = split->parse->cmdstr;
-		while (*split->end
-			&& !ft_isspace(*split->end) && !ft_isquote(*split->end))
-			split->end++;
-		_extract_expand(split);
-	}
-}
+	char	*substr;
 
-static void	_extract_expand(t_split *split)
-{
-	size_t	len;
-
-	if (split->tag > split->end || split->quote == 1)
-		split->tag = NULL;
-	if (split->tag)
-		split->result[split->count] = _expand(split);
-	else
-	{
-		len = split->end - split->parse->cmdstr;
-		split->result[split->count] = ft_substr(split->parse->cmdstr, 0, len);
-		split->parse->cmdstr = split->end;
-	}
-	if (!split->result[split->count])
-		return (update_status(split->parse->shell, MALLOC_ERROR));
-	split->count++;
+	if (split->pos <= split->str)
+		return ((SUCCESS));
+	substr = ft_substr(split->str, 0, split->pos - split->str);
+	if (substr)
+		split->tmp = ft_strcat_free(split->tmp, substr);
+	if (!split->tmp)
+		return (MALLOC_ERROR);
+	split->str = split->pos;
+	return (SUCCESS);
 }

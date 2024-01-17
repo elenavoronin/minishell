@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/13 16:38:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 17:43:29 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,27 @@ static char		*extract(char **s);
 /**
  * Splits a string into an array of strings allocated with malloc(3).
  * Splits will be delimited by white spaces, unless within quotation marks.
+ * returns NULL if void or empty string.
 */
 char	**ft_split2(char *s)
 {
 	char	**strings;
+	size_t	i;
 	size_t	count;
 
-	if (s == NULL)
-		return (NULL);
 	count = split_count(s);
-	strings = ft_malloc_wrapper((count + 1) * sizeof(*strings));
+	if (!count)
+		return (NULL);
+	strings = ft_calloc((count + 1), sizeof(*strings));
 	if (!strings)
 		return (NULL);
-	count = 0;
-	while (*s)
+	i = 0;
+	while (i < count)
 	{
-		while (*s && ft_strchr(" \t", *s))
-			s++;
-		strings[count] = extract(&s);
-		count++;
+		strings[i] = extract(&s);
+		if (!strings[i])
+			return (ft_free_strarr(strings), NULL);
+		i++;
 	}
 	strings[count] = NULL;
 	return (strings);
@@ -47,21 +49,23 @@ static size_t	split_count(char *s)
 	size_t	count;
 
 	count = 0;
-	while (*s)
+	while (s && *s)
 	{
-		while (*s && ft_strchr(" \t", *s))
+		while (ft_isspace(*s))
 			s++;
-		if (*s && !ft_strchr(" \t\'\"", *s))
-		{
-			count++;
-			while (*s && !ft_strchr(" \t\'\"", *s))
-				s++;
-		}
-		if (*s == '\'' || *s == '\"')
+		if (ft_isquote(*s))
 		{
 			count++;
 			s = ft_strchr(s + 1, *s);
+			if (!s)
+				return (0);
 			s++;
+		}
+		else
+		{
+			count++;
+			while (*s && !ft_isquote(*s) && !ft_isspace(*s))
+				s++;
 		}
 	}
 	return (count);
@@ -72,7 +76,9 @@ static char	*extract(char **s)
 	char	*pos;
 	char	*string;
 
-	if (**s == '\'' || **s == '\"')
+	while (**s && ft_isspace(**s))
+		*s += 1;
+	if (ft_isquote(**s))
 	{
 		pos = ft_strchr(*s + 1, **s);
 		*s += 1;
@@ -82,7 +88,7 @@ static char	*extract(char **s)
 	else
 	{
 		pos = *s;
-		while (!ft_strchr(" \t\'\"", *pos))
+		while (*pos && !ft_isspace(*pos) && !ft_isquote(*pos))
 			pos++;
 		string = ft_substr(*s, 0, pos - *s);
 		*s = pos;

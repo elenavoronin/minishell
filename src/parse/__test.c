@@ -6,20 +6,20 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/09 13:06:05 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:52:37 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 13:27:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
 //For testing and debugging use
-void	parse_test(t_list **cmdlist)
+void	parse_test(t_list *cmdlist)
 {
 	t_list	*printlist;
 	t_cmd	*cmd;
 	size_t	i;
 
-	printlist = *cmdlist;
+	printlist = cmdlist;
 	while (printlist)
 	{
 		cmd = printlist->content;

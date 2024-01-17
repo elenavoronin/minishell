@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   enviro.h                                           :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/10 13:04:42 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 21:20:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,6 @@ typedef struct s_env
 	char	**envp_value;
 }	t_env;
 
-typedef struct s_exp
-{
-	t_env	cmdenv;
-	int		ipos;
-	char	**cmd;
-	char	**newenvp;
-}	t_exp;
-
 typedef struct s_shell
 {
 	int			run;
@@ -55,6 +47,7 @@ typedef struct s_shell
 
 int		init_env(t_env *env, char **envp);
 char	*getenvp_value(t_env *env, char *name);
+char	*getenv_value(t_env env, char *name);
 int		update_envp(t_env *env, char *name, char *value);
 void	clear_env(t_env *env);
 

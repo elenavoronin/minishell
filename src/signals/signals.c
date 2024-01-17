@@ -6,19 +6,28 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/02 12:34:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/17 09:00:33 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2023/11/14 19:28:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	init_signals(struct sigaction *sa)
+{
+	ft_bzero(sa, sizeof(sa));
+	sa->sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, sa, NULL);
+	sa->sa_handler = &signal_handler;
+	sigaction(SIGINT, sa, NULL);
+}
 
 void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
 		printf("\n");
-		// rl_on_new_line();
-		// rl_replace_line("", 0);
-		// rl_redisplay();
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }

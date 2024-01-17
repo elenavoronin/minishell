@@ -1,18 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pwd.c                                              :+:    :+:            */
+/*   ft_strcat_free.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/12/12 13:47:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/16 13:18:06 by dliu          ########   odam.nl         */
+/*   Created: 2024/01/15 14:19:51 by dliu          #+#    #+#                 */
+/*   Updated: 2024/01/15 14:22:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-void	mini_pwd(t_shell *shell)
+/**
+ * Joins two strings, freeing both inputs and returning a new allocated string.
+*/
+char	*ft_strcat_free(char *old, char *join)
 {
-	ft_putendl_fd(getenv_value(shell->env, "PWD"), STDOUT_FILENO);
+	char	*new;
+
+	new = ft_strjoin(old, join);
+	free(old);
+	free(join);
+	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/02 13:03:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:56:58 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/16 12:52:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <signal.h>
 
+void	init_signals(struct sigaction *sa);
 void	signal_handler(int sig);
 
 #endif

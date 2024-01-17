@@ -12,106 +12,107 @@
 
 #include "parse.h"
 
-static void		_init_parse(t_parse *parse, t_shell *shell);
-static t_cmd	*_init_cmd(void);
-static size_t	_extract_cmdstr(char *input, t_parse *parse);
+static int	_extract_cmdstr(t_parse *parse, t_shell *shell);
+static int	_handle_quotes(t_parse *parse, t_shell *shell);
+static int	_expand_in_quotes(t_parse *parse, t_shell *t_shell);
+static int	_join_cmdstr(t_parse *parse, t_shell *shell);
 
 /**
- * Parses shell->line. Allocates memory.
+ * Parses shell->line. Allocates memory for linked list and content.
  * @return On success, returns pointer to head of list.
- * Will terminate program with appropriate exit code on failure.
 */
-void	parse_input(t_shell *shell)
+int	parse_input(t_shell *shell)
 {
 	t_parse	parse;
-	char	*line;
+	char	**tokens;
 
-	line = shell->line;
-	while (*line)
+	parse.line = shell->line;
+	while (ft_isspace(*parse.line))
+		parse.line++;
+	if (*parse.line == '|')
 	{
-		_init_parse(&parse, shell);
-		if (shell->status != SUCCESS)
-			return ;
-		line += _extract_cmdstr(line, &parse);
-		if (shell->status != SUCCESS)
-			return ;
-		_parse_tokens(&parse);
-		if (shell->status != SUCCESS)
-			return ;
-		if (*line == '|')
-			line++;
+		ft_perror("🐢shell", NULL, "syntax error near unexpected token `|'");
+		return (update_status(shell, SYNTAX_ERROR));
 	}
+	if (_extract_cmdstr(&parse, shell) != SUCCESS)
+	{
+		free(parse.cmdstr);
+		return (shell->status);
+	}
+	tokens = _split(parse.cmdstr);
+	free(parse.cmdstr);
+	if (!tokens)
+		return (update_status(shell, MALLOC_ERROR));
+	_tokenise(tokens, shell);
+	ft_free_strarr(tokens);
+	return (update_status(shell, SUCCESS));
 }
 
-/**
- * Use this function in ft_lstclear
-*/
-void	delete_cmd(void *content)
+static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
 {
-	t_cmd	*cmd;
-
-	if (content)
+	parse->cmdstr = NULL;
+	parse->pos = parse->line;
+	while (*parse->line && shell->status == SUCCESS)
 	{
-		cmd = content;
-		ft_free_strarr(cmd->cmd_table);
-		free(cmd->delimiter);
-		free(cmd->infile);
-		free(cmd->outfile);
-		free(cmd);
+		if (ft_isquote(*parse->line))
+			_handle_quotes(parse, shell);
+		else if (*parse->line == '$')
+			_expand(parse, shell);
+		while (*parse->pos && !ft_isquote(*parse->pos) && *parse->pos != '$')
+			parse->pos++;
+		if (shell->status == SUCCESS && parse->pos > parse->line)
+			_join_cmdstr(parse, shell);
 	}
+	return (shell->status);
 }
 
-static t_cmd	*_init_cmd(void)
+static int	_handle_quotes(t_parse *parse, t_shell *shell)
 {
-	t_cmd	*cmd;
+	int		qtype;
+	char	*qend;
 
-	cmd = ft_calloc(1, sizeof(*cmd));
-	if (cmd)
+	qtype = ft_isquote(*parse->line);
+	parse->pos = parse->line + 1;
+	qend = ft_strchr(parse->pos, *(parse->line));
+	if (!qend)
 	{
-		cmd->delimiter = NULL;
-		cmd->infile = NULL;
-		cmd->outfile = NULL;
-		cmd->output_flag = 'w';
-		cmd->cmd_table = NULL;
+		ft_perror("🐢shell", "parsing", "Ew, close your quotes when you type");
+		return (update_status(shell, SYNTAX_ERROR));
 	}
-	return (cmd);
+	if (qtype == 1)
+		parse->pos = qend + 1;
+	while (parse->pos <= qend)
+	{
+		if (*parse->pos != '$')
+			parse->pos++;
+		else if (_expand_in_quotes(parse, shell) != SUCCESS)
+			return (shell->status);
+	}
+	return (_join_cmdstr(parse, shell));
 }
 
-static void	_init_parse(t_parse *parse, t_shell *shell)
+static int	_expand_in_quotes(t_parse *parse, t_shell *shell)
 {
-	t_list	*new;
-
-	new = NULL;
-	parse->shell = shell;
-	parse->argc = 0;
-	parse->cmd = _init_cmd();
-	if (parse->cmd)
-		new = ft_lstnew(parse->cmd);
-	if (!new)
+	if (parse->pos > parse->line)
 	{
-		update_status(shell, MALLOC_ERROR);
-		delete_cmd(parse->cmd);
-		parse->cmd = NULL;
-		mini_exit(shell);
+		if (_join_cmdstr(parse, shell) != SUCCESS)
+			return (shell->status);
 	}
-	ft_lstadd_back(&shell->cmdlist, new);
-	parse->shell = shell;
+	return (_expand(parse, shell));
 }
 
-static size_t	_extract_cmdstr(char *input, t_parse *parse)
+static int	_join_cmdstr(t_parse *parse, t_shell *shell)
 {
-	size_t	len;
-	char	*str;
-	char	*end;
+	char	*join;
+	char	*old;
 
-	end = ft_strchr(input, '|');
-	if (end)
-		len = end - input;
-	else
-		len = ft_strlen(input);
-	str = ft_substr(input, 0, len);
-	if (!str)
-		update_status(parse->shell, MALLOC_ERROR);
-	parse->cmdstr = str;
-	return (len);
+	join = ft_substr(parse->line, 0, parse->pos - parse->line);
+	if (!join)
+		return (update_status(shell, MALLOC_ERROR));
+	old = parse->cmdstr;
+	parse->cmdstr = ft_strcat_free(old, join);
+	if (!parse->cmdstr)
+		return (update_status(shell, MALLOC_ERROR));
+	parse->line = parse->pos;
+	return (SUCCESS);
 }
