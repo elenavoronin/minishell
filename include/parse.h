@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/16 20:55:43 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 18:27:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,12 @@ typedef struct s_cmd
 int		parse_input(t_shell *shell);
 
 //For parsing internal use.
-typedef enum e_token_type
+typedef struct s_tok
 {
-	EMPTY,
-	WORD,
-	REDIR_IN,
-	REDIR_HERE,
-	REDIR_OUT,
-	REDIR_APPEND
-}	t_token_type;
+	char	**tokens;
+	char	**dest;
+	t_cmd	*cmd;
+}	t_tok;
 
 typedef struct s_parse
 {

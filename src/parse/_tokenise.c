@@ -6,33 +6,34 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/15 15:47:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 22:16:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
 static int	_init_cmd(t_shell *shell);
-static int	_tokens_to_cmd(char **tokens, t_cmd *cmd, t_shell *shell);
-static char	**_get_token_dest(char *token, t_cmd *cmd);
-static int	_update_cmdtable(char *token, t_cmd *cmd, t_shell *shell);
+static int	_tokens_to_cmd(t_tok *tok, t_shell *shell);
+static void	_get_token_dest(t_tok *tok);
+static int	_update_cmdtable(t_tok *tok, t_shell *shell);
 
 int	_tokenise(char	**tokens, t_shell *shell)
 {
-	t_cmd	*cmd;
+	t_tok	tok;
 
 	_init_cmd(shell);
-	while (*tokens && shell->status == SUCCESS)
+	tok.tokens = tokens;
+	while (*tok.tokens && shell->status == SUCCESS)
 	{
-		cmd = ft_lstlast(shell->cmdlist)->content;
-		if (_tokens_to_cmd(tokens, cmd, shell) != SUCCESS)
+		tok.cmd = ft_lstlast(shell->cmdlist)->content;
+		if (_tokens_to_cmd(&tok, shell) != SUCCESS)
 			break ;
-		tokens++;
-		if (ft_strcmp(*tokens, "|") == 0)
+		tok.tokens++;
+		if (ft_strcmp(*tok.tokens, "|") == 0)
 		{
 			if (_init_cmd(shell) != SUCCESS)
 				break ;
-			tokens++;
+			tok.tokens++;
 		}
 	}
 	return (shell->status);
@@ -63,77 +64,73 @@ static int	_init_cmd(t_shell *shell)
 	return (SUCCESS);
 }
 
-static int	_tokens_to_cmd(char **tokens, t_cmd *cmd, t_shell *shell)
+static int	_tokens_to_cmd(t_tok *tok, t_shell *shell)
 {
-	char	**dest;
-
-	dest = _get_token_dest(*tokens, cmd);
-	if (dest && dest != cmd->cmd_table)
+	_get_token_dest(tok);
+	if (tok->dest && tok->dest != tok->cmd->cmd_table)
 	{
-		tokens++;
-		if (!*tokens)
+		tok->tokens++;
+		if (!*tok->tokens)
 		{
 			ft_perror("🐢shell", "syntax error", "bad command");
 			return (update_status(shell, SYNTAX_ERROR));
 		}
-		if (*dest)
-			free(*dest);
-		*dest = ft_strdup(*tokens);
-		if (!*dest)
+		if (*tok->dest)
+			free(*tok->dest);
+		*tok->dest = ft_strdup(*tok->tokens);
+		if (!*tok->dest)
 			return (update_status(shell, MALLOC_ERROR));
 	}
 	else
-		_update_cmdtable(*tokens, cmd, shell);
+		_update_cmdtable(tok, shell);
 	return (SUCCESS);
 }
 
-static char	**_get_token_dest(char *token, t_cmd *cmd)
+static void	_get_token_dest(t_tok *tok)
 {
-	char	**dest;
-
-	dest = NULL;
-	if (ft_strcmp(token, "<<") == 0)
-		dest = &(cmd->delimiter);
-	else if (ft_strcmp(token, "<") == 0)
-		dest = &(cmd->infile);
-	else if (ft_strcmp(token, ">") == 0)
-		dest = &(cmd->outfile);
-	else if (ft_strcmp(token, ">>") == 0)
+	tok->dest = NULL;
+	if (!tok->tokens)
+		return ;
+	if (ft_strcmp(*tok->tokens, "<<") == 0)
+		tok->dest = &(tok->cmd->delimiter);
+	else if (ft_strcmp(*tok->tokens, "<") == 0)
+		tok->dest = &(tok->cmd->infile);
+	else if (ft_strcmp(*tok->tokens, ">") == 0)
+		tok->dest = &(tok->cmd->outfile);
+	else if (ft_strcmp(*tok->tokens, ">>") == 0)
 	{
-		cmd->output_flag = 'a';
-		dest = &(cmd->outfile);
+		tok->cmd->output_flag = 'a';
+		tok->dest = &(tok->cmd->outfile);
 	}
-	else if (*token)
-	{
-		cmd->cmd_argc++;
-		dest = cmd->cmd_table;
-	}
-	return (dest);
+	else
+		tok->dest = tok->cmd->cmd_table;
 }
 
-static int	_update_cmdtable(char *token, t_cmd *cmd, t_shell *shell)
+static int	_update_cmdtable(t_tok *tok, t_shell *shell)
 {
-	char	**cmdtable;
+	char	**newtable;
 	size_t	i;
 
-	cmdtable = ft_calloc((cmd->cmd_argc + 1), sizeof(*cmdtable));
-	if (!cmdtable)
+	newtable = ft_calloc((tok->cmd->cmd_argc + 2), sizeof(*newtable));
+	if (!newtable)
 		return (update_status(shell, MALLOC_ERROR));
 	i = 0;
-	while (i < cmd->cmd_argc)
+	while (i < tok->cmd->cmd_argc && shell->status == SUCCESS)
 	{
-		if (cmd->cmd_table && cmd->cmd_table[i])
-			cmdtable[i] = ft_strdup(cmd->cmd_table[i]);
-		else
-			cmdtable[i] = ft_strdup(token);
-		if (!cmdtable[i])
-			break ;
+		newtable[i] = ft_strdup(tok->cmd->cmd_table[i]);
+		if (!newtable[i])
+			update_status(shell, MALLOC_ERROR);
 		i++;
 	}
-	cmdtable[i] = NULL;
-	ft_free_strarr(cmd->cmd_table);
-	cmd->cmd_table = cmdtable;
-	if (i < cmd->cmd_argc)
+	if (shell->status == SUCCESS)
+		newtable[i] = ft_strdup(*tok->tokens);
+	if (!newtable[i])
+	{
+		ft_free_strarr(newtable);
 		return (update_status(shell, MALLOC_ERROR));
-	return (SUCCESS);
+	}
+	tok->cmd->cmd_argc++;
+	ft_free_strarr(tok->cmd->cmd_table);
+	tok->cmd->cmd_table = newtable;
+	return (shell->status);
 }

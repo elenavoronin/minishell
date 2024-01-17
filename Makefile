@@ -6,14 +6,14 @@
 #    By: dliu <dliu@student.codam.nl>                 +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2024/01/17 17:24:01 by dliu          ########   odam.nl          #
+#    Updated: 2024/01/17 18:12:55 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./include -g 
-CFLAGS += -fsanitize=address -D DEBUG=0
+CFLAGS += -fsanitize=address -D DEBUG=1
 
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
