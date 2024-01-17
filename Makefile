@@ -6,14 +6,13 @@
 #    By: dliu <dliu@student.codam.nl>                 +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2023/11/14 19:31:05 by dliu          ########   odam.nl          #
+#    Updated: 2024/01/17 17:24:01 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I ./include -g 
-CFLAGS += -fsanitize=address -D DEBUG=0
 CFLAGS += -fsanitize=address -D DEBUG=0
 
 READLINELINKFLAGS := -lreadline
@@ -29,7 +28,8 @@ ft_calloc.c ft_bzero.c ft_mem.c \
 ft_strhelpers.c ft_strfinds.c ft_strmakers.c ft_strmanips.c ft_split.c ft_itoa.c \
 ft_lltoa_base.c ft_ltoa_unsigned_base.c ft_atoi_validate.c ft_nums.c \
 ft_strcat_free.c ft_split2.c ft_joinstrs.c ft_nopes.c ft_free.c \
-execute_a.c execute_b.c execute_c.c execute_d.c
+execute.c execute_a_pathing.c execute_b_piping.c execute_c_redirecting.c
+#execute_a.c execute_b.c execute_c.c execute_d.c
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 OUT_DIR = ./objs

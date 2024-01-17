@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/16 21:20:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 17:43:57 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,8 @@ typedef struct s_shell
 }	t_shell;
 
 int		init_env(t_env *env, char **envp);
-char	*getenvp_value(t_env *env, char *name);
 char	*getenv_value(t_env env, char *name);
-int		update_envp(t_env *env, char *name, char *value);
+int		update_envp(t_env *env, char *name, char *value, int i);
 void	clear_env(t_env *env);
 
 #endif

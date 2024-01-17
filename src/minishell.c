@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/16 17:44:54 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 15:15:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	start_minishell(t_shell	*shell)
 		if (DEBUG)
 			parse_test(shell->cmdlist);
 		if (shell->status == SUCCESS)
-			execute_shell(&shell->cmdlist, shell);
+			execute_shell(shell);
 		clear_shell(shell);
 	}
 	mini_exit(shell);
@@ -86,4 +86,10 @@ void	delete_cmd(void *content)
 		free(cmd->outfile);
 		free(cmd);
 	}
+}
+
+int	update_status(t_shell *shell, t_status code)
+{
+	shell->status = code;
+	return (code);
 }

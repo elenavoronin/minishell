@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/15 12:20:10 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/16 13:02:26 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 17:52:47 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	populate_env(t_env *env, char **envp)
 			return (MALLOC_ERROR);
 		if (val)
 			val++;
-		if (update_envp(env, env->envp_name[i], val) != SUCCESS)
+		if (update_envp(env, env->envp_name[i], val, i) != SUCCESS)
 			return (MALLOC_ERROR);
 		i++;
 	}
@@ -86,14 +86,14 @@ char	*getenv_value(t_env env, char *name)
  * @return 1 if successful, 0 if there is a malloc error.
  * Remember to update the status in shell.
 */
-int	update_envp(t_env *env, char *name, char *value)
+int	update_envp(t_env *env, char *name, char *value, int i)
 {
-	int	i;
-
-	i = 0;
-	while (ft_strcmp(env->envp_name[i], name))
-		i++;
-	if (i < env->count)
+	if (!i)
+	{
+		while (i < env->count && ft_strcmp(env->envp_name[i], name))
+			i++;
+	}
+	if (ft_strcmp(env->envp_name[i], name) == 0)
 	{
 		free(env->envp_value[i]);
 		free(env->envp[i]);

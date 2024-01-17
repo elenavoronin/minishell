@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/16 13:45:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 15:15:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,4 @@ int	main(int argc, char **argv, char **envp)
 	}
 	start_minishell(&shell);
 	return (0);
-}
-
-int	update_status(t_shell *shell, t_status code)
-{
-	shell->status = code;
-	return (code);
 }
