@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/11/14 19:30:47 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/17 15:44:02 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	redirect_stuff(int i, t_pipes *pipes)
 			if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
 				return (perror("dup2"), -1);
 			close(pipes->fd_arr[i][0]);
+			close(pipes->fd_arr[i][1]);
 		}
 	}
 	if (i < pipes->nr_pipes)
@@ -36,6 +37,7 @@ int	redirect_stuff(int i, t_pipes *pipes)
 			if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
 				return (perror("dup2"), -1);
 			close(pipes->fd_arr[i][1]);
+			close(pipes->fd_arr[i][0]);
 		}
 	}
 	return (0);
