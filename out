@@ -1,0 +1,11 @@
+hello
+[?2004h🐢shell:~/Desktop/minishell$ ^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h^C[?2004l
+🐢shell:~/Desktop/minishell$ [?2004h[?2004l
+exit

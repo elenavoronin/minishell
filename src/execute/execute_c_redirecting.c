@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute_c_redirecting.c                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/17 17:12:56 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/18 12:05:56 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	int		fd;
 
+	fd = 0;
 	if (cmd->infile != NULL)
 	{
 		fd = open(cmd->infile, O_RDONLY, 0644);
@@ -27,6 +28,16 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		pipes->fd_arr[i][0] = fd;
 		if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
 			shell->return_value = errno;
+	}
+	else
+	{
+		if (cmd->delimiter != NULL)
+			fd = read_heredoc(cmd);
+		if (fd == -1)
+		{
+			shell->return_value = errno;
+			return ;
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/17 17:51:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/18 11:56:35 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	mini_cd(char **cmd, t_shell *shell)
 	}
 	if (!_setcurpath(&cd, cmd, shell))
 		return (perror("🐢shell: cd"), update_status(shell, INTERNAL_ERROR));
-	if (!update_envp(&shell->env, "PWD", cd.curpath, 0) != SUCCESS)
+	if (update_envp(&shell->env, "PWD", cd.curpath, 0) != SUCCESS)
 		return (update_status(shell, MALLOC_ERROR));
 	chdir(cd.curpath);
 	return (SUCCESS);
