@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/17 17:12:29 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/18 12:48:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,6 @@ int	create_pipes(t_pipes *pipes, t_shell *shell, int nr)
 	return (SUCCESS);
 }
 
-void	connect_pipes(int i, t_pipes *pipes)
-{
-	if (i > 0)
-		pipes->fd_arr[i][0] = pipes->fd_arr[i - 1][1];
-}
 
 void	clear_pipes(t_pipes *pipes, int nr)
 {

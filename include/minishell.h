@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/17 22:26:26 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/18 12:11:33 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # include "enviro.h"
 # include "parse.h"
 # include "signals.h"
-# include "exec.h"
+# include "execute.h"
 # include "builtins.h"
 
 void	start_minishell(t_shell	*shell);

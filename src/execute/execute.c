@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/17 17:16:25 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/18 15:23:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,9 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 
 void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
-	connect_pipes(i, pipes);
-	redirect_stuff(i, pipes);
-	redirect_input(cmd, pipes, shell, i);
-	redirect_output(cmd, pipes, shell, i);
+	if (pipes->pid[i] != 0)
+		return ;
+	redirect_stuff(cmd, pipes, shell, i);
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
@@ -72,6 +71,11 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 			return ;
 		}
 		execute_children(shell, pipes, (t_cmd *)list->content, i);
+		if (i > 0)
+		{
+			close(pipes->fd_arr[i][0]);
+			close(pipes->fd_arr[i][1]);
+		}
 		i++;
 		list = list->next;
 	}
