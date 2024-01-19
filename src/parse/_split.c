@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/18 11:56:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/19 13:09:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	split_count(const char *s);
+static size_t	split_count(char *s);
 static int		split_extract(t_split *split);
 static int		handle_quote(t_split *split);
 static int		safe_copy(t_split	*split);
@@ -41,7 +41,7 @@ char	**_split(char *s)
 	return (NULL);
 }
 
-static size_t	split_count(const char *s)
+static size_t	split_count(char *s)
 {
 	size_t	count;
 
@@ -50,17 +50,18 @@ static size_t	split_count(const char *s)
 	{
 		while (ft_isspace(*s))
 			s++;
-		if (*s)
+		if (*s && *s != '<' && *s != '>')
 			count++;
-		while (*s && !ft_isspace(*s))
+		while (*s && !ft_isspace(*s) && *s != '<' && *s != '>')
 		{
 			if (ft_isquote(*s))
-			{
 				s = ft_strchr(s + 1, *s);
-				if (!s)
-					return (0);
-			}
 			s++;
+		}
+		if (*s == '<' || *s == '>')
+		{
+			count++;
+			s += ft_charcount(s, *s);
 		}
 	}
 	return (count);
@@ -68,26 +69,29 @@ static size_t	split_count(const char *s)
 
 static int	split_extract(t_split *split)
 {
-	size_t	i;
-
-	i = 0;
+	split->i = 0;
 	while (*split->str)
 	{
 		while (ft_isspace(*split->str))
 			split->str++;
 		split->pos = split->str;
-		while (*split->pos && !ft_isspace(*split->pos))
+		if (*split->str == '<' || *split->str == '>')
+			split->pos += ft_charcount(split->str, *split->str);
+		else
 		{
-			if (!ft_isquote(*split->pos))
+			while (*split->pos && !ft_isspace(*split->pos)
+				&& *split->pos != '<' && *split->pos != '>')
+			{
+				if (ft_isquote(*split->pos) && handle_quote(split) != SUCCESS)
+					return (MALLOC_ERROR);
 				split->pos++;
-			else if (handle_quote(split) != SUCCESS)
-				return (MALLOC_ERROR);
+			}
 		}
 		if (safe_copy(split) != SUCCESS)
 			return (MALLOC_ERROR);
-		split->result[i] = split->tmp;
+		split->result[split->i] = split->tmp;
 		split->tmp = NULL;
-		i++;
+		split->i++;
 	}
 	return (SUCCESS);
 }
@@ -112,8 +116,9 @@ static int	safe_copy(t_split	*split)
 	if (split->pos <= split->str)
 		return ((SUCCESS));
 	substr = ft_substr(split->str, 0, split->pos - split->str);
-	if (substr)
-		split->tmp = ft_strcat_free(split->tmp, substr);
+	if (!substr)
+		return (MALLOC_ERROR);
+	split->tmp = ft_strcat_free(split->tmp, substr);
 	if (!split->tmp)
 		return (MALLOC_ERROR);
 	split->str = split->pos;

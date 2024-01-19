@@ -31,7 +31,8 @@ int	parse_input(t_shell *shell)
 		parse.line++;
 	if (*parse.line == '|')
 	{
-		ft_perror("🐢shell", NULL, "syntax error near unexpected token `|'");
+		ft_perror("🐢shell", "syntax error",
+			"syntax error near unexpected token `|'");
 		return (update_status(shell, SYNTAX_ERROR));
 	}
 	if (_extract_cmdstr(&parse, shell) != SUCCESS)
@@ -59,7 +60,16 @@ static int	_extract_cmdstr(t_parse *parse, t_shell *shell)
 		else if (*parse->line == '$')
 			_expand(parse, shell);
 		while (*parse->pos && !ft_isquote(*parse->pos) && *parse->pos != '$')
+		{
+			if ((*parse->pos == '>' || *parse->pos == '<')
+				&& ft_charcount(parse->pos, *parse->pos) > 2)
+			{
+				ft_perror("🐢shell", "syntax error",
+					"Pay attention to your angle brackets!");
+				return (update_status(shell, SYNTAX_ERROR));
+			}
 			parse->pos++;
+		}
 		if (shell->status == SUCCESS && parse->pos > parse->line)
 			_join_cmdstr(parse, shell);
 	}
@@ -76,7 +86,8 @@ static int	_handle_quotes(t_parse *parse, t_shell *shell)
 	qend = ft_strchr(parse->pos, *(parse->line));
 	if (!qend)
 	{
-		ft_perror("🐢shell", "parsing", "Ew, close your quotes when you type");
+		ft_perror("🐢shell", "syntax error",
+			"Ew, close your quotes when you type");
 		return (update_status(shell, SYNTAX_ERROR));
 	}
 	if (qtype == 1)
