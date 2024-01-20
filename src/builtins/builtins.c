@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/11 18:12:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/20 12:38:41 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	check_builtins(char **cmd)
 {
+	if (cmd == NULL)
+		return (1);
 	if (ft_strcmp(cmd[0], "env") == 0
 		|| ft_strcmp(cmd[0], "exit") == 0
 		|| ft_strcmp(cmd[0], "unset") == 0
@@ -27,6 +29,8 @@ int	check_builtins(char **cmd)
 
 void	execute_builtins(char **cmd, t_shell *shell)
 {
+	if (!cmd)
+		return ;
 	if (ft_strcmp(cmd[0], "env") == 0)
 		mini_env(shell->env);
 	else if (ft_strcmp(cmd[0], "echo") == 0)

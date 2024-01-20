@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/17 17:14:40 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/20 12:34:20 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,11 @@ void	get_path(t_shell *shell, t_pipes *pipes)
 	while (list != NULL && shell->status == SUCCESS)
 	{
 		cmd = list->content;
-		if (check_builtins(cmd->cmd_table) == 1)
+		if (cmd->cmd_table == NULL || check_builtins(cmd->cmd_table) == 1)
+		{
 			pipes->path[i] = NULL;
+			return ;
+		}
 		else if (access(cmd->cmd_table[0], X_OK) == 0)
 		{
 			pipes->path[i] = ft_strdup(cmd->cmd_table[0]);

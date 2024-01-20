@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/18 15:23:08 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/20 12:37:21 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 	if (pipes->pid[i] != 0)
 		return ;
 	redirect_stuff(cmd, pipes, shell, i);
+	if (!cmd->cmd_table)
+		return ;
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
