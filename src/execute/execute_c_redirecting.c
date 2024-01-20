@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute_c_redirecting.c                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/18 15:45:43 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/20 13:16:29 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,16 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
-
 	if (cmd->outfile != NULL)
 	{
-		pipes->fd_arr[i + 1][0] = open(cmd->outfile,
+		pipes->fd_arr[i][1] = open(cmd->outfile,
 				O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (pipes->fd_arr[i + 1][0] == -1)
+		if (pipes->fd_arr[i][1] == -1)
 		{
 			shell->return_value = errno;
 			return ;
 		}
-		if (dup2(pipes->fd_arr[i + 1][0], STDOUT_FILENO) == -1)
+		if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
 			shell->return_value = errno;
 	}
 	close(pipes->fd_arr[i][1]);
