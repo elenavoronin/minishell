@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/05 18:22:25 by dliu          #+#    #+#                 */
-/*   Updated: 2023/11/14 19:07:23 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/19 13:19:47 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ size_t	ft_charcount(char *str, char c)
 	size_t	len;
 
 	len = 0;
-	while (str && *str == c)
-		str++;
+	while (str[len] && str[len] == c)
+	{
+		len++;
+	}
 	return (len);
 }
 

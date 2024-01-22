@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/22 18:32:40 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/22 18:54:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 	if (pipes->pid[i] != 0)
 		return ;
 	redirect_stuff(cmd, pipes, shell, i);
+	if (!cmd->cmd_table)
+		return ;
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
@@ -97,12 +99,15 @@ void	execute_shell(t_shell *shell)
 	{
 		if (create_pipes(&pipes, shell, nr) != SUCCESS)
 			return ;
+		if (create_pipes(&pipes, shell, nr) != SUCCESS)
+			return ;
 		get_path(shell, &pipes);
-		if (shell->status == SUCCESS)
+		if (shell->status == SUCCESS && !g_sig)
 		{
 			create_children(shell, &pipes);
 			wait_all(shell, &pipes);
 		}
+		clear_pipes(&pipes, nr);
 		clear_pipes(&pipes, nr);
 	}
 }

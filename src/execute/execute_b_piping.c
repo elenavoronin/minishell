@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/22 18:50:13 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/22 18:55:05 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,12 @@ void	clear_pipes(t_pipes *pipes, int nr)
 	int	i;
 
 	i = 0;
-	if (nr > 0)
+	while (i <= nr)
 	{
-		while (i < nr)
-		{
-			free(pipes->path[i]);
-			i++;
-		}
+		free(pipes->path[i]);
+		i++;
 	}
-	free(pipes->pid);
 	free(pipes->path);
+	free(pipes->pid);
 	free(pipes->fd_arr);
 }

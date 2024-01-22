@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/17 18:27:15 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/19 12:50:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_parse
 
 typedef struct s_split
 {
+	size_t	i;
 	char	*str;
 	char	*pos;
 	char	*tmp;
