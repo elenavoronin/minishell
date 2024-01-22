@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/17 22:28:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/22 18:21:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.line = NULL;
 	shell.cmdlist = NULL;
 	shell.status = init_env(&shell.env, envp);
-	if (shell.status != SUCCESS)
+	if (shell.status != SUCCESS || g_sig != SUCCESS)
 	{
 		ft_perror("🐢shell", "init_shell", "Could not initialize envp");
 		return (INTERNAL_ERROR);

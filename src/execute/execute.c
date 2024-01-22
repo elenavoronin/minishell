@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/20 12:37:21 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/22 18:28:32 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,14 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 			return ;
 		}
 		execute_children(shell, pipes, (t_cmd *)list->content, i);
-		if (i > 0)
-		{
-			close(pipes->fd_arr[i][0]);
-			close(pipes->fd_arr[i][1]);
-		}
 		i++;
 		list = list->next;
 	}
+}
+
+void	redirect_files()
+{
+	printf("Redirecting files\n");
 }
 
 void	execute_shell(t_shell *shell)
@@ -91,22 +91,22 @@ void	execute_shell(t_shell *shell)
 
 	nr = ft_lstsize(shell->cmdlist) - 1;
 	cmd = shell->cmdlist->content;
-	if (create_pipes(&pipes, shell, nr) != SUCCESS)
-		return ;
 	if (nr == 0 && check_builtins(cmd->cmd_table) == 1)
 	{
-		redirect_input(cmd, &pipes, shell, 0);
-		redirect_output(cmd, &pipes, shell, 0);
+		if (cmd->infile || cmd->delimiter)
+			redirect_files();
 		execute_builtins(cmd->cmd_table, shell);
 	}
 	else
 	{
+		if (create_pipes(&pipes, shell, nr) != SUCCESS)
+			return ;
 		get_path(shell, &pipes);
-		if (shell->status == SUCCESS)
+		if (shell->status == SUCCESS && !g_sig)
 		{
 			create_children(shell, &pipes);
 			wait_all(shell, &pipes);
 		}
+		clear_pipes(&pipes, nr);
 	}
-	clear_pipes(&pipes, nr);
 }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/17 17:43:57 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/22 18:19:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef enum e_status
 	INTERNAL_ERROR,
 	REDIRECT_ERROR,
 	FORK_ERROR,
+	INTERRUPT
 }	t_status;
 
 typedef struct s_env
