@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/18 15:22:24 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/22 17:58:03 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		create_pipes(t_pipes *pipes, t_shell *shell, int nr);
 void	get_path(t_shell *shell, t_pipes *pipes);
 void	create_children(t_shell *shell, t_pipes *pipes);
 void	clear_pipes(t_pipes *pipes, int nr);
-int		redirect_stuff(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
+void	redirect_stuff(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 int		read_heredoc(t_cmd *cmd);
