@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/22 18:52:44 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/23 14:00:15 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	if (cmd->delimiter != NULL)
 	{
-		pipes->fd_arr[i][0] = read_heredoc(cmd);
-		if (pipes->fd_arr[i][0] == -1)
+		pipes->infile[i] = read_heredoc(cmd);
+		if (pipes->infile[i] == -1)
 		{
 			shell->return_value = errno;
 			return ;
@@ -25,8 +25,8 @@ static void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 	}
 	if (cmd->infile != NULL)
 	{
-		pipes->fd_arr[i][0] = open(cmd->infile, O_RDONLY, 0644);
-		if (pipes->fd_arr[i][0] == -1)
+		pipes->infile[i] = open(cmd->infile, O_RDONLY, 0644);
+		if (pipes->infile[i] == -1)
 		{
 			shell->return_value = errno;
 			return ;
@@ -36,47 +36,57 @@ static void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
-	if (i != 0)
+	if (i == 0)
+	{
+		close(pipes->fd_arr[i][0]);
+		pipes->infile[i] = dup(STDIN_FILENO);
+		close(pipes->infile[i]);
+		return ;
+	}
+	else
 	{
 		if (cmd->infile || cmd->delimiter)
 			redirect_files(cmd, pipes, shell, i);
 		else
-			pipes->fd_arr[i][0] = pipes->fd_arr[i - 1][1];
-	if (dup2(pipes->fd_arr[i][0], STDIN_FILENO) == -1)
-	{
-		shell->return_value = errno;
-		return ;
-	}
-	close(pipes->fd_arr[i][0]);
+			pipes->infile[i] = pipes->fd_arr[i - 1][1];
+		if (dup2(pipes->infile[i], STDIN_FILENO) == -1)
+		{
+			close(pipes->infile[i]);
+			shell->return_value = errno;
+			return ;
+		}
+		close(pipes->infile[i]);
 	}
 }
 
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
-	if (i != pipes->nr_pipes)
+	if (i == pipes->nr_pipes)
+	{
+		pipes->outfile[i] = dup(STDOUT_FILENO);
+		close(pipes->outfile[i]);
+		return ;
+	}
+	else
 	{
 		if (cmd->outfile != NULL)
 		{
-			pipes->fd_arr[i][1] = open(cmd->outfile,
+			pipes->outfile[i] = open(cmd->outfile,
 					O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (pipes->fd_arr[i][1] == -1)
+			if (pipes->outfile[i] == -1)
 			{
 				shell->return_value = errno;
 				return ;
 			}
 		}
+		else
+			pipes->outfile[i] = pipes->fd_arr[i][1];
+		if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
+		{
+			shell->return_value = errno;
+			close(pipes->outfile[i]);
+			return ;
+		}
+		close(pipes->outfile[i]);
 	}
-	if (dup2(pipes->fd_arr[i][1], STDOUT_FILENO) == -1)
-	{
-		shell->return_value = errno;
-		close(pipes->fd_arr[i][1]);
-		return ;
-	}
-	close(pipes->fd_arr[i][1]);
-}
-
-void	redirect_stuff(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
-{
-	redirect_input(cmd, pipes, shell, i);
-	redirect_output(cmd, pipes, shell, i);
 }

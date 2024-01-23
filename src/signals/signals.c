@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   signals.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/02 12:34:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/22 18:27:10 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/23 12:41:30 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	signal_handler(int sig)
 	{
 		g_sig = INTERRUPT;
 		write(STDOUT_FILENO, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		// rl_on_new_line();
+		// rl_replace_line("", 0);
+		// rl_redisplay();
 	}
 }

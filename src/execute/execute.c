@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/22 18:54:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/23 17:29:08 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
 	if (pipes->pid[i] != 0)
 		return ;
-	redirect_stuff(cmd, pipes, shell, i);
 	if (!cmd->cmd_table)
 		return ;
+	close_pipes(pipes, i);
+	redirect_input(cmd, pipes, shell, i);
+	redirect_output(cmd, pipes, shell, i);
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
@@ -67,17 +69,17 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 	{
 		pipes->pid[i] = fork();
 		if (pipes->pid[i] == 0)
-		// {
-		// 	perror("🐢shell");
-		// 	update_status(shell, FORK_ERROR);
-		// 	return ;
-		// }
-			execute_children(shell, pipes, (t_cmd *)list->content, i);
+		{
+			shell->return_value = errno;
+			update_status(shell, FORK_ERROR);
+			return ;
+		}
+		execute_children(shell, pipes, (t_cmd *)list->content, i);
 		i++;
 		list = list->next;
 	}
 	i = 0;
-	while(i < pipes->nr_pipes)
+	while (i < pipes->nr_pipes)
 	{
 		close(pipes->fd_arr[i][0]);
 		close(pipes->fd_arr[i][1]);
@@ -99,15 +101,12 @@ void	execute_shell(t_shell *shell)
 	{
 		if (create_pipes(&pipes, shell, nr) != SUCCESS)
 			return ;
-		if (create_pipes(&pipes, shell, nr) != SUCCESS)
-			return ;
 		get_path(shell, &pipes);
 		if (shell->status == SUCCESS && !g_sig)
 		{
 			create_children(shell, &pipes);
 			wait_all(shell, &pipes);
 		}
-		clear_pipes(&pipes, nr);
 		clear_pipes(&pipes, nr);
 	}
 }
