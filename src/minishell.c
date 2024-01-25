@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/25 13:23:18 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 13:30:07 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	start_minishell(t_shell	*shell)
 	shell->run = 1;
 	while (shell->run)
 	{
-		printf("\n----------START----------\n");
 		prompt = get_prompt(shell);
 		shell->line = readline(prompt);
 		free(prompt);
@@ -39,7 +38,6 @@ void	start_minishell(t_shell	*shell)
 			execute_shell(shell);
 		clear_shell(shell);
 		g_sig = SUCCESS;
-		printf("\n----------END----------\n");
 	}
 	mini_exit(shell);
 }

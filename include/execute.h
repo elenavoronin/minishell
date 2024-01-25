@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute.h                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/23 17:27:40 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/25 13:27:29 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ typedef struct s_pipes_struct
 	int				nr_pipes;
 	char			**path;
 	int				*pid;
-	int 			*infile;
-	int 			*outfile;
+	int				*infile;
+	int				*outfile;
 	int				return_value;
 	t_pipe_fd		*fd_arr;
 }	t_pipes;

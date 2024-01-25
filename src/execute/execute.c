@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 13:22:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 13:29:31 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 	int		i;
 
 	i = 0;
-	while (i < pipes->nr_pipes)
+	while (i <= pipes->nr_pipes)
 	{
 		if (pipes->pid[i] > 0)
 			waitpid(pipes->pid[i], &status, 0);
 		i++;
 	}
-	printf("DONE WAITING\n");
 	if (WIFEXITED(status))
 		shell->return_value = WEXITSTATUS(status);
 	else
@@ -74,13 +73,13 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 		i++;
 		list = list->next;
 	}
-	i = 0;
-	while (i < pipes->nr_pipes)
-	{
-		close(pipes->fd_arr[i][0]);
-		close(pipes->fd_arr[i][1]);
-		i++;
-	}
+	// i = 0;
+	// while (i < pipes->nr_pipes)
+	// {
+	// 	close(pipes->fd_arr[i][0]);
+	// 	close(pipes->fd_arr[i][1]);
+	// 	i++;
+	// }
 }
 
 void	execute_shell(t_shell *shell)
