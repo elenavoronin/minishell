@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/25 16:55:29 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 17:37:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,12 @@ static int	split_extract(t_split *split)
 		}
 		if (safe_copy(split) != SUCCESS)
 			return (MALLOC_ERROR);
-		split->result[split->i] = split->tmp;
-		split->tmp = NULL;
-		split->i++;
+		if (split->tmp)
+		{
+			split->result[split->i] = split->tmp;
+			split->tmp = NULL;
+			split->i++;
+		}
 	}
 	return (SUCCESS);
 }

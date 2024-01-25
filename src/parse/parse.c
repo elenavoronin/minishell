@@ -40,6 +40,7 @@ int	parse_input(t_shell *shell)
 		free(parse.cmdstr);
 		return (shell->status);
 	}
+	printf("TESTING cmdstr = -%s-\n", parse.cmdstr);
 	tokens = _split(parse.cmdstr);
 	free(parse.cmdstr);
 	if (!tokens)
