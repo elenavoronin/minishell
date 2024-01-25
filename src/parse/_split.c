@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/23 18:22:45 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 16:55:29 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,20 @@ static int	split_extract(t_split *split)
 		while (ft_isspace(*split->str))
 			split->str++;
 		split->pos = split->str;
-		if (*split->str == '<' || *split->str == '>' || *split->str == '|')
-			split->pos += ft_charcount(split->str, *split->str);
+		if (*split->pos == '<' || *split->pos == '>' || *split->pos == '|')
+			split->pos += ft_charcount(split->pos, *split->pos);
 		else
 		{
 			while (*split->pos && !ft_isspace(*split->pos) && *split->pos != '|'
 				&& *split->pos != '<' && *split->pos != '>')
 			{
-				if (ft_isquote(*split->pos) && handle_quote(split) != SUCCESS)
-					return (MALLOC_ERROR);
-				split->pos++;
+				if (ft_isquote(*split->pos))
+				{
+					if (handle_quote(split) != SUCCESS)
+						return (MALLOC_ERROR);
+				}
+				else
+					split->pos++;
 			}
 		}
 		if (safe_copy(split) != SUCCESS)
