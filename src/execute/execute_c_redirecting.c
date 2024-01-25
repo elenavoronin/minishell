@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 12:28:57 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/25 14:01:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	if (i == 0)
 	{
-		close(pipes->fd_arr[i][0]);
+		close(pipes->fd_arr[0][0]);
 		pipes->infile[i] = dup(STDIN_FILENO);
 		close(pipes->infile[i]);
 		return ;
@@ -90,3 +90,32 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		close(pipes->outfile[i]);
 	}
 }
+
+
+// int	redirect(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
+// {
+// 	redirect_files(cmd, pipes, shell, i);
+// 	if (i == 0)
+// 	{
+// 		if (pipes->infile[i])
+// 			dup2(pipes->infile[i], STDIN_FILENO);
+// 		close(pipes->fd_arr[0][0]);
+// 		if (pipes->outfile[i])
+// 			//dup appropriately and close stuff
+// 	}
+// 	else if (i > 0 && i < pipes->nr_pipes)
+// 	{
+// 		//probably wrong
+// 		if (pipes->infile[i])
+// 			dup2(pipes->infile[i], pipes->fd_arr[i][0]);
+// 		else
+// 			dup2(pipes->fd_arr[i][0], pipes->fd_arr[i - 1][1]);
+// 		//close something probably
+// 		if (pipes->outfile[i])
+// 			//dup appropriately and close stuff
+// 	}
+// 	else if (i == pipes->nr_pipes)
+// 	{
+// 		//etc
+// 	}
+// }

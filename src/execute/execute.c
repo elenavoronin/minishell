@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 13:29:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 13:44:51 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,27 +34,24 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
 	if (!cmd->cmd_table)
 		return ;
-	if (pipes->nr_pipes)
-		close_pipes(pipes, i);
-	//reconsider redirecting
-	//redirect_input(cmd, pipes, shell, i);
-	//redirect_output(cmd, pipes, shell, i);
+	if (redirect(cmd, pipes, shell, i) != SUCCESS)
+		exit(shell->return_value);
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
 		pipes->return_value = 0;
-		return ; //exit instead of return
+		exit(shell->return_value);
 	}
 	if (pipes->path[i] == NULL)
 	{
 		pipes->return_value = 127;
 		ft_perror("🐢shell", cmd->cmd_table[0], "command not found.");
-		return ; //exit instead of return
+		exit(shell->return_value);
 	}
 	if (execve(pipes->path[i], cmd->cmd_table, shell->env.envp) == -1)
 	{
 		perror("🐢shell");
-		return ; //exit instead of return
+		exit(shell->return_value);
 	}
 }
 
