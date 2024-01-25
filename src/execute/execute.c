@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 16:32:51 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/25 17:06:54 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,16 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 		i++;
 		list = list->next;
 	}
-	// i = 0;
-	// while (i < pipes->nr_pipes)
-	// {
-	// 	close(pipes->fd_arr[i][0]);
-	// 	close(pipes->fd_arr[i][1]);
-	// 	i++;
-	// }
+	i = 0;
+	if (pipes->nr_pipes != 0)
+	{
+		while (i < pipes->nr_pipes)
+		{
+			close(pipes->fd_arr[i][0]);
+			close(pipes->fd_arr[i][1]);
+			i++;
+		}
+	}
 }
 
 void	execute_shell(t_shell *shell)
