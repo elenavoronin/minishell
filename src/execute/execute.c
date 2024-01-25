@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 13:18:33 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 13:22:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 
 void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
-	if (pipes->pid[i] != 0)
-		return ;
 	if (!cmd->cmd_table)
 		return ;
 	if (pipes->nr_pipes)
@@ -46,18 +44,18 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 	{
 		execute_builtins(cmd->cmd_table, shell);
 		pipes->return_value = 0;
-		return ; //exit instead of return?
+		return ; //exit instead of return
 	}
 	if (pipes->path[i] == NULL)
 	{
 		pipes->return_value = 127;
 		ft_perror("🐢shell", cmd->cmd_table[0], "command not found.");
-		return ; //exit instead of return?
+		return ; //exit instead of return
 	}
 	if (execve(pipes->path[i], cmd->cmd_table, shell->env.envp) == -1)
 	{
 		perror("🐢shell");
-		return ; //exit instead of return?
+		return ; //exit instead of return
 	}
 }
 
@@ -72,12 +70,7 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 	{
 		pipes->pid[i] = fork();
 		if (pipes->pid[i] == 0)
-		{
-			shell->return_value = errno;
-			update_status(shell, FORK_ERROR);
-			return ;
-		}
-		execute_children(shell, pipes, (t_cmd *)list->content, i);
+			execute_children(shell, pipes, (t_cmd *)list->content, i);
 		i++;
 		list = list->next;
 	}
