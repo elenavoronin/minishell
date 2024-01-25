@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 13:34:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 16:35:28 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 void	close_pipes(t_pipes *pipes, int i)
 {
-	int	prev;
-	int	next;
-
-	if (i == 0)
+	if (i == 0 && pipes->nr_pipes != 0)
 	{
 		close(pipes->fd_arr[0][0]);
 		return ;
 	}
+	if (i == pipes->nr_pipes && pipes->nr_pipes != 0)
+	{
+		close(pipes->fd_arr[i - 1][1]);
+		return ;
+	}
 	while (i < pipes->nr_pipes)
 	{
-		if (i != prev)
-			close(pipes->fd_arr[i][0]);
-		if (i != next)
-			close(pipes->fd_arr[i][1]);
+		close(pipes->fd_arr[i - 1][1]);
+		close(pipes->fd_arr[i][0]);
 		i++;
 	}
 }

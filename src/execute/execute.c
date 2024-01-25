@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 13:44:51 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/25 16:32:51 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
 	if (!cmd->cmd_table)
 		return ;
-	if (redirect(cmd, pipes, shell, i) != SUCCESS)
-		exit(shell->return_value);
+	close_pipes(pipes, i);
+	redirect_input(cmd, pipes, shell, i);
+	redirect_output(cmd, pipes, shell, i);
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
