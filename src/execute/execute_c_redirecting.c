@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute_c_redirecting.c                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/23 14:00:15 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/25 12:28:57 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

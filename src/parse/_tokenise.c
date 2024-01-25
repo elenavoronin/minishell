@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/17 22:16:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/23 18:28:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,17 @@ int	_tokenise(char	**tokens, t_shell *shell)
 		if (_tokens_to_cmd(&tok, shell) != SUCCESS)
 			break ;
 		tok.tokens++;
-		if (ft_strcmp(*tok.tokens, "|") == 0)
+		if (*tok.tokens && *tok.tokens[0] == '|')
 		{
 			if (_init_cmd(shell) != SUCCESS)
 				break ;
-			tok.tokens++;
+			if (ft_strlen(*tok.tokens) == 1)
+				tok.tokens++;
+			if (!tok.tokens || !ft_isalpha(*tok.tokens[0]))
+			{
+				ft_perror("🐢shell", "syntax error", "bad command");
+				return (update_status(shell, SYNTAX_ERROR));
+			}
 		}
 	}
 	return (shell->status);
@@ -70,7 +76,7 @@ static int	_tokens_to_cmd(t_tok *tok, t_shell *shell)
 	if (tok->dest && tok->dest != tok->cmd->cmd_table)
 	{
 		tok->tokens++;
-		if (!*tok->tokens)
+		if (!*tok->tokens || !ft_isalnum(*tok->tokens[0]))
 		{
 			ft_perror("🐢shell", "syntax error", "bad command");
 			return (update_status(shell, SYNTAX_ERROR));

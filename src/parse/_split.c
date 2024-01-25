@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/19 13:09:49 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/23 18:22:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,15 @@ static size_t	split_count(char *s)
 	{
 		while (ft_isspace(*s))
 			s++;
-		if (*s && *s != '<' && *s != '>')
+		if (*s && *s != '<' && *s != '>' && *s != '|')
 			count++;
-		while (*s && !ft_isspace(*s) && *s != '<' && *s != '>')
+		while (*s && !ft_isspace(*s) && *s != '<' && *s != '>' && *s != '|')
 		{
 			if (ft_isquote(*s))
 				s = ft_strchr(s + 1, *s);
 			s++;
 		}
-		if (*s == '<' || *s == '>')
+		if (*s == '<' || *s == '>' || *s == '|')
 		{
 			count++;
 			s += ft_charcount(s, *s);
@@ -75,11 +75,11 @@ static int	split_extract(t_split *split)
 		while (ft_isspace(*split->str))
 			split->str++;
 		split->pos = split->str;
-		if (*split->str == '<' || *split->str == '>')
+		if (*split->str == '<' || *split->str == '>' || *split->str == '|')
 			split->pos += ft_charcount(split->str, *split->str);
 		else
 		{
-			while (*split->pos && !ft_isspace(*split->pos)
+			while (*split->pos && !ft_isspace(*split->pos) && *split->pos != '|'
 				&& *split->pos != '<' && *split->pos != '>')
 			{
 				if (ft_isquote(*split->pos) && handle_quote(split) != SUCCESS)

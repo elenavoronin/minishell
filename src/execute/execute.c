@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/23 17:29:08 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/25 12:56:50 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 			waitpid(pipes->pid[i], &status, 0);
 		i++;
 	}
+	printf("DONE WAITING\n");
 	if (WIFEXITED(status))
 		shell->return_value = WEXITSTATUS(status);
 	else
@@ -94,6 +95,7 @@ void	execute_shell(t_shell *shell)
 	t_cmd	*cmd;
 
 	nr = ft_lstsize(shell->cmdlist) - 1;
+	printf("NUMBER = -%d-\n", nr);
 	cmd = shell->cmdlist->content;
 	if (nr == 0 && check_builtins(cmd->cmd_table) == 1)
 		execute_builtins(cmd->cmd_table, shell);

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/23 17:48:01 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/25 12:56:10 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ void	close_pipes(t_pipes *pipes, int i)
 	int	next;
 
 	if (i == 0)
+	{
+		close(pipes->fd_arr[0][0]);	
 		return ;
-	prev = i - 1;
-	next = i;
-	while (i < pipes->nr_pipes) 
+	}
+	while (i < pipes->nr_pipes)
 	{
 		if (i != prev)
 			close(pipes->fd_arr[i][0]);
@@ -33,21 +34,25 @@ void	close_pipes(t_pipes *pipes, int i)
 
 int	create_pipes(t_pipes *pipes, t_shell *shell, int nr)
 {
-	pipes->nr_pipes = 0;
-	pipes->return_value = 0;
 	pipes->infile = ft_calloc(nr + 1, sizeof(*pipes->infile));
 	pipes->outfile = ft_calloc(nr + 1, sizeof(*pipes->outfile));
 	pipes->pid = ft_calloc(nr + 1, sizeof(*pipes->pid));
-	pipes->fd_arr = ft_calloc(nr, sizeof(*pipes->fd_arr));
 	pipes->path = ft_calloc(nr + 1, sizeof(*pipes->path));
-	if (!pipes->path || !pipes->fd_arr || !pipes->path
+	pipes->return_value = 0;
+	if (!pipes->path || !pipes->path
 		|| !pipes->infile || !pipes->outfile)
-	{
-		shell->return_value = errno;
 		return (update_status(shell, MALLOC_ERROR));
-	}
 	if (nr == 0)
+	{
+		pipes->fd_arr = NULL;
 		return (SUCCESS);
+	}
+	else
+	{
+		pipes->fd_arr = ft_calloc(nr, sizeof(*pipes->fd_arr));
+		if (!pipes->fd_arr)
+			return (update_status(shell, MALLOC_ERROR));
+	}
 	while (pipes->nr_pipes < nr)
 	{
 		if (pipe(pipes->fd_arr[pipes->nr_pipes]) != 0)
@@ -59,7 +64,6 @@ int	create_pipes(t_pipes *pipes, t_shell *shell, int nr)
 	}
 	return (SUCCESS);
 }
-
 
 void	clear_pipes(t_pipes *pipes, int nr)
 {
