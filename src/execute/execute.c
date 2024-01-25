@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/25 12:56:50 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/25 13:18:33 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,25 +37,27 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 		return ;
 	if (!cmd->cmd_table)
 		return ;
-	close_pipes(pipes, i);
-	redirect_input(cmd, pipes, shell, i);
-	redirect_output(cmd, pipes, shell, i);
+	if (pipes->nr_pipes)
+		close_pipes(pipes, i);
+	//reconsider redirecting
+	//redirect_input(cmd, pipes, shell, i);
+	//redirect_output(cmd, pipes, shell, i);
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
 		pipes->return_value = 0;
-		return ;
+		return ; //exit instead of return?
 	}
 	if (pipes->path[i] == NULL)
 	{
 		pipes->return_value = 127;
 		ft_perror("🐢shell", cmd->cmd_table[0], "command not found.");
-		return ;
+		return ; //exit instead of return?
 	}
 	if (execve(pipes->path[i], cmd->cmd_table, shell->env.envp) == -1)
 	{
 		perror("🐢shell");
-		return ;
+		return ; //exit instead of return?
 	}
 }
 
@@ -95,7 +97,6 @@ void	execute_shell(t_shell *shell)
 	t_cmd	*cmd;
 
 	nr = ft_lstsize(shell->cmdlist) - 1;
-	printf("NUMBER = -%d-\n", nr);
 	cmd = shell->cmdlist->content;
 	if (nr == 0 && check_builtins(cmd->cmd_table) == 1)
 		execute_builtins(cmd->cmd_table, shell);
