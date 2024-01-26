@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/23 18:28:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/26 15:09:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	_tokenise(char	**tokens, t_shell *shell)
 				break ;
 			if (ft_strlen(*tok.tokens) == 1)
 				tok.tokens++;
-			if (!tok.tokens || !ft_isalpha(*tok.tokens[0]))
+			if (!*tok.tokens || (*tok.tokens && !*tok.tokens[0]))
 			{
 				ft_perror("🐢shell", "syntax error", "bad command");
 				return (update_status(shell, SYNTAX_ERROR));
