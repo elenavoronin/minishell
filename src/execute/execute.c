@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/26 12:49:04 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/26 13:58:59 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 
 void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
-	if (!cmd->cmd_table)
-		return ;
 	close_pipes(pipes, i);
 	redirect_input(cmd, pipes, shell, i);
 	redirect_output(cmd, pipes, shell, i);
 	if (shell->return_value != 0)
 	{
-		ft_perror(cmd->infile, NULL, "No such file or directory");
+		perror(cmd->infile);
 		exit(shell->return_value);
 	}
+	if (!cmd->cmd_table)
+		cmd->cmd_table[0] = NULL;
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
 		execute_builtins(cmd->cmd_table, shell);
