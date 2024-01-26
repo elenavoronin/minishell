@@ -6,11 +6,28 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 12:37:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 12:51:18 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/26 10:08:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+static int	is_flag(char *str)
+{
+	size_t	i;
+
+	if (ft_strlen(str) < 2 || (str[0] != '-' || str[1] != 'n'))
+		return (0);
+	i = 1;
+	while (str && str[i])
+	{
+		if (str[i] == 'n')
+			i++;
+		else if (str[i] != '\0')
+			return (0);
+	}
+	return (i);
+}
 
 void	mini_echo(char **cmd)
 {
@@ -18,11 +35,8 @@ void	mini_echo(char **cmd)
 
 	nl = 1;
 	cmd++;
-	if (*cmd && ft_strcmp(*cmd, "-n") == 0)
-	{
-		nl = 0;
+	while (is_flag(*cmd))
 		cmd++;
-	}
 	while (*cmd)
 	{
 		write(STDOUT_FILENO, *cmd, ft_strlen(*cmd));

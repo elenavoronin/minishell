@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/25 13:30:07 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/26 10:10:54 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ static char	*get_prompt(t_shell *shell)
 		curpath[1] = '\0';
 	}
 	i = 0;
-	while (curpath[i] == home[i])
+	while (home && curpath[i] == home[i])
 		i++;
-	if (i == ft_strlen(home))
+	if (i && i == ft_strlen(home))
 		prompt = ft_joinstrs(3, "🐢shell:~", &curpath[i], "$ ");
 	else
 		prompt = ft_joinstrs(3, "🐢shell:", curpath, "$ ");
