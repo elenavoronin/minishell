@@ -6,14 +6,14 @@
 #    By: dliu <dliu@student.codam.nl>                 +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2024/01/25 17:37:35 by dliu          ########   odam.nl          #
+#    Updated: 2024/01/26 11:13:22 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
 CFLAGS = -I ./include -g 
-CFLAGS += -fsanitize=address -D DEBUG=0
+CFLAGS += -fsanitize=address -D DEBUG=1
 
 READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
@@ -21,7 +21,7 @@ READLINEFLAGS ?= -I/usr/include
 VPATH = ./src ./src/libft ./src/parse ./src/execute ./src/builtins ./src/enviro ./src/signals
 SRCS_NAMES = main.c minishell.c enviro.c signals.c \
 parse.c _expand.c _split.c _tokenise.c __test.c \
-builtins.c env.c echo.c cd.c pwd.c export.c unset.c exit.c \
+builtins.c env.c echo.c cd.c pwd.c export.c export_check.c unset.c exit.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
 ft_put_fd.c ft_is.c ft_is2.c ft_converts.c \
 ft_calloc.c ft_bzero.c ft_mem.c \

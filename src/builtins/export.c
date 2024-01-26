@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/16 21:43:18 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/26 11:24:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	mini_export(char **cmd, t_shell *shell)
 
 	if (cmd[1] && *cmd[1])
 	{
+		if (export_check_cmds(cmd + 1) != SUCCESS)
+			return (update_status(shell, SYNTAX_ERROR));
 		exp.newenvp = ft_calloc(ft_strarray_count(cmd) + shell->env.count,
 				sizeof(*exp.newenvp));
 		if (!exp.newenvp)
@@ -30,8 +32,7 @@ int	mini_export(char **cmd, t_shell *shell)
 		exp.cmd = cmd + 1;
 		if (_replace_existing(&exp, shell->env) != SUCCESS)
 			return (update_status(shell, MALLOC_ERROR));
-		_append_new(&exp);
-		if (!exp.newenvp)
+		if (_append_new(&exp) != SUCCESS)
 			return (update_status(shell, MALLOC_ERROR));
 		clear_env(&exp.cmdenv);
 		clear_env(&shell->env);
@@ -61,6 +62,30 @@ static int	_replace_existing(t_exp *exp, t_env oldenv)
 	return (SUCCESS);
 }
 
+static int	_append_new(t_exp *exp)
+{
+	int	i;
+
+	i = 0;
+	while (i < exp->cmdenv.count)
+	{
+		if (exp->cmdenv.envp_name[i])
+		{
+			exp->newenvp[exp->ipos] = ft_strdup(exp->cmdenv.envp[i]);
+			if (!exp->newenvp[exp->ipos])
+			{
+				ft_free_strarr(exp->newenvp);
+				exp->newenvp = NULL;
+				clear_env(&exp->cmdenv);
+				return (MALLOC_ERROR);
+			}
+			exp->ipos++;
+		}
+		i++;
+	}
+	return (SUCCESS);
+}
+
 static char	*_find_envp(t_env env, t_exp *exp)
 {
 	int	i;
@@ -80,30 +105,6 @@ static char	*_find_envp(t_env env, t_exp *exp)
 	}
 	else
 		return (ft_strdup(env.envp[exp->ipos]));
-}
-
-static int	_append_new(t_exp *exp)
-{
-	int	i;
-
-	i = 0;
-	while (i < exp->cmdenv.count)
-	{
-		if (exp->cmdenv.envp_name[i])
-		{
-			exp->newenvp[exp->ipos] = ft_strdup(exp->cmdenv.envp[i]);
-			if (!exp->newenvp[exp->ipos])
-			{
-				ft_free_strarr(exp->newenvp);
-				exp->newenvp = NULL;
-				clear_env(&exp->cmdenv);
-				return (0);
-			}
-			exp->ipos++;
-		}
-		i++;
-	}
-	return (1);
 }
 
 static void	_export_print(t_env env)
