@@ -3,10 +3,10 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: dliu <dliu@student.codam.nl>                 +#+                      #
+#    By: elenavoronin <elnvoronin@gmail.com>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2024/01/26 11:13:22 by dliu          ########   odam.nl          #
+#    Updated: 2024/01/26 12:57:32 by elenavoroni   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
