@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/26 14:06:49 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/26 16:05:32 by elenavoroni   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,18 @@ static void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	if (cmd->infile || cmd->delimiter)
-	{
 		redirect_files(cmd, pipes, shell, i);
-		if (shell->return_value != 0)
-			return ;
-	}
 	else
 	{
 		if (i == 0)
 			pipes->infile[i] = dup(STDIN_FILENO);
 		else
 			pipes->infile[i] = pipes->fd_arr[i - 1][0];
+	}
+	if (pipes->infile[i] == -1)
+	{
+		shell->return_value = errno;
+		return ;
 	}
 	if (dup2(pipes->infile[i], STDIN_FILENO) == -1)
 	{
