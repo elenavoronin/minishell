@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/26 13:57:50 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/29 12:31:55 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ void	execute_builtins(char **cmd, t_shell *shell)
 	if (!cmd)
 		return ;
 	if (ft_strcmp(cmd[0], "env") == 0)
-		mini_env(shell->env);
+		shell->return_value = mini_env(shell->env);
 	else if (ft_strcmp(cmd[0], "echo") == 0)
-		mini_echo(cmd);
+		shell->return_value = mini_echo(cmd);
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
-		mini_pwd(shell);
+		shell->return_value = mini_pwd(shell);
 	else if (ft_strcmp(cmd[0], "cd") == 0)
-		mini_cd(cmd, shell);
+		shell->return_value = mini_cd(cmd, shell);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
-		mini_unset(cmd, shell);
+		shell->return_value = mini_unset(cmd, shell);
 	else if (ft_strcmp(cmd[0], "export") == 0)
-		mini_export(cmd, shell);
+		shell->return_value = mini_export(cmd, shell);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
 		mini_exit(shell);
 }

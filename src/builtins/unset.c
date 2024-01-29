@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/15 11:03:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/29 12:20:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,26 @@
 
 static char	**copy_enviro(t_shell *shell, char *var_name);
 
-void	mini_unset(char **cmd, t_shell *shell)
+int	mini_unset(char **cmd, t_shell *shell)
 {
 	int		i;
 	char	**new_envp;
 
 	if (!cmd[1] || !*cmd[1])
-		return ;
+		return (SUCCESS);
 	i = 0;
 	while (i < shell->env.count && ft_strcmp(cmd[1], shell->env.envp_name[i]))
 		i++;
 	if (i == shell->env.count)
-		return ;
+		return (SUCCESS);
 	new_envp = copy_enviro(shell, cmd[1]);
 	if (!new_envp)
-	{
-		update_status(shell, MALLOC_ERROR);
-		return ;
-	}
+		return (update_status(shell, MALLOC_ERROR));
 	clear_env(&shell->env);
 	if (!init_env(&shell->env, new_envp))
 		update_status(shell, MALLOC_ERROR);
 	ft_free_strarr(new_envp);
+	return (shell->status);
 }
 
 static char	**copy_enviro(t_shell *shell, char *var_name)
