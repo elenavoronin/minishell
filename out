@@ -1,0 +1,7 @@
+include
+LICENSE
+Makefile
+minishell
+objs
+out
+src
