@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/29 15:40:33 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/29 16:49:23 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
-	if (1 == 0)
-		close (pipes->fd_arr[i][0]);
 	if (cmd->infile || cmd->delimiter)
 		redirect_files(cmd, pipes, shell, i);
 	else
@@ -92,8 +90,6 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
-	if (i == pipes->nr_pipes)
-		close (pipes->fd_arr[i - 1][1]);
 	if (cmd->outfile != NULL)
 	{
 		pipes->outfile[i] = open(cmd->outfile,

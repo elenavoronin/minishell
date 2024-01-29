@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/26 10:39:45 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/29 16:48:24 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	start_minishell(t_shell	*shell)
 		clear_shell(shell);
 		g_sig = SUCCESS;
 	}
-	mini_exit(shell);
+	mini_exit(shell, STDOUT_FILENO);
 }
 
 static char	*get_prompt(t_shell *shell)
