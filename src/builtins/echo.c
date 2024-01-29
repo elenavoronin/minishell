@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 12:37:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/26 10:08:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/29 15:16:34 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	is_flag(char *str)
 	return (i);
 }
 
-void	mini_echo(char **cmd)
+void	mini_echo(char **cmd, int fd)
 {
 	int	nl;
 
@@ -39,11 +39,11 @@ void	mini_echo(char **cmd)
 		cmd++;
 	while (*cmd)
 	{
-		write(STDOUT_FILENO, *cmd, ft_strlen(*cmd));
+		write(fd, *cmd, ft_strlen(*cmd));
 		cmd++;
 		if (*cmd)
-			write(STDOUT_FILENO, " ", 1);
+			write(fd, " ", 1);
 	}
 	if (nl)
-		write(STDOUT_FILENO, "\n", 1);
+		write(fd, "\n", 1);
 }

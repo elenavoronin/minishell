@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/26 11:24:45 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/29 15:23:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static char	*_find_envp(t_env env, t_exp *exp);
 static int	_replace_existing(t_exp *exp, t_env oldenv);
 static int	_append_new(t_exp *exp);
-static void	_export_print(t_env env);
+static void	_export_print(t_env env, int fd);
 
-int	mini_export(char **cmd, t_shell *shell)
+int	mini_export(char **cmd, t_shell *shell, int fd)
 {
 	t_exp	exp;
 
@@ -40,7 +40,7 @@ int	mini_export(char **cmd, t_shell *shell)
 		ft_free_strarr(exp.newenvp);
 	}
 	else
-		_export_print(shell->env);
+		_export_print(shell->env, fd);
 	return (SUCCESS);
 }
 
@@ -107,21 +107,21 @@ static char	*_find_envp(t_env env, t_exp *exp)
 		return (ft_strdup(env.envp[exp->ipos]));
 }
 
-static void	_export_print(t_env env)
+static void	_export_print(t_env env, int fd)
 {
 	int	i;
 
 	i = 0;
 	while (env.envp[i])
 	{
-		ft_putstr_fd(env.envp_name[i], STDOUT_FILENO);
+		ft_putstr_fd(env.envp_name[i], fd);
 		if (env.envp_value[i])
 		{
-			ft_putstr_fd("=\"", STDOUT_FILENO);
-			ft_putstr_fd(env.envp_value[i], STDOUT_FILENO);
-			ft_putchar_fd('\"', STDOUT_FILENO);
+			ft_putstr_fd("=\"", fd);
+			ft_putstr_fd(env.envp_value[i], fd);
+			ft_putchar_fd('\"', fd);
 		}
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		ft_putchar_fd('\n', fd);
 		i++;
 	}
 }

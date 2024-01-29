@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/26 17:11:24 by elenavoroni   ########   odam.nl         */
+/*   Updated: 2024/01/29 15:07:58 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 		return ;
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
-		execute_builtins(cmd->cmd_table, shell);
+		execute_builtins(cmd->cmd_table, pipes, shell);
 		pipes->return_value = 0;
 		exit(shell->return_value);
 	}
@@ -91,16 +91,16 @@ void	execute_shell(t_shell *shell)
 
 	nr = ft_lstsize(shell->cmdlist) - 1;
 	cmd = shell->cmdlist->content;
+	if (create_pipes(&pipes, shell, nr) != SUCCESS)
+		return ;
 	if (nr == 0 && check_builtins(cmd->cmd_table) == 1)
 	{
-		redirect_input(cmd, );
-		redirect_output();
-		execute_builtins(cmd->cmd_table, shell);
+		redirect_sgl_builtin(cmd, &pipes, shell);
+		execute_builtins(cmd->cmd_table, &pipes, shell);
+		clear_pipes(&pipes, nr);
 	}
 	else
 	{
-		if (create_pipes(&pipes, shell, nr) != SUCCESS)
-			return ;
 		get_path(shell, &pipes);
 		if (shell->status == SUCCESS && !g_sig)
 		{
