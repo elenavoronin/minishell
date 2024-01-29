@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/29 17:53:32 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/29 18:07:56 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		else
 			pipes->infile[i] = pipes->fd_arr[i - 1][0];
 	}
-	if (pipes->infile[i] != 0)
+	if (pipes->infile[i] != STDIN_FILENO)
 	{
 		if (dup2(pipes->infile[i], STDIN_FILENO) == -1)
 		{
@@ -82,7 +82,7 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 			shell->return_value = errno;
 			return ;
 		}
-		close(pipes->infile[i]);
+		// close(pipes->infile[i]);
 	}
 }
 
@@ -105,7 +105,7 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		else
 			pipes->outfile[i] = pipes->fd_arr[i][1];
 	}
-	if (pipes->outfile[i] != 1)
+	if (pipes->outfile[i] != STDOUT_FILENO)
 	{
 		if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
 		{
@@ -113,6 +113,6 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 			close(pipes->outfile[i]);
 			return ;
 		}
-		close(pipes->outfile[i]);
+		// close(pipes->outfile[i]);
 	}
 }
