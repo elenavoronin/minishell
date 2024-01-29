@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/22 17:48:00 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/29 17:24:17 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ void	get_path(t_shell *shell, t_pipes *pipes)
 	{
 		cmd = list->content;
 		if (cmd->cmd_table == NULL || check_builtins(cmd->cmd_table) == 1)
-		{
 			pipes->path[i] = NULL;
-			return ;
-		}
 		else if (access(cmd->cmd_table[0], X_OK) == 0)
 		{
 			pipes->path[i] = ft_strdup(cmd->cmd_table[0]);
