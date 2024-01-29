@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 12:37:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/29 16:46:51 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/29 17:51:54 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,6 @@ int	mini_echo(char **cmd, int fd)
 			write(fd, " ", 1);
 	}
 	if (nl)
-		write(STDOUT_FILENO, "\n", 1);
+		write(fd, "\n", 1);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/29 17:46:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/29 17:53:32 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		else
 			pipes->outfile[i] = pipes->fd_arr[i][1];
 	}
-	if (pipes->outfile[i] == 1)
+	if (pipes->outfile[i] != 1)
 	{
 		if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
 		{
