@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/29 15:22:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/29 15:43:10 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ void	execute_builtins(char **cmd, t_pipes *pipes, t_shell *shell)
 	if (!cmd)
 		return ;
 	if (ft_strcmp(cmd[0], "env") == 0)
-		mini_env(shell->env, pipes->outfile[0]);
+		shell->return_value = mini_env(shell->env, pipes->outfile[0]);
 	else if (ft_strcmp(cmd[0], "echo") == 0)
-		mini_echo(cmd, pipes->outfile[0]);
+		shell->return_value = mini_echo(cmd, pipes->outfile[0]);
 	else if (ft_strcmp(cmd[0], "pwd") == 0)
-		mini_pwd(shell, pipes->outfile[0]);
+		shell->return_value = mini_pwd(shell, pipes->outfile[0]);
 	else if (ft_strcmp(cmd[0], "cd") == 0)
-		mini_cd(cmd, shell);
+		shell->return_value = mini_cd(cmd, shell);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
-		mini_unset(cmd, shell);
+		shell->return_value = mini_unset(cmd, shell);
 	else if (ft_strcmp(cmd[0], "export") == 0)
-		mini_export(cmd, shell, pipes->outfile[0]);
+		shell->return_value = mini_export(cmd, shell, pipes->outfile[0]);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
 		mini_exit(shell, pipes->outfile[0]);
 }
