@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/29 17:24:17 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 20:34:10 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,16 @@ int	get_path_char(t_shell *shell, t_pipes *pipes, int nr, char *cmd)
 			return (update_status(shell, MALLOC_ERROR));
 		}
 		if (access(pipes->path[nr], X_OK) == 0)
-			break ;
+		{
+			ft_free_strarr(new_paths);
+			return (SUCCESS);
+		}
 		free(pipes->path[nr]);
 		pipes->path[nr] = NULL;
 		i++;
 	}
 	ft_free_strarr(new_paths);
-	return (shell->status);
+	return (1);
 }
 
 void	get_path(t_shell *shell, t_pipes *pipes)
@@ -65,14 +68,18 @@ void	get_path(t_shell *shell, t_pipes *pipes)
 		cmd = list->content;
 		if (cmd->cmd_table == NULL || check_builtins(cmd->cmd_table) == 1)
 			pipes->path[i] = NULL;
-		else if (access(cmd->cmd_table[0], X_OK) == 0)
-		{
-			pipes->path[i] = ft_strdup(cmd->cmd_table[0]);
-			if (!pipes->path[i])
-				update_status(shell, MALLOC_ERROR);
-		}
 		else
-			get_path_char(shell, pipes, i, cmd->cmd_table[0]);
+		{
+			if (get_path_char(shell, pipes, i, cmd->cmd_table[0]) != SUCCESS)
+			{
+				if (access(cmd->cmd_table[0], X_OK) == 0)
+				{
+					pipes->path[i] = ft_strdup(cmd->cmd_table[0]);
+					if (!pipes->path[i])
+						update_status(shell, MALLOC_ERROR);
+				}
+			}
+		}
 		list = list->next;
 		i++;
 	}

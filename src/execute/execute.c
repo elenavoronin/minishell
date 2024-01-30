@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 20:01:19 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 20:19:57 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	execute_shell(t_shell *shell)
 			create_children(shell, &pipes);
 			wait_all(shell, &pipes);
 		}
-		unlink("temp");
+		unlink("temp_heredoc");
 		clear_pipes(&pipes, nr);
 	}
 }
