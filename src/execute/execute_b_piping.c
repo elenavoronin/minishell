@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 12:45:28 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 13:45:37 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ void	close_pipes(t_pipes *pipes, int i)
 	int	j;
 
 	j = 0;
+	if (pipes->nr_pipes == 0)
+		return ;
 	while (j < pipes->nr_pipes)
 	{
-		if (j == i - 1 && i != 1)
+		if (j == i - 1 && i != 0)
 			close(pipes->fd_arr[j][1]);
 		else if (j == i)
 			close(pipes->fd_arr[j][0]);
