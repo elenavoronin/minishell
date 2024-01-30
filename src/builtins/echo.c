@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 12:37:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/29 18:00:06 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 14:23:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	mini_echo(char **cmd, int fd)
 
 	nl = 1;
 	cmd++;
+	if (is_flag(*cmd))
+		nl = 0;
 	while (is_flag(*cmd))
 		cmd++;
 	while (*cmd)
