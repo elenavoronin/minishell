@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/29 14:59:43 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 15:13:25 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_pipes_struct
 	int				*pid;
 	int				*infile;
 	int				*outfile;
-	int				return_value;
 	t_pipe_fd		*fd_arr;
 }	t_pipes;
 

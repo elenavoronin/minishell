@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 13:45:37 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 15:13:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	close_pipes(t_pipes *pipes, int i)
 
 int	create_pipes(t_pipes *pipes, t_shell *shell, int nr)
 {
-	pipes->return_value = 0;
 	pipes->nr_pipes = 0;
 	pipes->pid = ft_calloc(nr + 1, sizeof(*pipes->pid));
 	pipes->path = ft_calloc(nr + 1, sizeof(*pipes->path));

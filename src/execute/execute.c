@@ -6,7 +6,7 @@
 /*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 13:47:00 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 16:03:53 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,31 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 	}
 	if (WIFEXITED(status))
 		shell->return_value = WEXITSTATUS(status);
-	else
+	if (WIFSIGNALED(status))
 		shell->return_value = 128 + WTERMSIG(status);
 }
 
 void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
+	shell->return_value = 0;
 	close_pipes(pipes, i);
 	redirect_input(cmd, pipes, shell, i);
 	redirect_output(cmd, pipes, shell, i);
 	if (shell->return_value != 0)
-		return ;
+	{
+		perror("🐢shell");
+		exit(shell->return_value);
+	}
+	if (!cmd->cmd_table)
+		exit(shell->return_value);
 	if (check_builtins(cmd->cmd_table) == 1)
 	{
-		execute_builtins(cmd->cmd_table, pipes, shell);
+		execute_builtins(cmd->cmd_table, pipes, shell, i);
 		exit(shell->return_value);
 	}
 	if (pipes->path[i] == NULL)
 	{
-		pipes->return_value = 127;
+		shell->return_value = 127;
 		ft_perror("🐢shell", cmd->cmd_table[0], "command not found.");
 		exit(shell->return_value);
 	}
@@ -95,7 +101,7 @@ void	execute_shell(t_shell *shell)
 	if (nr == 0 && check_builtins(cmd->cmd_table) == 1)
 	{
 		redirect_sgl_builtin(cmd, &pipes, shell);
-		execute_builtins(cmd->cmd_table, &pipes, shell);
+		execute_builtins(cmd->cmd_table, &pipes, shell, 0);
 		clear_pipes(&pipes, nr);
 	}
 	else

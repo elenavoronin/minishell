@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 13:55:19 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/30 15:20:56 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,19 @@ void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 			return ;
 		}
 	}
+	if (dup2(pipes->infile[i], STDIN_FILENO) == -1)
+	{
+		close(pipes->infile[i]);
+		shell->return_value = errno;
+	}
 }
 
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
+	pipes->infile[i] = STDIN_FILENO;
 	if (cmd->infile || cmd->delimiter)
 		redirect_files(cmd, pipes, shell, i);
-	else if (i)
+	else if (i != 0)
 	{
 		pipes->infile[i] = pipes->fd_arr[i - 1][0];
 		if (dup2(pipes->infile[i], STDIN_FILENO) == -1)
@@ -80,6 +86,7 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
+	pipes->outfile[i] = STDOUT_FILENO;
 	if (cmd->outfile != NULL)
 	{
 		pipes->outfile[i] = open(cmd->outfile,
@@ -88,6 +95,11 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		{
 			shell->return_value = errno;
 			return ;
+		}
+		if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
+		{
+			shell->return_value = errno;
+			close(pipes->outfile[i]);
 		}
 	}
 	else if (i != pipes->nr_pipes)

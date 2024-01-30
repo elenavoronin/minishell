@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/29 15:44:04 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 15:23:23 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_exp
 }	t_exp;
 
 int		check_builtins(char **cmd);
-void	execute_builtins(char **cmd, t_pipes *pipes, t_shell *shell);
+void	execute_builtins(char **cmd, t_pipes *pipes, t_shell *shell, int i);
 int		mini_echo(char **cmd, int fd);
 int		mini_pwd(t_shell *shell, int outfile);
 int		mini_cd(char **cmd, t_shell *shell);

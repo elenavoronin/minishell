@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/18 11:56:35 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/30 14:49:06 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	_setcurpath(t_cd *cd, char **cmd, t_shell *shell)
 		_slash(cd);
 	else
 	{
-		ft_strlcpy(cd->curpath, getenv_value(shell->env, "PWD"), PATH_MAX);
+		getcwd(cd->curpath, PATH_MAX);
 		cd->i = ft_strlen(cd->curpath);
 	}
 	while (*cd->cmd && cd->i < PATH_MAX)

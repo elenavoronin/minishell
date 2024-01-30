@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/30 14:00:34 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/30 16:02:40 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,19 @@ int	g_sig = 0;
 
 void	start_minishell(t_shell	*shell)
 {
-	char	*prompt;
+	char				*prompt;
+	struct sigaction	sa;
 
 	shell->run = 1;
 	while (shell->run)
 	{
+		init_signals_before_rl(&sa);
 		prompt = get_prompt(shell);
 		shell->line = readline(prompt);
 		free(prompt);
 		if (shell->line && !ft_isspace(*shell->line))
 			add_history(shell->line);
+		init_signals_after_rl(&sa);
 		if (!shell->line)
 			break ;
 		if (!g_sig)
