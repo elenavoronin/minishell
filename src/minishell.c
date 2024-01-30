@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/30 16:10:48 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/30 17:39:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,22 @@ int	g_sig = 0;
 
 void	start_minishell(t_shell	*shell)
 {
-	char				*prompt;
-	struct sigaction	sa;
+	char	*prompt;
 
 	shell->run = 1;
 	while (shell->run)
 	{
-		init_signals_before_rl(&sa);
 		prompt = get_prompt(shell);
 		shell->line = readline(prompt);
 		free(prompt);
-		if (shell->line && minishell_check_line(shell->line) == SUCCESS)
-			add_history(shell->line);
-		init_signals_after_rl(&sa);
+		add_history(shell->line);
 		if (!shell->line)
 			break ;
 		if (!g_sig)
 			parse_input(shell);
 		if (DEBUG)
 			parse_test(shell->cmdlist);
-		if (shell->status == SUCCESS && !g_sig)
+		else if (shell->status == SUCCESS && !g_sig)
 			execute_shell(shell);
 		clear_shell(shell);
 		g_sig = SUCCESS;
@@ -61,9 +57,9 @@ static char	*get_prompt(t_shell *shell)
 		curpath[1] = '\0';
 	}
 	i = 0;
-	while (home && curpath[i] == home[i])
+	while (curpath[i] == home[i])
 		i++;
-	if (i && i == ft_strlen(home))
+	if (i == ft_strlen(home))
 		prompt = ft_joinstrs(3, "🐢shell:~", &curpath[i], "$ ");
 	else
 		prompt = ft_joinstrs(3, "🐢shell:", curpath, "$ ");
