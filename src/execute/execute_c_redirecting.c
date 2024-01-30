@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute_c_redirecting.c                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 13:50:46 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 13:55:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,9 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	if (cmd->infile || cmd->delimiter)
 		redirect_files(cmd, pipes, shell, i);
-	else
+	else if (i)
 	{
-		if (i == 0)
-			pipes->infile[i] = STDIN_FILENO;
-		else
-			pipes->infile[i] = pipes->fd_arr[i - 1][0];
-	}
-	if (pipes->infile[i] != STDIN_FILENO)
-	{
+		pipes->infile[i] = pipes->fd_arr[i - 1][0];
 		if (dup2(pipes->infile[i], STDIN_FILENO) == -1)
 		{
 			close(pipes->infile[i]);
@@ -96,15 +90,9 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 			return ;
 		}
 	}
-	else
+	else if (i != pipes->nr_pipes)
 	{
-		if (i == pipes->nr_pipes)
-			pipes->outfile[i] = STDOUT_FILENO;
-		else
-			pipes->outfile[i] = pipes->fd_arr[i][1];
-	}
-	if (pipes->outfile[i] != STDOUT_FILENO)
-	{
+		pipes->outfile[i] = pipes->fd_arr[i][1];
 		if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
 		{
 			shell->return_value = errno;
