@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/30 17:39:26 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/30 17:48:56 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	start_minishell(t_shell	*shell)
 	{
 		prompt = get_prompt(shell);
 		shell->line = readline(prompt);
+		g_sig = SUCCESS;
 		free(prompt);
 		add_history(shell->line);
 		if (!shell->line)

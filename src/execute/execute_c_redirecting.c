@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 15:20:56 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/30 20:02:04 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,12 @@ void	redirect_sgl_builtin(t_cmd *cmd, t_pipes *pipes, t_shell *shell)
 	}
 	if (cmd->outfile != NULL)
 	{
-		pipes->outfile[0] = open(cmd->outfile,
+		if (cmd->output_flag == 'w')
+			pipes->outfile[0] = open(cmd->outfile,
 				O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		else
+			pipes->outfile[0] = open(cmd->outfile,
+				O_CREAT | O_WRONLY | O_APPEND, 0644);
 	}
 }
 
@@ -66,6 +70,8 @@ void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		close(pipes->infile[i]);
 		shell->return_value = errno;
 	}
+	if (i != 0)
+		close(pipes->fd_arr[i - 1][0]);
 }
 
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
@@ -89,8 +95,12 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 	pipes->outfile[i] = STDOUT_FILENO;
 	if (cmd->outfile != NULL)
 	{
-		pipes->outfile[i] = open(cmd->outfile,
-				O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (cmd->output_flag == 'w')
+			pipes->outfile[i] = open(cmd->outfile,
+					O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		else
+			pipes->outfile[i] = open(cmd->outfile,
+					O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (pipes->outfile[i] == -1)
 		{
 			shell->return_value = errno;
@@ -101,6 +111,8 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 			shell->return_value = errno;
 			close(pipes->outfile[i]);
 		}
+		if (i != pipes->nr_pipes)
+			close(pipes->fd_arr[i][1]);
 	}
 	else if (i != pipes->nr_pipes)
 	{
