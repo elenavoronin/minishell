@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/17 12:38:52 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 18:46:16 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 19:26:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	read_heredoc(char *delimiter)
 	int		tmp;
 	char	*input;
 
-	tmp = open("temp_heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
+	tmp = open("/tmp/temp_heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (tmp == -1)
 		return ;
 	input = readline("> ");

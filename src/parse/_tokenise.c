@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 18:53:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 19:26:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ static int	_init_cmd(t_shell *shell)
 	if (!cmd)
 		return (update_status(shell, MALLOC_ERROR));
 	cmd->cmd_argc = 0;
-	cmd->delimiter = NULL;
+	cmd->delimiter = 0;
+	cmd->tmp = 0;
 	cmd->infile = NULL;
 	cmd->outfile = NULL;
 	cmd->output_flag = 'w';
@@ -81,21 +82,16 @@ static int	_tokens_to_cmd(t_tok *tok, t_shell *shell)
 			ft_perror("🐢shell", "syntax error", "bad command");
 			return (update_status(shell, SYNTAX_ERROR));
 		}
-		if (tok->dest == &(tok->cmd->delimiter))
+		if (*tok->dest)
+			free(*tok->dest);
+		if (tok->cmd->delimiter)
 		{
-			*tok->dest = NULL;
-			tok->dest = &(tok->cmd->infile);
-			if (*tok->dest)
-				free(*tok->dest);
+			*tok->dest = ft_strdup("/tmp/temp_heredoc");
 			read_heredoc(*tok->tokens);
-			*tok->dest = ft_strdup("temp_heredoc");
+			tok->cmd->delimiter = 0;
 		}
 		else
-		{
-			if (*tok->dest)
-				free(*tok->dest);
 			*tok->dest = ft_strdup(*tok->tokens);
-		}
 		if (!*tok->dest)
 			return (update_status(shell, MALLOC_ERROR));
 	}
@@ -109,10 +105,14 @@ static void	_get_token_dest(t_tok *tok)
 	tok->dest = NULL;
 	if (!tok->tokens)
 		return ;
-	if (ft_strcmp(*tok->tokens, "<<") == 0)
-		tok->dest = &(tok->cmd->delimiter);
-	else if (ft_strcmp(*tok->tokens, "<") == 0)
+	if (ft_strcmp(*tok->tokens, "<") == 0)
 		tok->dest = &(tok->cmd->infile);
+	else if (ft_strcmp(*tok->tokens, "<<") == 0)
+	{
+		tok->cmd->delimiter = 1;
+		tok->cmd->tmp = 1;
+		tok->dest = &(tok->cmd->infile);
+	}
 	else if (ft_strcmp(*tok->tokens, ">") == 0)
 		tok->dest = &(tok->cmd->outfile);
 	else if (ft_strcmp(*tok->tokens, ">>") == 0)

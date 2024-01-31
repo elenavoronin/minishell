@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 18:42:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 19:20:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
  */
 typedef struct s_cmd
 {
-	char	*delimiter;
+	char	tmp;
+	char	delimiter;
 	char	*infile;
 	char	*outfile;
 	char	output_flag;

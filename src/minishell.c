@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/31 13:50:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 19:12:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	clear_shell(t_shell *shell);
 static char	*get_prompt(t_shell *shell);
 
-int	g_sig = 0;
+int	g_sig = SUCCESS;
 
 void	start_minishell(t_shell	*shell)
 {
@@ -30,11 +30,11 @@ void	start_minishell(t_shell	*shell)
 		add_history(shell->line);
 		if (!shell->line)
 			mini_exit(shell, NULL, STDOUT_FILENO);
-		if (!g_sig)
-			parse_input(shell);
+		if (g_sig == SUCCESS)
+			shell->return_value = parse_input(shell);
 		if (DEBUG)
 			parse_test(shell->cmdlist);
-		else if (shell->status == SUCCESS && !g_sig)
+		else if (shell->status == SUCCESS && g_sig == SUCCESS)
 			execute_shell(shell);
 		clear_shell(shell);
 		g_sig = SUCCESS;
@@ -91,7 +91,6 @@ void	delete_cmd(void *content)
 	{
 		cmd = content;
 		ft_free_strarr(cmd->cmd_table);
-		free(cmd->delimiter);
 		free(cmd->infile);
 		free(cmd->outfile);
 		free(cmd);

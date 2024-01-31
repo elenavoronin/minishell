@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 20:02:04 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/31 19:08:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,6 @@ void	redirect_sgl_builtin(t_cmd *cmd, t_pipes *pipes, t_shell *shell)
 {
 	pipes->infile[0] = 0;
 	pipes->outfile[0] = 1;
-	if (cmd->delimiter != NULL)
-	{
-		pipes->infile[0] = read_heredoc(cmd);
-		if (pipes->infile[0] == -1)
-		{
-			shell->return_value = errno;
-			return ;
-		}
-	}
 	if (cmd->infile != NULL)
 	{
 		pipes->infile[0] = open(cmd->infile, O_RDONLY, 0644);
@@ -38,24 +29,15 @@ void	redirect_sgl_builtin(t_cmd *cmd, t_pipes *pipes, t_shell *shell)
 	{
 		if (cmd->output_flag == 'w')
 			pipes->outfile[0] = open(cmd->outfile,
-				O_CREAT | O_WRONLY | O_TRUNC, 0644);
+					O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		else
 			pipes->outfile[0] = open(cmd->outfile,
-				O_CREAT | O_WRONLY | O_APPEND, 0644);
+					O_CREAT | O_WRONLY | O_APPEND, 0644);
 	}
 }
 
-void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
+void	redirect_infiles(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
-	if (cmd->delimiter != NULL)
-	{
-		pipes->infile[i] = read_heredoc(cmd);
-		if (pipes->infile[i] == -1)
-		{
-			shell->return_value = errno;
-			return ;
-		}
-	}
 	if (cmd->infile != NULL)
 	{
 		pipes->infile[i] = open(cmd->infile, O_RDONLY, 0644);
@@ -78,7 +60,7 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	pipes->infile[i] = STDIN_FILENO;
 	if (cmd->infile || cmd->delimiter)
-		redirect_files(cmd, pipes, shell, i);
+		redirect_infiles(cmd, pipes, shell, i);
 	else if (i != 0)
 	{
 		pipes->infile[i] = pipes->fd_arr[i - 1][0];
@@ -90,30 +72,33 @@ void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 	}
 }
 
+void	redirect_outfiles(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
+{
+	if (cmd->output_flag == 'w')
+		pipes->outfile[i] = open(cmd->outfile,
+				O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	else
+		pipes->outfile[i] = open(cmd->outfile,
+				O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (pipes->outfile[i] == -1)
+	{
+		shell->return_value = errno;
+		return ;
+	}
+	if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
+	{
+		shell->return_value = errno;
+		close(pipes->outfile[i]);
+	}
+	if (i != pipes->nr_pipes)
+		close(pipes->fd_arr[i][1]);
+}
+
 void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	pipes->outfile[i] = STDOUT_FILENO;
 	if (cmd->outfile != NULL)
-	{
-		if (cmd->output_flag == 'w')
-			pipes->outfile[i] = open(cmd->outfile,
-					O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		else
-			pipes->outfile[i] = open(cmd->outfile,
-					O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (pipes->outfile[i] == -1)
-		{
-			shell->return_value = errno;
-			return ;
-		}
-		if (dup2(pipes->outfile[i], STDOUT_FILENO) == -1)
-		{
-			shell->return_value = errno;
-			close(pipes->outfile[i]);
-		}
-		if (i != pipes->nr_pipes)
-			close(pipes->fd_arr[i][1]);
-	}
+		redirect_outfiles(cmd, pipes, shell, i);
 	else if (i != pipes->nr_pipes)
 	{
 		pipes->outfile[i] = pipes->fd_arr[i][1];

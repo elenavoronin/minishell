@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   execute.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 20:19:57 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/31 19:21:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ void	execute_shell(t_shell *shell)
 			create_children(shell, &pipes);
 			wait_all(shell, &pipes);
 		}
-		unlink("temp_heredoc");
+		if (cmd->tmp)
+			unlink("temp_heredoc");
 		clear_pipes(&pipes, nr);
 	}
 }
