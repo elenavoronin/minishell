@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 15:13:59 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 19:53:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,15 @@ int	export_check_cmds(char **cmds)
 			ft_perror("🐢shell: export", cmds[i], "not a valid identifier");
 			return (SYNTAX_ERROR);
 		}
-		else
+		j = 0;
+		while (cmds[i][j] && cmds[i][j] != '=')
 		{
-			j = 0;
-			while (cmds[i][j] && cmds[i][j] != '=')
+			if (!ft_isalnum(cmds[i][j]) && cmds[i][j] != '_')
 			{
-				if (!ft_isalnum(cmds[i][j]) && cmds[i][j] != '_')
-				{
-					ft_perror("🐢shell: export", cmds[i], "not a valid identifier");
-					return (SYNTAX_ERROR);
-				}
-				j++;
+				ft_perror("🐢shell: export", cmds[i], "not a valid identifier");
+				return (SYNTAX_ERROR);
 			}
+			j++;
 		}
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/31 19:12:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 20:19:21 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	start_minishell(t_shell	*shell)
 	while (1)
 	{
 		prompt = get_prompt(shell);
+		g_sig = READLINE;
 		shell->line = readline(prompt);
 		g_sig = SUCCESS;
 		free(prompt);
@@ -37,7 +38,6 @@ void	start_minishell(t_shell	*shell)
 		else if (shell->status == SUCCESS && g_sig == SUCCESS)
 			execute_shell(shell);
 		clear_shell(shell);
-		g_sig = SUCCESS;
 	}
 	write(STDERR_FILENO, "\nWTF\n", 5);
 	mini_exit(shell, NULL, STDOUT_FILENO);
@@ -53,11 +53,8 @@ static char	*get_prompt(t_shell *shell)
 	home = getenv_value(shell->env, "HOME");
 	getcwd(curpath, PATH_MAX);
 	if (ft_strcmp(home, curpath) == 0)
-	{
-		curpath[0] = '~';
-		curpath[1] = '\0';
-	}
-	if (home)
+		prompt = ft_strjoin("🐢shell:~", "$ ");
+	else if (home)
 	{
 		i = 0;
 		while (curpath[i] == home[i])
