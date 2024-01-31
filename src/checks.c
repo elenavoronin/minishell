@@ -6,11 +6,22 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/30 16:20:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 15:13:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+int	parse_check_tokens(char *token)
+{
+	if (!token || ft_strcmp(token, "") == 0 || ft_strcmp(token, "|") == 0)
+		return (SYNTAX_ERROR);
+	if (ft_strcmp(token, "<<") == 0 || ft_strcmp(token, ">>") == 0)
+		return (SYNTAX_ERROR);
+	else if (ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0)
+		return (SYNTAX_ERROR);
+	return (SUCCESS);
+}
 
 int	export_check_cmds(char **cmds)
 {

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/19 12:50:58 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 15:10:27 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ int		_expand(t_parse *parse, t_shell *shell);
 char	**_split(char *s);
 int		_tokenise(char	**tokens, t_shell *shell);
 void	parse_test(t_list *cmdlist);
+int		parse_check_tokens(char *token);
 
 #endif
