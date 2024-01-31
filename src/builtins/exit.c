@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:30:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 12:56:58 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 14:00:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 int	check_status(t_shell *shell, char **cmd)
 {
 	int		i;
+	int		j;
 
-	if (!cmd)
+	if (!cmd || !cmd[1])
 		return (SUCCESS);
+	cmd++;
 	i = 0;
 	while (cmd[0][i])
 	{
@@ -27,9 +29,9 @@ int	check_status(t_shell *shell, char **cmd)
 			shell->return_value = SYNTAX_ERROR;
 			return (SUCCESS);
 		}
-		i++;
 	}
-	if (cmd[1])
+	cmd++;
+	if (cmd)
 	{
 		ft_perror("🐢shell", "exit", "too many arguments");
 		return (SYNTAX_ERROR);
@@ -40,7 +42,7 @@ int	check_status(t_shell *shell, char **cmd)
 
 int	mini_exit(t_shell *shell, char **cmd, int fd)
 {
-	if (check_status(shell, cmd + 1) != SUCCESS)
+	if (check_status(shell, cmd) != SUCCESS)
 		return (SYNTAX_ERROR);
 	ft_putendl_fd("exit", fd);
 	free(shell->line);

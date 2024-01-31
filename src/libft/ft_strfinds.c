@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/06 17:10:10 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/10 13:00:38 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 13:36:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 }
 
 /**
- * Compares two strings until a difference, or '\0' is found in either string.
+ * Compares two strings until a difference, or 0 is found in either string.
 */
 int	ft_strcmp(const char *s1, const char *s2)
 {
