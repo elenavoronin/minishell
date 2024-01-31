@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 12:47:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 22:49:56 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ typedef struct s_env
 
 typedef struct s_shell
 {
-	int			run;
-	t_status	status;
-	t_env		env;
-	char		*line;
-	t_list		*cmdlist;
-	char		return_value;
+	int				run;
+	t_status		status;
+	t_env			env;
+	char			*line;
+	t_list			*cmdlist;
+	unsigned char	return_value;
 }	t_shell;
 
 int		init_env(t_env *env, char **envp);

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/02 13:03:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 20:18:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 22:56:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 # define READLINE 42
 
-void	init_signals(struct sigaction *sa);
+void	init_signals(void);
+void	dfl_signals(void);
 
 #endif

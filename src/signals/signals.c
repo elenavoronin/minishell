@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/02 12:34:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 20:30:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 22:56:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,24 @@ void	signal_handler(int sig)
 	}
 }
 
-void	init_signals(struct sigaction *sa)
+void	dfl_signals(void)
 {
-	// ft_bzero(sa, sizeof(sa));
-	sa->sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, sa, NULL);
-	sa->sa_handler = &signal_handler;
-	sigaction(SIGINT, sa, NULL);
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = SIG_DFL;
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
+void	init_signals(void)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	sa.sa_handler = &signal_handler;
+	sigaction(SIGINT, &sa, NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 19:21:04 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 22:56:37 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 	int		status;
 	int		i;
 
+	status = 0;
 	i = 0;
 	while (i <= pipes->nr_pipes)
 	{
@@ -73,7 +74,10 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 	{
 		pipes->pid[i] = fork();
 		if (pipes->pid[i] == 0)
+		{
+			dfl_signals();
 			execute_children(shell, pipes, (t_cmd *)list->content, i);
+		}
 		i++;
 		list = list->next;
 	}
