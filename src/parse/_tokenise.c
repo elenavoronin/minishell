@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/30 19:15:01 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/31 15:10:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	_tokens_to_cmd(t_tok *tok, t_shell *shell)
 	if (tok->dest && tok->dest != tok->cmd->cmd_table)
 	{
 		tok->tokens++;
-		if (!*tok->tokens || !ft_isalnum(*tok->tokens[0]))
+		if (parse_check_tokens(*tok->tokens) != SUCCESS)
 		{
 			ft_perror("🐢shell", "syntax error", "bad command");
 			return (update_status(shell, SYNTAX_ERROR));
