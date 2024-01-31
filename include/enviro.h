@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/02 13:36:06 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/22 18:19:59 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 12:47:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_shell
 	t_env		env;
 	char		*line;
 	t_list		*cmdlist;
-	int			return_value;
+	char		return_value;
 }	t_shell;
 
 int		init_env(t_env *env, char **envp);

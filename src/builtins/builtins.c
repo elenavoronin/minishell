@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtins.c                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: elenavoronin <elnvoronin@gmail.com>          +#+                     */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/30 15:23:01 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/31 12:48:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,5 @@ void	execute_builtins(char **cmd, t_pipes *pipes, t_shell *shell, int i)
 	else if (ft_strcmp(cmd[0], "export") == 0)
 		shell->return_value = mini_export(cmd, shell, pipes->outfile[i]);
 	else if (ft_strcmp(cmd[0], "exit") == 0)
-		mini_exit(shell, pipes->outfile[i]);
+		shell->return_value = mini_exit(shell, cmd, pipes->outfile[i]);
 }
