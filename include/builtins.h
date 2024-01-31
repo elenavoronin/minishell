@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 15:23:23 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/01/31 12:28:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,6 @@ int		mini_env(t_env enviro, int fd);
 int		mini_export(char **cmd, t_shell *shell, int fd);
 int		export_check_cmds(char **cmds);
 int		mini_unset(char **cmd, t_shell *shell);
-int		mini_exit(t_shell *shell, int fd);
+int		mini_exit(t_shell *shell, char **cmd, int fd);
 
 #endif
