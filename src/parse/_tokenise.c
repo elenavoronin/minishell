@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 15:10:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 18:53:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,21 @@ static int	_tokens_to_cmd(t_tok *tok, t_shell *shell)
 			ft_perror("🐢shell", "syntax error", "bad command");
 			return (update_status(shell, SYNTAX_ERROR));
 		}
-		if (*tok->dest)
-			free(*tok->dest);
-		*tok->dest = ft_strdup(*tok->tokens);
+		if (tok->dest == &(tok->cmd->delimiter))
+		{
+			*tok->dest = NULL;
+			tok->dest = &(tok->cmd->infile);
+			if (*tok->dest)
+				free(*tok->dest);
+			read_heredoc(*tok->tokens);
+			*tok->dest = ft_strdup("temp_heredoc");
+		}
+		else
+		{
+			if (*tok->dest)
+				free(*tok->dest);
+			*tok->dest = ft_strdup(*tok->tokens);
+		}
 		if (!*tok->dest)
 			return (update_status(shell, MALLOC_ERROR));
 	}
