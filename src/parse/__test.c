@@ -25,7 +25,7 @@ void	parse_test(t_list *cmdlist)
 		cmd = printlist->content;
 		if (cmd)
 		{
-			printf("\ndelimiter: %s\n", cmd->delimiter);
+			printf("\ndelimiter: %d\n", cmd->delimiter);
 			printf("\ninfile: %s\n", cmd->infile);
 			printf("\noutfile: %s\n", cmd->outfile);
 			printf("\nout_flag: %c\n", cmd->output_flag);

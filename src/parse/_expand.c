@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 13:53:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 19:01:19 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 22:21:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int	_expand_env(t_parse *parse, t_shell *shell);
 static int	_expand_status(t_parse *parse, t_shell *shell);
 static int	_expand_nothing(t_parse *parse, t_shell *shell);
-static char	*_expand_var(char *value);
 
 int	_expand(t_parse *parse, t_shell *shell)
 {
