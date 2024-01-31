@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 14:46:32 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 18:25:13 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	_setcurpath(t_cd *cd, char **cmd, t_shell *shell)
 		else
 			_appendpath(cd);
 		if (stat(cd->curpath, &cd->statbuf) != 0)
-			return (INTERNAL_ERROR);
+			return (update_status(shell, INTERNAL_ERROR));
 	}
 	return (SUCCESS);
 }

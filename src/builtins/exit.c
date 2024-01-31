@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:30:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 14:00:15 by dliu          ########   odam.nl         */
+/*   Updated: 2024/01/31 18:23:31 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,25 @@ int	check_status(t_shell *shell, char **cmd)
 
 	if (!cmd || !cmd[1])
 		return (SUCCESS);
-	cmd++;
 	i = 0;
-	while (cmd[0][i])
+	j = 1;
+	while (cmd[j][i])
 	{
-		if (!ft_isdigit(cmd[0][i]))
+		if (!ft_isdigit(cmd[1][i]))
 		{
 			ft_perror("🐢shell", "exit", "a numeric argument required");
 			shell->return_value = SYNTAX_ERROR;
 			return (SUCCESS);
 		}
+		i++;
 	}
-	cmd++;
-	if (cmd)
+	j++;
+	if (cmd[j])
 	{
 		ft_perror("🐢shell", "exit", "too many arguments");
 		return (SYNTAX_ERROR);
 	}
-	shell->return_value = ft_atoi(cmd[0]);
+	shell->return_value = ft_atoi(cmd[1]);
 	return (SUCCESS);
 }
 
