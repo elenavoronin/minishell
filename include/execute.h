@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:51:43 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 18:48:15 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 11:22:48 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,8 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	redirect_files(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i);
 void	redirect_sgl_builtin(t_cmd *cmd, t_pipes *pipes, t_shell *shell);
+void	close_parent_pipes(t_pipes *pipes);
+void	setup_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i);
+void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i);
 
 #endif

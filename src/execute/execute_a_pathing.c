@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 14:55:28 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 20:34:10 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/02/01 11:25:57 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,16 @@ int	get_path_char(t_shell *shell, t_pipes *pipes, int nr, char *cmd)
 	return (1);
 }
 
+static void	check_access(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
+{
+	if (access(cmd->cmd_table[0], X_OK) == 0)
+	{
+		pipes->path[i] = ft_strdup(cmd->cmd_table[0]);
+		if (!pipes->path[i])
+			update_status(shell, MALLOC_ERROR);
+	}
+}
+
 void	get_path(t_shell *shell, t_pipes *pipes)
 {
 	int		i;
@@ -71,14 +81,7 @@ void	get_path(t_shell *shell, t_pipes *pipes)
 		else
 		{
 			if (get_path_char(shell, pipes, i, cmd->cmd_table[0]) != SUCCESS)
-			{
-				if (access(cmd->cmd_table[0], X_OK) == 0)
-				{
-					pipes->path[i] = ft_strdup(cmd->cmd_table[0]);
-					if (!pipes->path[i])
-						update_status(shell, MALLOC_ERROR);
-				}
-			}
+				check_access(cmd, pipes, shell, i);
 		}
 		list = list->next;
 		i++;

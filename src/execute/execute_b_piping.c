@@ -6,11 +6,27 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 12:01:17 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/30 20:24:15 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/02/01 11:19:10 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	close_parent_pipes(t_pipes *pipes)
+{
+	int	i;
+
+	i = 0;
+	if (pipes->nr_pipes != 0)
+	{
+		while (i < pipes->nr_pipes)
+		{
+			close(pipes->fd_arr[i][0]);
+			close(pipes->fd_arr[i][1]);
+			i++;
+		}
+	}
+}
 
 void	close_pipes(t_pipes *pipes, int i)
 {

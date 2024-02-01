@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 22:56:37 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 11:22:35 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,6 @@ void	wait_all(t_shell *shell, t_pipes *pipes)
 
 void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 {
-	shell->return_value = 0;
-	close_pipes(pipes, i);
-	redirect_input(cmd, pipes, shell, i);
-	redirect_output(cmd, pipes, shell, i);
 	if (shell->return_value != 0)
 	{
 		perror("🐢shell");
@@ -63,6 +59,15 @@ void	execute_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
 	}
 }
 
+void	setup_children(t_shell *shell, t_pipes *pipes, t_cmd *cmd, int i)
+{
+	shell->return_value = 0;
+	close_pipes(pipes, i);
+	redirect_input(cmd, pipes, shell, i);
+	redirect_output(cmd, pipes, shell, i);
+	execute_children(shell, pipes, cmd, i);
+}
+
 void	create_children(t_shell *shell, t_pipes *pipes)
 {
 	int		i;
@@ -76,21 +81,12 @@ void	create_children(t_shell *shell, t_pipes *pipes)
 		if (pipes->pid[i] == 0)
 		{
 			dfl_signals();
-			execute_children(shell, pipes, (t_cmd *)list->content, i);
+			setup_children(shell, pipes, (t_cmd *)list->content, i);
 		}
 		i++;
 		list = list->next;
 	}
-	i = 0;
-	if (pipes->nr_pipes != 0)
-	{
-		while (i < pipes->nr_pipes)
-		{
-			close(pipes->fd_arr[i][0]);
-			close(pipes->fd_arr[i][1]);
-			i++;
-		}
-	}
+	close_parent_pipes(pipes);
 }
 
 void	execute_shell(t_shell *shell)
@@ -107,7 +103,6 @@ void	execute_shell(t_shell *shell)
 	{
 		redirect_sgl_builtin(cmd, &pipes, shell);
 		execute_builtins(cmd->cmd_table, &pipes, shell, 0);
-		clear_pipes(&pipes, nr);
 	}
 	else
 	{
@@ -119,6 +114,6 @@ void	execute_shell(t_shell *shell)
 		}
 		if (cmd->tmp)
 			unlink("temp_heredoc");
-		clear_pipes(&pipes, nr);
 	}
+	clear_pipes(&pipes, nr);
 }
