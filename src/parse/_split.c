@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/25 17:37:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 08:51:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static size_t	split_count(char *s);
 static int		split_extract(t_split *split);
 static int		handle_quote(t_split *split);
-static int		safe_copy(t_split	*split);
+static int		safe_copy(t_split *split, int final);
 
 /**
  * Splits a string into an array of strings allocated (with malloc(3)).
@@ -35,6 +35,7 @@ char	**_split(char *s)
 	split.str = s;
 	split.tmp = NULL;
 	split.result = ft_calloc((count + 1), sizeof(*split.result));
+	split.i = 0;
 	if (split.result && split_extract(&split) == SUCCESS)
 		return (split.result);
 	ft_free_strarr(split.result);
@@ -69,7 +70,6 @@ static size_t	split_count(char *s)
 
 static int	split_extract(t_split *split)
 {
-	split->i = 0;
 	while (*split->str)
 	{
 		while (ft_isspace(*split->str))
@@ -91,32 +91,26 @@ static int	split_extract(t_split *split)
 					split->pos++;
 			}
 		}
-		if (safe_copy(split) != SUCCESS)
+		if (safe_copy(split, 1) != SUCCESS)
 			return (MALLOC_ERROR);
-		if (split->tmp)
-		{
-			split->result[split->i] = split->tmp;
-			split->tmp = NULL;
-			split->i++;
-		}
 	}
 	return (SUCCESS);
 }
 
 static int	handle_quote(t_split *split)
 {
-	if (safe_copy(split) != SUCCESS)
+	if (safe_copy(split, 0) != SUCCESS)
 		return (MALLOC_ERROR);
 	split->str++;
 	split->pos = ft_strchr(split->str, *split->pos);
-	if (safe_copy(split) != SUCCESS)
+	if (safe_copy(split, 0) != SUCCESS)
 		return (MALLOC_ERROR);
 	split->pos++;
 	split->str = split->pos;
 	return (SUCCESS);
 }
 
-static int	safe_copy(t_split	*split)
+static int	safe_copy(t_split	*split, int final)
 {
 	char	*substr;
 
@@ -129,5 +123,11 @@ static int	safe_copy(t_split	*split)
 	if (!split->tmp)
 		return (MALLOC_ERROR);
 	split->str = split->pos;
+	if (final && split->tmp)
+	{
+		split->result[split->i] = split->tmp;
+		split->tmp = NULL;
+		split->i++;
+	}
 	return (SUCCESS);
 }
