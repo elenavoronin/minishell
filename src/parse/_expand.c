@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 13:53:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 12:37:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 16:44:51 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	_expand_env(t_parse *parse, t_shell *shell)
 	value = getenv_value(shell->env, name);
 	free(name);
 	if (value)
-		value = ft_joinstrs(3, "\'", value, "\'");
+		value = ft_joinstrs(3, "\"", value, "\"");
 	else
 		value = ft_strdup("");
 	if (!value)

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 19:20:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 17:24:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 # define PARSE_H
 
 # include "minishell.h"
+
+typedef enum e_token
+{
+	ARG,
+	IN,
+	OUT,
+	HERE,
+	PIPE
+}	t_token;
 
 /**
  * Container for parsed input.
@@ -58,10 +67,13 @@ typedef struct s_split
 	char	*pos;
 	char	*tmp;
 	char	**result;
+	t_token	*tokens;
 }	t_split;
 
 int		_expand(t_parse *parse, t_shell *shell);
-char	**_split(char *s);
+t_split	*_split(char *cmd);
+int		_split_copyremaining(t_split *split);
+int		safe_copy(t_split	*split);
 int		_tokenise(char	**tokens, t_shell *shell);
 void	parse_test(t_list *cmdlist);
 int		parse_check_tokens(char *token);
