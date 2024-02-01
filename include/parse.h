@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 17:24:09 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 20:51:33 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef enum e_token
 	IN,
 	OUT,
 	HERE,
+	APPEND,
 	PIPE
 }	t_token;
 
@@ -45,36 +46,28 @@ typedef struct s_cmd
 
 int		parse_input(t_shell *shell);
 
-//For parsing internal use.
-typedef struct s_tok
-{
-	char	**tokens;
-	char	**dest;
-	t_cmd	*cmd;
-}	t_tok;
-
 typedef struct s_parse
 {
-	char	*line;
-	char	*pos;
-	char	*cmdstr;
-}	t_parse;
-
-typedef struct s_split
-{
 	size_t	i;
+	size_t	count;
+	char	*cmdstr;
 	char	*str;
 	char	*pos;
 	char	*tmp;
 	char	**result;
 	t_token	*tokens;
-}	t_split;
+	char	**dest;
+	t_cmd	*curcmd;
+}	t_parse;
 
-int		_expand(t_parse *parse, t_shell *shell);
-t_split	*_split(char *cmd);
-int		_split_copyremaining(t_split *split);
-int		safe_copy(t_split	*split);
-int		_tokenise(char	**tokens, t_shell *shell);
+int		_is_symbol(char c);
+int		_expand(t_shell *shell, t_parse *parse);
+int		_copy_tmp(t_shell *shell, t_parse *parse);
+int		_copy_str(t_shell *shell, t_parse *parse, char *str);
+int		_copy_fin(t_shell *shell, t_parse *parse);
+int		_handle_symbols(t_shell *shell, t_parse *parse);
+int		_handle_args(t_shell *shell, t_parse *parse);
+int		_tokenise(t_shell *shell, t_parse *parse);
 void	parse_test(t_list *cmdlist);
 int		parse_check_tokens(char *token);
 
