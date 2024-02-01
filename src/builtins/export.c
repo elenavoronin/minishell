@@ -6,105 +6,79 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/29 15:23:08 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/02/01 12:50:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-static char	*_find_envp(t_env env, t_exp *exp);
-static int	_replace_existing(t_exp *exp, t_env oldenv);
-static int	_append_new(t_exp *exp);
 static void	_export_print(t_env env, int fd);
+static int	_validate_and_getname(t_shell *shell, t_exp *exp, char **cmd);
+static void	_clear_exp(t_exp *exp);
+
+static void	_clear_exp(t_exp *exp)
+{
+	exp->i = 0;
+	ft_free_strarr(exp->newenvp);
+	exp->newenvp = NULL;
+	free(exp->var_name);
+	exp->var_name = NULL;
+}
 
 int	mini_export(char **cmd, t_shell *shell, int fd)
 {
 	t_exp	exp;
+	int		i;
 
-	if (cmd[1] && *cmd[1])
+	ft_bzero(&exp, sizeof(exp));
+	i = 1;
+	if (cmd && cmd[i])
 	{
-		if (export_check_cmds(cmd + 1) != SUCCESS)
-			return (update_status(shell, SYNTAX_ERROR));
-		exp.newenvp = ft_calloc(ft_strarray_count(cmd) + shell->env.count,
-				sizeof(*exp.newenvp));
-		if (!exp.newenvp)
-			return (update_status(shell, MALLOC_ERROR));
-		exp.cmd = cmd + 1;
-		if (_replace_existing(&exp, shell->env) != SUCCESS)
-			return (update_status(shell, MALLOC_ERROR));
-		if (_append_new(&exp) != SUCCESS)
-			return (update_status(shell, MALLOC_ERROR));
-		clear_env(&exp.cmdenv);
-		clear_env(&shell->env);
-		init_env(&shell->env, exp.newenvp);
-		ft_free_strarr(exp.newenvp);
-	}
-	else
-		_export_print(shell->env, fd);
-	return (SUCCESS);
-}
-
-static int	_replace_existing(t_exp *exp, t_env oldenv)
-{
-	if (init_env(&exp->cmdenv, exp->cmd) != SUCCESS)
-		return (ft_free_strarr(exp->newenvp), MALLOC_ERROR);
-	exp->ipos = 0;
-	while (oldenv.envp[exp->ipos])
-	{
-		exp->newenvp[exp->ipos] = _find_envp(oldenv, exp);
-		if (!exp->newenvp[exp->ipos])
+		while (cmd[i])
 		{
-			ft_free_strarr(exp->newenvp);
-			return (clear_env(&exp->cmdenv), MALLOC_ERROR);
-		}
-		exp->ipos++;
-	}
-	return (SUCCESS);
-}
-
-static int	_append_new(t_exp *exp)
-{
-	int	i;
-
-	i = 0;
-	while (i < exp->cmdenv.count)
-	{
-		if (exp->cmdenv.envp_name[i])
-		{
-			exp->newenvp[exp->ipos] = ft_strdup(exp->cmdenv.envp[i]);
-			if (!exp->newenvp[exp->ipos])
+			_clear_exp(&exp);
+			if (_validate_and_getname(shell, &exp, &cmd[i]) == SUCCESS)
 			{
-				ft_free_strarr(exp->newenvp);
-				exp->newenvp = NULL;
-				clear_env(&exp->cmdenv);
-				return (MALLOC_ERROR);
+				if (_replace_and_append(shell, &exp) != SUCCESS)
+					break ;
+				clear_env(&shell->env);
+				init_env(&shell->env, exp.newenvp);
 			}
-			exp->ipos++;
+			i++;
 		}
-		i++;
+		_clear_exp(&exp);
+		return (shell->return_value);
 	}
-	return (SUCCESS);
+	_export_print(shell->env, fd);
+	return (shell->return_value);
 }
 
-static char	*_find_envp(t_env env, t_exp *exp)
+static int	_validate_and_getname(t_shell *shell, t_exp *exp, char **cmd)
 {
 	int	i;
 
 	i = 0;
-	while (i < exp->cmdenv.count)
+	exp->cmd = *cmd;
+	if (!ft_isalpha(exp->cmd[i]) && exp->cmd[i] != '_')
 	{
-		if (ft_strcmp(env.envp_name[exp->ipos], exp->cmdenv.envp_name[i]) == 0)
-			break ;
+		ft_perror("🐢shell: export", exp->cmd, "not a valid identifier");
+		shell->return_value = SYNTAX_ERROR;
+		return (update_status(shell, SYNTAX_ERROR));
+	}
+	while (exp->cmd[i] && exp->cmd[i] != '=')
+	{
+		if (!ft_isalnum(exp->cmd[i]) && exp->cmd[i] != '_')
+		{
+			ft_perror("🐢shell: export", exp->cmd, "not a valid identifier");
+			shell->return_value = SYNTAX_ERROR;
+			return (update_status(shell, SYNTAX_ERROR));
+		}
 		i++;
 	}
-	if (i < exp->cmdenv.count)
-	{
-		free(exp->cmdenv.envp_name[i]);
-		exp->cmdenv.envp_name[i] = NULL;
-		return (ft_strdup(exp->cmdenv.envp[i]));
-	}
-	else
-		return (ft_strdup(env.envp[exp->ipos]));
+	exp->var_name = ft_substr(exp->cmd, 0, i);
+	if (!exp->var_name)
+		return (update_status(shell, MALLOC_ERROR));
+	return (SUCCESS);
 }
 
 static void	_export_print(t_env env, int fd)

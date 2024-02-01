@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:49 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 12:28:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/01 12:34:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@ typedef struct s_cd
 
 typedef struct s_exp
 {
-	t_env	cmdenv;
-	int		ipos;
-	char	**cmd;
+	int		i;
+	int		size;
+	char	*cmd;
+	char	*var_name;
 	char	**newenvp;
 }	t_exp;
 
@@ -40,7 +41,7 @@ int		mini_pwd(t_shell *shell, int outfile);
 int		mini_cd(char **cmd, t_shell *shell);
 int		mini_env(t_env enviro, int fd);
 int		mini_export(char **cmd, t_shell *shell, int fd);
-int		export_check_cmds(char **cmds);
+int		_replace_and_append(t_shell *shell, t_exp *exp);
 int		mini_unset(char **cmd, t_shell *shell);
 int		mini_exit(t_shell *shell, char **cmd, int fd);
 
