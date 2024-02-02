@@ -28,7 +28,7 @@ int	parse_input(t_shell *shell)
 	parse.str = shell->line;
 	parse.count = _count(parse.str);
 	if (!parse.count)
-		return (FAILED);
+		return (update_status(shell, FAILED));
 	parse.result = ft_calloc(parse.count + 1, sizeof(*parse.result));
 	parse.tokens = ft_calloc(parse.count, sizeof(*parse.result));
 	if (!parse.result || !parse.tokens)

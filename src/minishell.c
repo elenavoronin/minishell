@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/02/02 06:50:54 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 07:38:57 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void	clear_shell(t_shell *shell);
 static char	*get_prompt(t_shell *shell);
+static int	check_line(t_shell *shell);
 
 int	g_sig = SUCCESS;
 
@@ -28,14 +29,15 @@ void	start_minishell(t_shell	*shell)
 		shell->line = readline(prompt);
 		g_sig = SUCCESS;
 		free(prompt);
-		add_history(shell->line);
 		if (!shell->line)
 			mini_exit(shell, NULL, STDOUT_FILENO);
-		if (g_sig == SUCCESS)
+		if (check_line(shell) == SUCCESS)
+			add_history(shell->line);
+		if (shell->status == SUCCESS && g_sig == SUCCESS)
 			shell->return_value = parse_input(shell);
 		if (DEBUG)
 			parse_test(shell->cmdlist);
-		if (shell->cmdlist && shell->status == SUCCESS && g_sig == SUCCESS)
+		if (shell->status == SUCCESS && g_sig == SUCCESS)
 			execute_shell(shell);
 		clear_shell(shell);
 	}
@@ -72,6 +74,20 @@ static char	*get_prompt(t_shell *shell)
 	return (prompt);
 }
 
+static int	check_line(t_shell *shell)
+{
+	int	i;
+
+	i = 0;
+	while (shell->line && shell->line[i])
+	{
+		if (!ft_isspace(shell->line[i]))
+			return (SUCCESS);
+		i++;
+	}
+	return (update_status(shell, FAILED));
+}
+
 static void	clear_shell(t_shell *shell)
 {
 	free(shell->line);
@@ -93,10 +109,4 @@ void	delete_cmd(void *content)
 		free(cmd->outfile);
 		free(cmd);
 	}
-}
-
-int	update_status(t_shell *shell, t_status code)
-{
-	shell->status = code;
-	return (code);
 }

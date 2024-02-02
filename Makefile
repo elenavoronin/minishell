@@ -6,7 +6,7 @@
 #    By: dliu <dliu@student.codam.nl>                 +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/06/12 11:12:29 by evoronin      #+#    #+#                  #
-#    Updated: 2024/02/02 07:07:47 by dliu          ########   odam.nl          #
+#    Updated: 2024/02/02 07:35:56 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ READLINELINKFLAGS := -lreadline
 READLINEFLAGS ?= -I/usr/include
 
 VPATH = ./src ./src/libft ./src/parse ./src/execute ./src/builtins ./src/enviro ./src/signals
-SRCS_NAMES = main.c minishell.c enviro.c signals.c checks.c \
+SRCS_NAMES = main.c minishell.c enviro.c signals.c \
 parse.c _copy.c _expand.c _handle_args.c _handle_symbols.c _tokenise.c __test.c \
 builtins.c env.c echo.c cd.c pwd.c export.c unset.c exit.c _export_replace_append.c \
 ft_lstnew.c ft_lstadd.c ft_lstsize.c ft_lstlast.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
