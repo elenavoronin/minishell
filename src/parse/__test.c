@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/09 13:06:05 by dliu          #+#    #+#                 */
-/*   Updated: 2024/01/31 22:22:20 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:30:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	parse_test(t_list *cmdlist)
 		cmd = printlist->content;
 		if (cmd)
 		{
-			printf("\ndelimiter: %d\n", cmd->delimiter);
 			printf("\ninfile: %s\n", cmd->infile);
 			printf("\noutfile: %s\n", cmd->outfile);
 			printf("\nout_flag: %c\n", cmd->output_flag);
