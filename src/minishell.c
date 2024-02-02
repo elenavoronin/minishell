@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/02/02 06:04:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:50:54 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static char	*get_prompt(t_shell *shell)
 	char	curpath[PATH_MAX];
 	size_t	i;
 
+	ft_bzero(&curpath, PATH_MAX);
 	home = getenv_value(shell->env, "HOME");
 	getcwd(curpath, PATH_MAX);
 	if (ft_strcmp(home, curpath) == 0)
