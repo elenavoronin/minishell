@@ -65,6 +65,9 @@ static size_t	_count(char *s)
 		{
 			if (ft_isquote(*s))
 				s = ft_strchr(s + 1, *s);
+			if (!s)
+				return (ft_perror("🐢shell", NULL,
+						"Ew, close your quotes when you type"), 0);
 			s++;
 		}
 		if (_is_symbol(*s))

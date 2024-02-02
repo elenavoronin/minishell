@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 21:18:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 07:04:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	__handle_pipe(t_shell *shell, t_parse *parse)
 	parse->pos += ft_charcount(parse->pos, *parse->pos);
 	if (parse->pos - parse->str == 1)
 		parse->tokens[parse->i] = PIPE;
-	if (parse->pos - parse->str > 1 || parse->i == 0 
+	if (parse->pos - parse->str > 1 || parse->i == 0
 		|| parse->i == parse->count - 1
 		|| ((parse->i > 0 && parse->tokens[parse->i - 1] == PIPE)))
 	{
