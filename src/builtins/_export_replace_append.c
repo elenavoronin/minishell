@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 12:41:37 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:13:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-int	_count_size(t_shell *shell, t_exp *exp)
+static int	_count_size(t_shell *shell, t_exp *exp)
 {
 	exp->size = 0;
 	while (exp->size <= shell->env.count)
@@ -30,7 +30,7 @@ int	_count_size(t_shell *shell, t_exp *exp)
 	return (SUCCESS);
 }
 
-int	_append(t_shell *shell, t_exp *exp)
+static int	_append(t_shell *shell, t_exp *exp)
 {
 	if (exp->i < exp->size)
 	{

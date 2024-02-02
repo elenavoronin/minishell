@@ -16,16 +16,6 @@ static size_t	_count(char *s);
 static int		_split(t_shell *shell, t_parse *parse);
 static void		_free_parse(t_parse *parse);
 
-static void	_free_parse(t_parse *parse)
-{
-	ft_free_strarr(parse->result);
-	parse->result = NULL;
-	free(parse->tmp);
-	parse->tmp = NULL;
-	free(parse->tokens);
-	parse->tokens = NULL;
-}
-
 /**
  * Parses shell->line. Allocates memory for linked list and content.
  * @return On success, returns pointer to head of list.
@@ -46,26 +36,6 @@ int	parse_input(t_shell *shell)
 	if (_split(shell, &parse) == SUCCESS && parse.result)
 		_tokenise(shell, &parse);
 	_free_parse(&parse);
-	return (shell->status);
-}
-
-static int	_split(t_shell *shell, t_parse *parse)
-{
-	if (shell->status != SUCCESS)
-		return (shell->status);
-	parse->i = 0;
-	while (*parse->str && shell->status == SUCCESS)
-	{
-		while (ft_isspace(*parse->str))
-			parse->str++;
-		if (!parse->str)
-			return (SUCCESS);
-		parse->pos = parse->str;
-		if (_is_symbol(*parse->pos))
-			_handle_symbols(shell, parse);
-		else
-			_handle_args(shell, parse);
-	}
 	return (shell->status);
 }
 
@@ -104,4 +74,34 @@ static size_t	_count(char *s)
 		}
 	}
 	return (count);
+}
+
+static int	_split(t_shell *shell, t_parse *parse)
+{
+	if (shell->status != SUCCESS)
+		return (shell->status);
+	parse->i = 0;
+	while (*parse->str && shell->status == SUCCESS)
+	{
+		while (ft_isspace(*parse->str))
+			parse->str++;
+		if (!parse->str)
+			return (shell->status);
+		parse->pos = parse->str;
+		if (_is_symbol(*parse->pos))
+			_handle_symbols(shell, parse);
+		else
+			_handle_args(shell, parse);
+	}
+	return (shell->status);
+}
+
+static void	_free_parse(t_parse *parse)
+{
+	ft_free_strarr(parse->result);
+	parse->result = NULL;
+	free(parse->tmp);
+	parse->tmp = NULL;
+	free(parse->tokens);
+	parse->tokens = NULL;
 }

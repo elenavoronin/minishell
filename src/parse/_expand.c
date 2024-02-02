@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 13:53:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 21:24:49 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 05:56:43 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static int	__expand_nothing(t_parse *parse, t_shell *shell);
 
 int	_expand(t_shell *shell, t_parse *parse)
 {
+	if (_copy_tmp(shell, parse) != SUCCESS)
+		return (shell->status);
 	parse->pos++;
 	if (ft_isalpha(*parse->pos) || *parse->pos == '_')
 		return (__expand_env(parse, shell));

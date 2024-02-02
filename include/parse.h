@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/31 18:00:09 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 20:51:33 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:19:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ typedef enum e_token
 
 /**
  * Container for parsed input.
- * @param delimiter If not NULL, delimiter for heredoc.
  * @param infile If not NULL, name of input file.
  * @param outfile If not NULL, name of output file.
  * @param output_flag Either 'w' for write, or 'a' for append.
@@ -36,7 +35,6 @@ typedef enum e_token
 typedef struct s_cmd
 {
 	char	tmp;
-	char	delimiter;
 	char	*infile;
 	char	*outfile;
 	char	output_flag;

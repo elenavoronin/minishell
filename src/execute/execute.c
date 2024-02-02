@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 15:32:36 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/02/01 17:05:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:22:40 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,8 @@ void	execute_shell(t_shell *shell)
 			create_children(shell, &pipes);
 			wait_all(shell, &pipes);
 		}
-		if (cmd->tmp)
-			unlink("temp_heredoc");
 	}
+	if (cmd->tmp)
+		unlink("temp_heredoc");
 	clear_pipes(&pipes, nr);
 }

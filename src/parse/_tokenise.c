@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/01 16:10:26 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 21:28:26 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:20:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static int	_update_outfile(t_shell *shell, t_parse *parse)
 		return (update_status(shell, INTERNAL_ERROR));
 	}
 	parse->curcmd->outfile = ft_strdup(parse->result[parse->i]);
+	parse->curcmd->output_flag = 'w';
 	if (parse->tokens[parse->i - 1] == APPEND)
 		parse->curcmd->output_flag = 'a';
 	if (!parse->curcmd->outfile)
@@ -92,7 +93,6 @@ static int	_init_cmd(t_shell *shell)
 	if (!cmd)
 		return (update_status(shell, MALLOC_ERROR));
 	cmd->cmd_argc = 0;
-	cmd->delimiter = 0;
 	cmd->tmp = 0;
 	cmd->infile = NULL;
 	cmd->outfile = NULL;

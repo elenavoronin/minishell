@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/03 15:06:11 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/31 20:19:21 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:04:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	start_minishell(t_shell	*shell)
 			shell->return_value = parse_input(shell);
 		if (DEBUG)
 			parse_test(shell->cmdlist);
-		else if (shell->status == SUCCESS && g_sig == SUCCESS)
+		if (shell->cmdlist && shell->status == SUCCESS && g_sig == SUCCESS)
 			execute_shell(shell);
 		clear_shell(shell);
 	}

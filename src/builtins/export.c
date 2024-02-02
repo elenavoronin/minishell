@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/21 17:21:31 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 12:50:03 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:12:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,6 @@
 static void	_export_print(t_env env, int fd);
 static int	_validate_and_getname(t_shell *shell, t_exp *exp, char **cmd);
 static void	_clear_exp(t_exp *exp);
-
-static void	_clear_exp(t_exp *exp)
-{
-	exp->i = 0;
-	ft_free_strarr(exp->newenvp);
-	exp->newenvp = NULL;
-	free(exp->var_name);
-	exp->var_name = NULL;
-}
 
 int	mini_export(char **cmd, t_shell *shell, int fd)
 {
@@ -79,6 +70,15 @@ static int	_validate_and_getname(t_shell *shell, t_exp *exp, char **cmd)
 	if (!exp->var_name)
 		return (update_status(shell, MALLOC_ERROR));
 	return (SUCCESS);
+}
+
+static void	_clear_exp(t_exp *exp)
+{
+	exp->i = 0;
+	ft_free_strarr(exp->newenvp);
+	exp->newenvp = NULL;
+	free(exp->var_name);
+	exp->var_name = NULL;
 }
 
 static void	_export_print(t_env env, int fd)
