@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/01/31 19:08:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:30:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	redirect_infiles(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 void	redirect_input(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	pipes->infile[i] = STDIN_FILENO;
-	if (cmd->infile || cmd->delimiter)
+	if (cmd->infile)
 		redirect_infiles(cmd, pipes, shell, i);
 	else if (i != 0)
 	{
