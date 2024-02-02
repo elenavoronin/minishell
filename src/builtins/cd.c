@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 13:44:57 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/01 08:43:15 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/02 06:43:57 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ static void	_slash(t_cd *cd)
 
 static void	_dot(t_cd *cd)
 {
+	if (!cd->cmd[1])
+		cd->cmd += 1;
+	else if (cd->cmd[1] != '.' && cd->cmd[1] != '/')
+		_appendpath(cd);
 	while (cd->cmd[0] == '.' && cd->cmd[1] == '/')
 		cd->cmd += 2;
 	while (cd->cmd[0] == '.' && cd->cmd[1] == '.'
