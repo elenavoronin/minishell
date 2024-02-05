@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/02/05 12:43:40 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/02/05 12:53:52 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ void	redirect_sgl_builtin(t_cmd *cmd, t_pipes *pipes, t_shell *shell)
 		else
 			pipes->outfile[0] = open(cmd->outfile,
 					O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (pipes->outfile[0] == -1)
+		{
+			shell->return_value = 1;
+			return ;
+		}
 	}
 }
 
@@ -43,7 +48,7 @@ void	redirect_infiles(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 		pipes->infile[i] = open(cmd->infile, O_RDONLY, 0644);
 		if (pipes->infile[i] == -1)
 		{
-			shell->return_value = 2;
+			shell->return_value = 1;
 			return ;
 		}
 	}
@@ -99,6 +104,11 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 	pipes->outfile[i] = STDOUT_FILENO;
 	if (cmd->outfile != NULL)
 		redirect_outfiles(cmd, pipes, shell, i);
+	if (pipes->outfile[i] == -1)
+	{
+		shell->return_value = errno;
+		return ;
+	}
 	else if (i != pipes->nr_pipes)
 	{
 		pipes->outfile[i] = pipes->fd_arr[i][1];
