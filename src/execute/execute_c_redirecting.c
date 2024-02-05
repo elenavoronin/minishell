@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/02/05 12:53:52 by evoronin      ########   odam.nl         */
+/*   Updated: 2024/02/05 15:23:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,11 +103,13 @@ void	redirect_output(t_cmd *cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	pipes->outfile[i] = STDOUT_FILENO;
 	if (cmd->outfile != NULL)
-		redirect_outfiles(cmd, pipes, shell, i);
-	if (pipes->outfile[i] == -1)
 	{
-		shell->return_value = errno;
-		return ;
+		redirect_outfiles(cmd, pipes, shell, i);
+		if (pipes->outfile[i] == -1)
+		{
+			shell->return_value = errno;
+			return ;
+		}
 	}
 	else if (i != pipes->nr_pipes)
 	{
