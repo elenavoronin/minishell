@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/24 13:23:27 by elenavoroni   #+#    #+#                 */
-/*   Updated: 2024/01/31 12:48:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/05 12:43:13 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	execute_builtins(char **cmd, t_pipes *pipes, t_shell *shell, int i)
 {
 	if (!cmd)
 		return ;
+	if (shell->return_value != SUCCESS)
+	{
+		perror("🐢shell");
+		return ;
+	}
 	if (ft_strcmp(cmd[0], "env") == 0)
 		shell->return_value = mini_env(shell->env, pipes->outfile[i]);
 	else if (ft_strcmp(cmd[0], "echo") == 0)

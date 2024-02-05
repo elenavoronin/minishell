@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 15:48:52 by dliu          #+#    #+#                 */
-/*   Updated: 2024/02/02 07:04:18 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/05 12:30:44 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	__handle_pipe(t_shell *shell, t_parse *parse)
 		parse->tokens[parse->i] = PIPE;
 	if (parse->pos - parse->str > 1 || parse->i == 0
 		|| parse->i == parse->count - 1
-		|| ((parse->i > 0 && parse->tokens[parse->i - 1] == PIPE)))
+		|| ((parse->i > 0 && parse->tokens[parse->i - 1] != ARG)))
 	{
 		ft_perror("🐢shell", NULL, "syntax error near pipe");
 		return (update_status(shell, SYNTAX_ERROR));

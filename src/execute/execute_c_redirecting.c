@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/11/08 16:43:51 by evoronin      #+#    #+#                 */
-/*   Updated: 2024/02/02 06:30:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/02/05 12:43:40 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	redirect_sgl_builtin(t_cmd *cmd, t_pipes *pipes, t_shell *shell)
 		pipes->infile[0] = open(cmd->infile, O_RDONLY, 0644);
 		if (pipes->infile[0] == -1)
 		{
-			shell->return_value = 2;
+			shell->return_value = 1;
 			return ;
 		}
 	}
